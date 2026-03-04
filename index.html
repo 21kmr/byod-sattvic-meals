@@ -762,7 +762,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="atab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
       </div>
       <div class="asec on" id="atab-orders">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin:9px 0 8px"><div style="font-size:.65rem;color:var(--muted)">Tap <b>Publish Menu</b> each morning to open orders</div><button id="pub-menu-btn" onclick="publishMenu()" style="background:rgba(78,158,107,.15);border:1px solid rgba(78,158,107,.3);border-radius:8px;padding:5px 11px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish Menu</button></div><div class="stats-grid" style="margin-top:0">
+        <div style="margin:10px 0 12px">
+          <button id="pub-menu-btn" onclick="publishMenu()" style="width:100%;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:12px;padding:13px 16px;font-size:.88rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.01em">📢 Publish Menu</button>
+          <div style="font-size:.62rem;color:var(--muted);text-align:center;margin-top:5px">Tap to open orders for the day. Tap again to close.</div>
+        </div><div class="stats-grid" style="margin-top:0">
           <div class="sbox"><div class="sbn s" id="st-orders">0</div><div class="sbl">Orders</div></div>
           <div class="sbox"><div class="sbn g" id="st-rev">₹0</div><div class="sbl">Revenue</div></div>
           <div class="sbox"><div class="sbn t" id="st-subs">0</div><div class="sbl">Tele Linked</div></div>
