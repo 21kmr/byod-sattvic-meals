@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v7</title>
+<title>BYOD — Bring Your Own Dabba v9</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -378,6 +378,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .ocbtn.t{border-color:var(--tele);color:var(--tele)}
 
 /* edit menu */
+.ed-ing-row{margin-top:7px}
+.ed-ing-lbl{display:block;font-size:.6rem;font-weight:700;letter-spacing:.05em;color:var(--saff);margin-bottom:4px;text-transform:uppercase}
+.ed-ing-inp{width:100%;background:var(--surf);border:1px solid rgba(244,163,37,.18);border-radius:7px;padding:7px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.7rem;line-height:1.5;resize:vertical;min-height:52px;outline:none;box-sizing:border-box}
+.ed-ing-inp:focus{border-color:rgba(244,163,37,.45)}
 .edcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px}
 .ed-top{display:flex;align-items:center;gap:7px;margin-bottom:8px}
 .ed-em{font-size:1.4rem;width:32px;text-align:center;flex-shrink:0}
@@ -491,7 +495,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v7.0</span>
+      <span class="ver-badge" id="ver-badge">v9.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -620,6 +624,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div class="fld"><label>Drop-off Point</label><select id="cf-drop"><option>H-002 (Direct)</option><option>Exit Gate Security</option></select></div>
           
         </div>
+        <div id="order-closed-banner" style="display:none;background:rgba(239,68,68,.12);border:1.5px solid rgba(239,68,68,.35);border-radius:14px;padding:16px 18px;font-size:.92rem;font-weight:700;color:#f87171;text-align:center;margin-bottom:12px;line-height:1.5"></div>
         <button class="btn-place" id="placeBtn" onclick="placeOrder()">🎉 Place Order &amp; Notify Host</button>
         <button class="btn-notify-dabba" id="notifyDabbaBtn" onclick="notifyDabbaDropped()">📦 I've Dropped My Dabba!</button>
         <div style="height:8px"></div>
@@ -744,7 +749,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v7.0</span>
+          <span class="ver-badge">v9.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -980,7 +985,7 @@ function getOrderStatus(cat){
   if(!menuPublishedToday) return {open:false,msg:"Today's menu not yet published. Check back soon!"};
   if(cat==='si'){
     const now=new Date(),cut=new Date(); cut.setHours(9,30,0,0);
-    if(now>=cut) return {open:false,msg:'SI Ala Carte orders closed at 9:30 AM. Savoury, Breads & Cookies still open!'};
+    if(now>=cut) return {open:false,msg:'South Indian Ala Carte orders closed at 9:30 AM. Savoury, Breads & Cookies still open!'};
   }
   return {open:true,msg:''};
 }
@@ -1127,7 +1132,7 @@ function orderAll(){
   // Check cutoff only for pure-SI orders
   const allSI=getItems().every(i=>i.id.startsWith('si'));
   const s=getOrderStatus(allSI?'si':null);
-  if(!s.open){toast('⏰',allSI?'SI orders closed':"Orders unavailable",s.msg);return;}
+  if(!s.open){toast('⏰','South Indian Ala Carte closed',s.msg);return;}
   cart={};
   MENU.si.filter(x=>x.avail).slice(0,4).forEach(x=>{cart[x.id]=1;});
   showPage('submenu'); loadSubMenu('si');
@@ -1236,7 +1241,7 @@ function updateCheckBtn(){
   const btn=document.getElementById('sm-checkout-btn');
   if(currentCat==='si' && !s.open){
     btn.disabled=true;
-    btn.textContent='SI orders closed at 9:30 AM — try Savoury, Breads or Cookies';
+    btn.textContent='South Indian Ala Carte orders closed at 9:30 AM';
     btn.style.fontSize='.62rem';
   } else {
     btn.style.fontSize='';
@@ -1252,7 +1257,7 @@ function updateCartBadge(){
 function goCheckout(){
   const allSI2=getItems().every(i=>i.id.startsWith('si'));
   const s2=getOrderStatus(allSI2?'si':null);
-  if(!s2.open){toast('⏰','SI orders closed',s2.msg);return;}
+  if(!s2.open){toast('⏰','South Indian Ala Carte closed',s2.msg);return;}
   if(Object.keys(cart).length<1){toast('⚠️','Add items','Select at least 1 dish.');return;}
   showPage('checkout');
   const items=getItems(),tot=getTotal();
@@ -1498,6 +1503,10 @@ function renderAdminMenuEdit(){
           <input class="ed-photo-inp" id="edph-${d.id}" value="${d.photo||''}" placeholder="Paste Google Drive image URL…" oninput="previewDishPhoto('${d.id}')"/>
           <div class="ed-photo-prev" id="edphp-${d.id}">${d.photo?`<img src="${d.photo}" onerror="this.outerHTML='📷'" alt=""/>`:'📷'}</div>
         </div>
+        <div class="ed-ing-row">
+          <label class="ed-ing-lbl">🌿 Ingredients</label>
+          <textarea class="ed-ing-inp" id="eding-${d.id}" rows="2" placeholder="List ingredients here — shown to customers as a tooltip on the menu…">${INGREDIENTS[d.id]||''}</textarea>
+        </div>
       </div>`).join('');
   });
 }
@@ -1515,12 +1524,14 @@ function saveMenu(){
   ['si','sv','pb','ck'].forEach(cat=>{
     MENU[cat].forEach(d=>{
       const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),
-            t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id);
+            t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id),
+            ing=document.getElementById('eding-'+d.id);
       if(n)d.n=n.value;if(p)d.p=parseInt(p.value)||d.p;
       if(t)d.avail=t.classList.contains('on');if(ph)d.photo=ph.value.trim();
+      if(ing)INGREDIENTS[d.id]=ing.value.trim();
     });
   });
-  renderBanner();toast('💾','Menu saved!','Prices, photos and availability updated.');
+  renderBanner();toast('💾','Menu saved!','Dishes, prices, photos & ingredients updated.');
 }
 function switchAdminTab(name,btn){
   document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
