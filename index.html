@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v13</title>
+<title>BYOD — Bring Your Own Dabba v14</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -496,7 +496,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v13.0</span>
+      <span class="ver-badge" id="ver-badge">v14.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -750,7 +750,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v13.0</span>
+          <span class="ver-badge">v14.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -759,6 +759,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="atab" onclick="switchAdminTab('kitchen-sheet',this)">🍳 Kitchen Sheet</button>
         <button class="atab" onclick="switchAdminTab('menu',this)">✏️ Menu</button>
         <button class="atab" onclick="switchAdminTab('broadcast',this)">📢 Broadcast</button>
+        <button class="atab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
       </div>
       <div class="asec on" id="atab-orders">
         <div style="display:flex;align-items:center;justify-content:space-between;margin:9px 0 8px"><div style="font-size:.65rem;color:var(--muted)">Tap <b>Publish Menu</b> each morning to open orders</div><button id="pub-menu-btn" onclick="publishMenu()" style="background:rgba(78,158,107,.15);border:1px solid rgba(78,158,107,.3);border-radius:8px;padding:5px 11px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish Menu</button></div><div class="stats-grid" style="margin-top:0">
@@ -933,7 +934,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v13.0 — Bring Your Own Dabba
+// BYOD v14.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
