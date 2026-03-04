@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v9</title>
+<title>BYOD — Bring Your Own Dabba v11</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -378,6 +378,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .ocbtn.t{border-color:var(--tele);color:var(--tele)}
 
 /* edit menu */
+.ed-photo-hint{font-size:.62rem;color:#f59e0b;line-height:1.5;margin-top:3px;padding:6px 8px;background:rgba(245,158,11,.07);border-radius:6px}
 .ed-ing-row{margin-top:7px}
 .ed-ing-lbl{display:block;font-size:.6rem;font-weight:700;letter-spacing:.05em;color:var(--saff);margin-bottom:4px;text-transform:uppercase}
 .ed-ing-inp{width:100%;background:var(--surf);border:1px solid rgba(244,163,37,.18);border-radius:7px;padding:7px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.7rem;line-height:1.5;resize:vertical;min-height:52px;outline:none;box-sizing:border-box}
@@ -495,7 +496,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v9.0</span>
+      <span class="ver-badge" id="ver-badge">v11.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -620,7 +621,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
           <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
           <div class="fld"><label>Flat Number</label><input id="cf-flat" placeholder="e.g. H-302"/></div>
-          <div class="fld"><label>Portions</label><select id="cf-portions"><option>10 portions</option><option>1 portion</option><option>2 portions</option><option>3 portions</option><option>4 portions</option></select></div>
+          <div class="fld"><label>Portions</label><select id="cf-portions"><option>1 portion</option><option>2 portions</option><option>3 portions</option><option>4 portions</option><option>5 portions</option></select></div>
           <div class="fld"><label>Drop-off Point</label><select id="cf-drop"><option>H-002 (Direct)</option><option>Exit Gate Security</option></select></div>
           
         </div>
@@ -749,7 +750,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v9.0</span>
+          <span class="ver-badge">v11.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -760,7 +761,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="atab" onclick="switchAdminTab('broadcast',this)">📢 Broadcast</button>
       </div>
       <div class="asec on" id="atab-orders">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin:9px 0 8px"><div style="font-size:.65rem;color:var(--muted)">Tap <b>Publish Menu</b> each morning to open orders</div><button onclick="publishMenu()" style="background:rgba(78,158,107,.15);border:1px solid rgba(78,158,107,.3);border-radius:8px;padding:5px 11px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish Menu</button></div><div class="stats-grid" style="margin-top:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:9px 0 8px"><div style="font-size:.65rem;color:var(--muted)">Tap <b>Publish Menu</b> each morning to open orders</div><button id="pub-menu-btn" onclick="publishMenu()" style="background:rgba(78,158,107,.15);border:1px solid rgba(78,158,107,.3);border-radius:8px;padding:5px 11px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish Menu</button></div><div class="stats-grid" style="margin-top:0">
           <div class="sbox"><div class="sbn s" id="st-orders">0</div><div class="sbl">Orders</div></div>
           <div class="sbox"><div class="sbn g" id="st-rev">₹0</div><div class="sbl">Revenue</div></div>
           <div class="sbox"><div class="sbn t" id="st-subs">0</div><div class="sbl">Tele Linked</div></div>
@@ -911,11 +912,27 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
-// BYOD v3.0 — Bring Your Own Dabba
-// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// BYOD v11.0 — Bring Your Own Dabba
+// Persistent storage: localStorage for menu, config, ingredients
+// Payment screenshots forwarded to Telegram as photo
+// ═══════════════════════════════════════════════════════════════
 
-const INGREDIENTS = {
+// ── localStorage keys ────────────────────────────────────────
+const LS = {
+  MENU:       'byod_menu',
+  INGR:       'byod_ingredients',
+  TELE:       'byod_tele_config',
+  ORDERS:     'byod_orders',
+  MOMENTS:    'byod_moments',
+  PUBLISHED:  'byod_published',
+};
+
+function lsSave(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){ console.warn('LS save fail',e); } }
+function lsLoad(key, fallback){ try{ const v=localStorage.getItem(key); return v!==null?JSON.parse(v):fallback; }catch(e){ return fallback; } }
+
+// ── Default ingredient data ──────────────────────────────────
+const DEFAULT_INGREDIENTS = {
   si1:'Toor dal, tomatoes, tamarind, drumstick, carrots, curry leaves, mustard seeds, coconut oil.',
   si2:'Yam, raw banana, drumstick, beans, coconut, yogurt, turmeric, green chilli, coconut oil.',
   si3:'Chana dal, raw banana, yam, fresh coconut, cumin, curry leaves, coconut oil.',
@@ -933,86 +950,84 @@ const INGREDIENTS = {
   ck3:'Wheat, oats, flax seeds, sunflower seeds, sesame — dense and nutritious.',
   ck4:'Fresh coconut, jaggery, cardamom — traditional 3-ingredient sweet.',
 };
+let INGREDIENTS = lsLoad(LS.INGR, {...DEFAULT_INGREDIENTS});
 
-let MENU = {
+// ── Default menu ──────────────────────────────────────────────
+const DEFAULT_MENU = {
   si:[
-    {id:'si1',e:'🥘',n:'Sambar',d:'Lentil & vegetable stew with tamarind. 150g.',p:60,avail:true,photo:''},
-    {id:'si2',e:'🌿',n:'Avial',d:'Mixed seasonal vegetables in coconut-yogurt gravy. 150g.',p:80,avail:true,photo:''},
-    {id:'si3',e:'🍛',n:'Kootu',d:'Lentil & vegetable dry curry with fresh coconut. 150g.',p:60,avail:true,photo:''},
-    {id:'si4',e:'🌶️',n:'Vatha Kuzhambu',d:'Tangy tamarind gravy with sun-dried vegetables. 150g.',p:60,avail:true,photo:''},
-    {id:'si5',e:'🍋',n:'Rasam',d:'Digestive pepper-tamarind broth. 150g.',p:40,avail:true,photo:''},
-    {id:'si6',e:'🥦',n:'Poriyal',d:'Seasonal vegetable stir-fry with coconut & mustard. 150g.',p:50,avail:true,photo:''},
+    {id:'si1',e:'🥘',n:'Sambar',p:60,avail:true,photo:''},
+    {id:'si2',e:'🌿',n:'Avial',p:80,avail:true,photo:''},
+    {id:'si3',e:'🍛',n:'Kootu',p:60,avail:true,photo:''},
+    {id:'si4',e:'🌶️',n:'Vatha Kuzhambu',p:60,avail:true,photo:''},
+    {id:'si5',e:'🍋',n:'Rasam',p:40,avail:true,photo:''},
+    {id:'si6',e:'🥦',n:'Poriyal',p:50,avail:true,photo:''},
   ],
   sv:[
-    {id:'sv1',e:'🥪',n:'Masala Oats Upma',d:'Savoury oats with vegetables and mild spices.',p:70,avail:true,photo:''},
-    {id:'sv2',e:'🫔',n:'Ragi Idli',d:'Finger millet idli with sambar & chutney.',p:60,avail:true,photo:''},
-    {id:'sv3',e:'🥞',n:'Mixed Veg Dosa',d:'Crispy dosa with mixed vegetable filling.',p:80,avail:true,photo:''},
+    {id:'sv1',e:'🥪',n:'Masala Oats Upma',p:70,avail:true,photo:''},
+    {id:'sv2',e:'🫔',n:'Ragi Idli',p:60,avail:true,photo:''},
+    {id:'sv3',e:'🥞',n:'Mixed Veg Dosa',p:80,avail:true,photo:''},
   ],
   pb:[
-    {id:'pb1',e:'🫓',n:'Methi Parantha',d:'Whole wheat fenugreek flatbread with ghee. 2 pcs.',p:70,avail:true,photo:''},
-    {id:'pb2',e:'🥕',n:'Aloo Parantha',d:'Spiced potato stuffed flatbread. 2 pcs.',p:75,avail:true,photo:''},
-    {id:'pb3',e:'🍝',n:'Jain Pasta',d:'No-onion no-garlic tomato pasta.',p:90,avail:true,photo:''},
+    {id:'pb1',e:'🫓',n:'Methi Parantha',p:70,avail:true,photo:''},
+    {id:'pb2',e:'🥕',n:'Aloo Parantha',p:75,avail:true,photo:''},
+    {id:'pb3',e:'🍝',n:'Jain Pasta',p:90,avail:true,photo:''},
   ],
   ck:[
-    {id:'ck1',e:'🍪',n:'Ragi Jaggery Cookies',d:'Finger millet cookies with jaggery. 4 pcs.',p:80,avail:true,photo:''},
-    {id:'ck2',e:'🍞',n:'Whole Wheat Sourdough',d:'Slow-fermented sourdough loaf. 200g.',p:120,avail:true,photo:''},
-    {id:'ck3',e:'🥐',n:'Multigrain Bread',d:'Nutritious multigrain bread. 200g.',p:110,avail:true,photo:''},
-    {id:'ck4',e:'🧁',n:'Coconut Ladoo',d:'Traditional coconut ladoo with jaggery. 4 pcs.',p:60,avail:true,photo:''},
+    {id:'ck1',e:'🍪',n:'Ragi Jaggery Cookies',p:80,avail:true,photo:''},
+    {id:'ck2',e:'🍞',n:'Whole Wheat Sourdough',p:120,avail:true,photo:''},
+    {id:'ck3',e:'🥐',n:'Multigrain Bread',p:110,avail:true,photo:''},
+    {id:'ck4',e:'🧁',n:'Coconut Ladoo',p:60,avail:true,photo:''},
   ]
 };
+let MENU = lsLoad(LS.MENU, JSON.parse(JSON.stringify(DEFAULT_MENU)));
 
 let REVIEWS = [
   {name:'Priya M.',flat:'H-204',stars:5,text:'The Avial was absolutely divine — 14 fresh vegetables, you could taste the love! Ordering every week since.',dishes:['Avial','Sambar','Poriyal'],date:'2 days ago'},
   {name:'Ramesh K.',flat:'G-101',stars:5,text:'Authentic South Indian flavours, exactly like home. The Rasam is outstanding. Packaging always clean.',dishes:['Rasam','Kootu'],date:'4 days ago'},
   {name:'Sunita & Arun',flat:'H-310',stars:5,text:'No onion or garlic — perfect for strict Jains. The only home-cooked option in our complex.',dishes:['Vatha Kuzhambu','Sambar'],date:'1 week ago'},
   {name:'Deepa V.',flat:'F-205',stars:4,text:'Ragi cookies are our family favourite. Kids love them.',dishes:['Ragi Cookies','Coconut Ladoo'],date:'1 week ago'},
-  {name:'Anand S.',flat:'H-108',stars:5,text:'Pure gold. Low-flame cooking makes all the difference — vegetables retain their nutrition and flavour.',dishes:['Avial','Kootu','Rasam'],date:'2 weeks ago'},
+  {name:'Anand S.',flat:'H-108',stars:5,text:'Pure gold. Low-flame cooking makes all the difference.',dishes:['Avial','Kootu','Rasam'],date:'2 weeks ago'},
 ];
 
 let cart={}, currentCat='si', orders=[], teleLinked=false, webPushOk=false;
 let teleUser='', subs=0, selectedStars=5, kitchenMoments=[];
 
-// ── Order cutoff ─────────────────────────────────
-let menuPublishedToday = false;
-function isOrderOpen(){
-  if(!menuPublishedToday) return false;
-  const now=new Date(), cut=new Date(); cut.setHours(9,30,0,0);
-  return now < cut;
+// ── Telegram config — loaded from localStorage ───────────────
+const TELE_CONFIG = lsLoad(LS.TELE, { BOT_TOKEN:'', ADMIN_CHAT_ID:'' });
+function teleReady(){
+  return !!(TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.BOT_TOKEN.includes(':') &&
+            TELE_CONFIG.ADMIN_CHAT_ID && TELE_CONFIG.ADMIN_CHAT_ID.length>3);
 }
+
+// ── Order cutoff ─────────────────────────────────────────────
+let menuPublishedToday = lsLoad(LS.PUBLISHED, false);
+
 function getOrderStatus(cat){
-  // cat='si' = South Indian Ala Carte, closes at 9:30 AM
-  // All other categories open all day once menu is published
-  if(!menuPublishedToday) return {open:false,msg:"Today's menu not yet published. Check back soon!"};
+  if(!menuPublishedToday) return {open:false,msg:"Today's menu not published yet. Check back soon!"};
   if(cat==='si'){
-    const now=new Date(),cut=new Date(); cut.setHours(9,30,0,0);
+    const now=new Date(), cut=new Date(); cut.setHours(9,30,0,0);
     if(now>=cut) return {open:false,msg:'South Indian Ala Carte orders closed at 9:30 AM. Savoury, Breads & Cookies still open!'};
   }
   return {open:true,msg:''};
 }
 function updateOrderState(){
-  // Check if cart has only SI items — if so apply cutoff
-  const siOnly = Object.keys(cart).length>0 && Object.keys(cart).every(id=>id.startsWith('si'));
-  const catToCheck = (currentCat==='si' || siOnly) ? 'si' : null;
+  const siOnly=Object.keys(cart).length>0 && Object.keys(cart).every(id=>id.startsWith('si'));
+  const catToCheck=(currentCat==='si'||siOnly)?'si':null;
   const s=getOrderStatus(catToCheck);
   const pb=document.getElementById('placeBtn');
   const cb=document.getElementById('order-closed-banner');
   const sb=document.getElementById('sm-checkout-btn');
   if(pb){ pb.disabled=!s.open; pb.style.opacity=s.open?'1':'.45'; }
   if(cb){ cb.style.display=s.open?'none':'block'; if(!s.open) cb.textContent=s.msg; }
-  if(sb){ sb.disabled=!s.open && Object.keys(cart).length<1; }
+  if(sb && !s.open && currentCat==='si') sb.disabled=true;
 }
 
-// ── Telegram ─────────────────────────────────────
-const TELE_CONFIG = { BOT_TOKEN:'', ADMIN_CHAT_ID:'' };
-function teleReady(){
-  return !!(TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.BOT_TOKEN.includes(':') &&
-            TELE_CONFIG.ADMIN_CHAT_ID && TELE_CONFIG.ADMIN_CHAT_ID.length > 3);
-}
+// ── Telegram: text message ────────────────────────────────────
 async function telegramSend(chatId, text){
-  if(!TELE_CONFIG.BOT_TOKEN || !chatId) return false;
+  if(!TELE_CONFIG.BOT_TOKEN||!chatId) return false;
   try{
     const r=await fetch('https://api.telegram.org/bot'+TELE_CONFIG.BOT_TOKEN+'/sendMessage',{
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({chat_id:String(chatId),text,parse_mode:'HTML'})
     });
     const d=await r.json();
@@ -1020,14 +1035,43 @@ async function telegramSend(chatId, text){
     return d.ok;
   }catch(e){ console.warn('Telegram fetch failed:',e); return false; }
 }
-async function teleNotifyAdmin(o){
+
+// ── Telegram: send photo (base64) ────────────────────────────
+async function telegramSendPhoto(chatId, base64DataUrl, caption){
+  if(!TELE_CONFIG.BOT_TOKEN||!chatId||!base64DataUrl) return false;
+  try{
+    // Convert base64 dataURL to Blob
+    const res=await fetch(base64DataUrl);
+    const blob=await res.blob();
+    const form=new FormData();
+    form.append('chat_id', String(chatId));
+    form.append('photo', blob, 'payment.jpg');
+    if(caption) form.append('caption', caption);
+    const r=await fetch('https://api.telegram.org/bot'+TELE_CONFIG.BOT_TOKEN+'/sendPhoto',{
+      method:'POST', body:form
+    });
+    const d=await r.json();
+    if(!d.ok) console.warn('Telegram photo:',d.description);
+    return d.ok;
+  }catch(e){ console.warn('Telegram photo failed:',e); return false; }
+}
+
+// ── Telegram notification flows ───────────────────────────────
+async function teleNotifyAdmin(o, screenshotDataUrl){
   if(!teleReady()) return false;
   const items=o.items.map(i=>'  '+i.e+' '+i.n+' x'+i.qty+' — Rs.'+(i.p*i.qty)).join('\n');
-  return telegramSend(TELE_CONFIG.ADMIN_CHAT_ID,
+  const msg=
     '🛒 <b>New Order — '+o.oid+'</b>\n\n'+
     '👤 '+o.name+'\n📱 '+(o.phone||'—')+'\n🏠 Flat '+o.flat+'\n📍 Drop: '+o.drop+'\n\n'+
     '<b>Items:</b>\n'+items+'\n\n'+
-    '💰 Rs.'+o.total+' · '+o.portions+'\n⏰ Expect dabba by 11:30 AM');
+    '💰 Rs.'+o.total+' · '+o.portions+'\n⏰ Expect dabba by 11:30 AM';
+  const textSent=await telegramSend(TELE_CONFIG.ADMIN_CHAT_ID, msg);
+  // Send screenshot as photo if available
+  if(screenshotDataUrl && textSent){
+    await telegramSendPhoto(TELE_CONFIG.ADMIN_CHAT_ID, screenshotDataUrl,
+      '💳 Payment screenshot — '+o.name+' ('+o.oid+')');
+  }
+  return textSent;
 }
 async function teleNotifyAdminDabba(o){
   if(!teleReady()) return false;
@@ -1051,10 +1095,9 @@ async function telegramBroadcast(text){
   return ids.length;
 }
 
-// ── Alert log ─────────────────────────────────────
+// ── Notifications log ─────────────────────────────────────────
 const notifLog=[
-  {ico:'🍲',title:"Today's menu is live!",body:'Sambar, Avial, Kootu, Rasam ready. Order by 9:30 AM.',time:'7:30 AM · Today',via:'t',unread:true},
-  {ico:'⏰',title:'Order deadline in 30 min',body:'Place order before 9:30 AM cutoff.',time:'9:00 AM · Yesterday',via:'t',unread:false},
+  {ico:'🍲',title:"Today's menu is live!",body:'Order by 9:30 AM for South Indian.',time:'7:30 AM · Today',via:'t',unread:true},
   {ico:'✅',title:'Order #BYOD-1041 confirmed',body:'Dabba packed and ready!',time:'12:30 PM · Yesterday',via:'t',unread:false},
 ];
 function addAlert(ico,via,title,body){
@@ -1064,18 +1107,18 @@ function addAlert(ico,via,title,body){
   if(webPushOk&&Notification.permission==='granted') new Notification(title,{body});
 }
 
-// ── Admin triple-tap access ───────────────────────
+// ── Admin triple-tap ──────────────────────────────────────────
 let _tapC=0,_tapT=null;
 function handleAdminTap(){
-  _tapC++; clearTimeout(_tapT);
+  _tapC++;clearTimeout(_tapT);
   if(_tapC>=3){_tapC=0;openAdminModal();}
   else _tapT=setTimeout(()=>{_tapC=0;},600);
 }
 
-// ── Footer BYOD Review — single tap=reviews, triple tap=admin
+// ── Footer Review — single=reviews, triple=admin ──────────────
 let _rTapC=0,_rTapT=null;
 function handleReviewFooterTap(){
-  _rTapC++; clearTimeout(_rTapT);
+  _rTapC++;clearTimeout(_rTapT);
   if(_rTapC>=3){_rTapC=0;openAdminModal();}
   else{
     _rTapT=setTimeout(()=>{
@@ -1086,15 +1129,15 @@ function handleReviewFooterTap(){
 }
 
 function openAdminModal(){
-  const m=document.getElementById('admin-modal'); m.style.display='flex';
-  const inp=document.getElementById('admin-pw-inp'); inp.value='';
+  const m=document.getElementById('admin-modal');m.style.display='flex';
+  const inp=document.getElementById('admin-pw-inp');inp.value='';
   document.getElementById('admin-pw-err').textContent='';
   setTimeout(()=>inp.focus(),120);
 }
-function closeAdminModal(){ document.getElementById('admin-modal').style.display='none'; }
+function closeAdminModal(){document.getElementById('admin-modal').style.display='none';}
 function checkAdminPw(){
   const val=document.getElementById('admin-pw-inp').value;
-  if(val==='ZXC'){ closeAdminModal(); showPage('admin'); renderAdmin(); }
+  if(val==='ZXC'){closeAdminModal();showPage('admin');renderAdmin();}
   else{
     document.getElementById('admin-pw-err').textContent='Incorrect password. Try again.';
     document.getElementById('admin-pw-inp').value='';
@@ -1102,21 +1145,62 @@ function checkAdminPw(){
   }
 }
 
-// ── Init ─────────────────────────────────────────
+// ── Init ─────────────────────────────────────────────────────
 function init(){
   const d=new Date();
   const hdr=document.getElementById('hdrDate');
   if(hdr) hdr.textContent=d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
   const adm=document.getElementById('admDate');
   if(adm) adm.textContent=d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  menuPublishedToday=true; // demo: menu is live; in production set via publishMenu()
-  renderBanner(); updateOrderState(); renderNotifFeed();
-  renderAdminMenuEdit(); renderReviews(); renderKitchenGrid();
-  countdown(); setInterval(countdown,1000); setInterval(updateOrderState,30000);
+
+  // Restore Telegram config inputs from saved config
+  const tokEl=document.getElementById('cfg-token');
+  const cidEl=document.getElementById('cfg-chatid');
+  if(tokEl && TELE_CONFIG.BOT_TOKEN) tokEl.value=TELE_CONFIG.BOT_TOKEN;
+  if(cidEl && TELE_CONFIG.ADMIN_CHAT_ID) cidEl.value=TELE_CONFIG.ADMIN_CHAT_ID;
+  if(TELE_CONFIG.BOT_TOKEN){
+    const st=document.getElementById('cfg-status');
+    if(st) st.textContent='✅ Telegram configured';
+  }
+
+  // Restore publish state + button label
+  syncPublishBtn();
+
+  // Restore orders
+  orders=lsLoad(LS.ORDERS,[]);
+
+  // Restore kitchen moments
+  kitchenMoments=lsLoad(LS.MOMENTS,[]);
+
+  renderBanner();
+  updateOrderState();
+  renderNotifFeed();
+  renderAdminMenuEdit();
+  renderReviews();
+  renderKitchenGrid();
+  countdown();
+  setInterval(countdown,1000);
+  setInterval(updateOrderState,30000);
   if(location.hash==='#reviews') showPage('reviews');
 }
 
-// ── Banner ────────────────────────────────────────
+function syncPublishBtn(){
+  const btn=document.getElementById('pub-menu-btn');
+  if(!btn) return;
+  if(menuPublishedToday){
+    btn.textContent='🔴 Unpublish Menu';
+    btn.style.background='rgba(239,68,68,.15)';
+    btn.style.borderColor='rgba(239,68,68,.3)';
+    btn.style.color='#f87171';
+  } else {
+    btn.textContent='📢 Publish Menu';
+    btn.style.background='rgba(78,158,107,.15)';
+    btn.style.borderColor='rgba(78,158,107,.3)';
+    btn.style.color='#4e9e6b';
+  }
+}
+
+// ── Banner ────────────────────────────────────────────────────
 function renderBanner(){
   const dishes=MENU.si.filter(x=>x.avail).slice(0,4);
   const tot=dishes.reduce((s,x)=>s+x.p,0);
@@ -1129,32 +1213,45 @@ function renderBanner(){
   });
 }
 function orderAll(){
-  // Check cutoff only for pure-SI orders
-  const allSI=getItems().every(i=>i.id.startsWith('si'));
-  const s=getOrderStatus(allSI?'si':null);
+  const s=getOrderStatus('si');
   if(!s.open){toast('⏰','South Indian Ala Carte closed',s.msg);return;}
   cart={};
   MENU.si.filter(x=>x.avail).slice(0,4).forEach(x=>{cart[x.id]=1;});
-  showPage('submenu'); loadSubMenu('si');
-  toast('✅','Full menu added!','All 4 South Indian dishes in your order.');
+  showPage('submenu');loadSubMenu('si');
+  toast('✅','Full menu added!','All South Indian dishes in your order.');
 }
 function countdown(){
-  const now=new Date(),dl=new Date(); dl.setHours(9,30,0,0);
-  const el=document.getElementById('cd'); if(!el) return;
+  const now=new Date(),dl=new Date();dl.setHours(9,30,0,0);
+  const el=document.getElementById('cd');if(!el)return;
   if(now>dl){el.textContent='Closed';return;}
   const df=dl-now,h=Math.floor(df/3600000),m=Math.floor((df%3600000)/60000),s=Math.floor((df%60000)/1000);
   el.textContent=h+'h '+String(m).padStart(2,'0')+'m '+String(s).padStart(2,'0')+'s';
 }
 
-// ── Ingredient tooltip ────────────────────────────
+// ── Google Photos URL converter ───────────────────────────────
+function convertGoogleUrl(url){
+  if(!url) return '';
+  url=url.trim();
+  if(url.includes('lh3.googleusercontent.com')){
+    url=url.replace(/=[a-zA-Z]\d*$/,'');
+    return url+'=w800';
+  }
+  const driveMatch=url.match(/drive\.google\.com\/file\/d\/([^/?]+)/);
+  if(driveMatch) return 'https://drive.google.com/uc?export=view&id='+driveMatch[1];
+  if(url.includes('drive.google.com/uc')) return url;
+  if(url.includes('photos.app.goo.gl')||url.includes('photos.google.com')) return null;
+  return url;
+}
+
+// ── Ingredient tooltip ────────────────────────────────────────
 function showIngTip(id){
   document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show'));
   const tip=document.getElementById('ing-'+id);
   if(tip) tip.classList.add('show');
 }
-function hideAllIngTips(){ document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show')); }
+function hideAllIngTips(){document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show'));}
 
-// ── Submenu ───────────────────────────────────────
+// ── Submenu ───────────────────────────────────────────────────
 function loadSubMenu(cat){
   currentCat=cat;
   const names={si:'South Indian Àla Carte',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
@@ -1162,23 +1259,24 @@ function loadSubMenu(cat){
   document.getElementById('sm-sub').textContent=MENU[cat].filter(x=>x.avail).length+' items available today';
   document.getElementById('dish-list').innerHTML=MENU[cat].filter(x=>x.avail).map(d=>{
     const sel=!!cart[d.id];
-    const imgHtml=d.photo
-      ? `<img src="${d.photo}" alt="${d.n}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover"/>`
-      : `<span style="position:relative;z-index:1">${d.e}</span>`;
-    const ing=INGREDIENTS[d.id]||d.d;
+    const raw=d.photo||'';
+    const photoUrl=raw?convertGoogleUrl(raw)||raw:'';
+    const imgHtml=photoUrl
+      ?`<img src="${photoUrl}" alt="${d.n}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover"/>`
+      :`<span style="position:relative;z-index:1">${d.e}</span>`;
+    const ing=INGREDIENTS[d.id]||'';
     return `<div class="dcard${sel?' sel':''}" id="dc-${d.id}" onclick="toggleDish('${d.id}')">
       <div class="dimg" id="dimg-${d.id}">${imgHtml}</div>
       <div class="dsel-badge">✓</div>
       <div class="dinfo">
         <div class="dname-wrap">
           <span class="dname">${d.n}</span>
-          <button class="ing-btn" onclick="event.stopPropagation();showIngTip('${d.id}')" title="What's in it?">i</button>
+          ${ing?`<button class="ing-btn" onclick="event.stopPropagation();showIngTip('${d.id}')" title="What's in it?">i</button>
           <div class="ing-tip" id="ing-${d.id}">
             <div class="ing-tip-title">What's in it?</div>
             <div class="ing-tip-body">${ing}</div>
-          </div>
+          </div>`:''}
         </div>
-        <div class="ddesc">${d.d}</div>
         <div class="dfoot">
           <div class="dtags">
             <span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span>
@@ -1201,21 +1299,22 @@ function loadSubMenu(cat){
   }).join('');
   document.getElementById('dish-list').addEventListener('click',e=>{
     if(!e.target.closest('.ing-btn')&&!e.target.closest('.ing-tip')) hideAllIngTips();
-  },{capture:true,once:false});
-  updateCheckBtn(); updateOrderState();
+  },{capture:true});
+  updateCheckBtn();updateOrderState();
 }
 
 function uploadDishPhoto(input){
-  const id=input.dataset.dish, f=input.files[0]; if(!f) return;
+  const id=input.dataset.dish,f=input.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
     for(const cat of ['si','sv','pb','ck']){
       const dish=MENU[cat].find(d=>d.id===id);
       if(dish){dish.photo=ev.target.result;break;}
     }
+    lsSave(LS.MENU,MENU);
     const w=document.getElementById('dimg-'+id);
     if(w) w.innerHTML=`<img src="${ev.target.result}" alt="" style="width:100%;height:100%;object-fit:cover"/>`;
-    toast('📷','Photo added!','Dish photo updated.');
+    toast('📷','Photo saved!','Dish photo stored in this browser.');
   };
   r.readAsDataURL(f);
 }
@@ -1223,10 +1322,10 @@ function uploadDishPhoto(input){
 function toggleDish(id){
   if(cart[id]){delete cart[id];document.getElementById('dc-'+id).classList.remove('sel');}
   else{cart[id]=1;document.getElementById('dc-'+id).classList.add('sel');}
-  updateCheckBtn(); updateCartBadge();
+  updateCheckBtn();updateCartBadge();
 }
 function chgQty(id,delta){
-  if(!cart[id]) return;
+  if(!cart[id])return;
   cart[id]=Math.max(1,(cart[id]||1)+delta);
   const dish=findDish(id);
   document.getElementById('qn-'+id).textContent=cart[id];
@@ -1236,15 +1335,22 @@ function chgQty(id,delta){
 function findDish(id){return [...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d=>d.id===id);}
 function getItems(){return Object.keys(cart).map(id=>({...findDish(id),qty:cart[id]}));}
 function getTotal(){return getItems().reduce((s,i)=>s+i.p*i.qty,0);}
+
 function updateCheckBtn(){
-  const s=getOrderStatus(currentCat),n=Object.keys(cart).length;
+  const s=getOrderStatus(currentCat);
+  const n=Object.keys(cart).length;
+  const siCount=Object.keys(cart).filter(id=>id.startsWith('si')).length;
   const btn=document.getElementById('sm-checkout-btn');
-  if(currentCat==='si' && !s.open){
+  btn.style.fontSize='';
+  if(currentCat==='si'&&!s.open){
     btn.disabled=true;
     btn.textContent='South Indian Ala Carte orders closed at 9:30 AM';
     btn.style.fontSize='.62rem';
+  } else if(currentCat==='si'&&siCount>0&&siCount<2&&n===siCount){
+    btn.disabled=true;
+    btn.textContent='Select 1 more South Indian dish (min 2)';
+    btn.style.fontSize='.65rem';
   } else {
-    btn.style.fontSize='';
     btn.disabled=n<1;
     btn.textContent=n<1?'Add items to order…':`Checkout (${n} items) →`;
   }
@@ -1252,18 +1358,23 @@ function updateCheckBtn(){
 }
 function updateCartBadge(){
   const n=Object.keys(cart).length,b=document.getElementById('cbadge');
-  b.textContent=n; b.style.display=n?'flex':'none';
+  b.textContent=n;b.style.display=n?'flex':'none';
 }
 function goCheckout(){
-  const allSI2=getItems().every(i=>i.id.startsWith('si'));
-  const s2=getOrderStatus(allSI2?'si':null);
-  if(!s2.open){toast('⏰','South Indian Ala Carte closed',s2.msg);return;}
+  const allSI=getItems().every(i=>i.id.startsWith('si'));
+  const s=getOrderStatus(allSI?'si':null);
+  if(!s.open){toast('⏰','South Indian Ala Carte closed',s.msg);return;}
+  const siCount=getItems().filter(i=>i.id.startsWith('si')).length;
+  const nonSiCount=getItems().filter(i=>!i.id.startsWith('si')).length;
+  if(siCount>0&&siCount<2&&nonSiCount===0){
+    toast('⚠️','Min 2 for South Indian','Select at least 2 South Indian dishes.');return;
+  }
   if(Object.keys(cart).length<1){toast('⚠️','Add items','Select at least 1 dish.');return;}
   showPage('checkout');
   const items=getItems(),tot=getTotal();
   document.getElementById('co-items').innerHTML=items.map(i=>`
     <div class="cline">
-      <div class="climg">${i.photo?`<img src="${i.photo}" onerror="this.outerHTML='<span>${i.e}</span>'" alt=""/>`:`<span>${i.e}</span>`}</div>
+      <div class="climg">${i.photo?`<img src="${convertGoogleUrl(i.photo)||i.photo}" onerror="this.outerHTML='<span>${i.e}</span>'" alt=""/>`:`<span>${i.e}</span>`}</div>
       <div class="clinfo"><div class="clname">${i.n}</div><div class="clqty">× ${i.qty}</div></div>
       <div class="clprice">Rs.${i.p*i.qty}</div>
     </div>`).join('');
@@ -1271,14 +1382,16 @@ function goCheckout(){
   document.getElementById('co-tot').textContent='Rs.'+tot;
 }
 
-// ── Checkout ──────────────────────────────────────
+// ── Checkout ──────────────────────────────────────────────────
+let _screenshotDataUrl='';
 function handleSS(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
+    _screenshotDataUrl=ev.target.result;
     document.getElementById('ss-img').src=ev.target.result;
     document.getElementById('ss-prev').style.display='block';
-    toast('📎','Screenshot uploaded!','Payment proof attached.');
+    toast('📎','Screenshot attached!','Will be sent to host via Telegram.');
   };
   r.readAsDataURL(f);
 }
@@ -1291,12 +1404,12 @@ function linkTele(ctx){
   const val=(inp.value||'').trim();
   if(!val||!val.startsWith('@')){toast('⚠️','Invalid username','Enter your @username');return;}
   teleLinked=true;teleUser=val;subs++;
-  const st=document.getElementById('st-subs');if(st) st.textContent=subs;
+  const st=document.getElementById('st-subs');if(st)st.textContent=subs;
   document.getElementById('pill-tele').classList.add('at');
   document.getElementById('pill-tele-lbl').textContent='Linked '+val;
-  if(ctx==='co'){const el=document.getElementById('co-tele-linked');if(el) el.style.display='flex';}
-  else{const el=document.getElementById('tele-linked-main');if(el) el.style.display='flex';}
-  addAlert('✈️','t','Telegram linked',val+' connected to BYOD bot.');
+  if(ctx==='co'){const el=document.getElementById('co-tele-linked');if(el)el.style.display='flex';}
+  else{const el=document.getElementById('tele-linked-main');if(el)el.style.display='flex';}
+  addAlert('✈️','t','Telegram linked',val+' connected.');
   toast('✈️','Telegram linked!','Alerts will go to '+val);
 }
 function openTeleBot(){
@@ -1304,16 +1417,17 @@ function openTeleBot(){
   toast('✈️','Opening Telegram…','Search @BYODSattvicMeals and send /start');
 }
 
+// ── Place order ───────────────────────────────────────────────
 async function placeOrder(){
-  const s=getOrderStatus();
-  if(!s.open){toast('⏰','Orders closed',s.msg);return;}
+  const allSI=getItems().every(i=>i.id.startsWith('si'));
+  const s=getOrderStatus(allSI?'si':null);
+  if(!s.open){toast('⏰','South Indian Ala Carte closed',s.msg);return;}
   const name=document.getElementById('cf-name').value.trim();
   const phone=document.getElementById('cf-phone').value.trim();
   const flat=document.getElementById('cf-flat').value.trim();
   if(!name){toast('⚠️','Name required','Enter your name.');return;}
   if(!flat){toast('⚠️','Flat required','Enter your flat number.');return;}
-  const ssImg=document.getElementById('ss-img');
-  if(!ssImg.src||ssImg.src===location.href){toast('⚠️','Payment screenshot needed','Upload screenshot first.');return;}
+  if(!_screenshotDataUrl){toast('⚠️','Payment screenshot needed','Upload screenshot first.');return;}
   const btn=document.getElementById('placeBtn');
   btn.disabled=true;btn.innerHTML='<span class="spin"></span>Placing…';
   await new Promise(r=>setTimeout(r,800));
@@ -1323,11 +1437,20 @@ async function placeOrder(){
   const drop=document.getElementById('cf-drop').value;
   const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
   const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
-  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',time:new Date()};
+  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,
+                status:'confirmed',time:new Date().toISOString(),screenshotSent:false};
   orders.push(order);
-  const adminSent=await teleNotifyAdmin(order);
+  lsSave(LS.ORDERS,orders);
+
+  // Send order text + screenshot photo to admin Telegram
+  const adminSent=await teleNotifyAdmin(order,_screenshotDataUrl);
+  if(adminSent) order.screenshotSent=true;
+  lsSave(LS.ORDERS,orders);
+
   const configured=teleReady();
-  addAlert('✅','t','New order — '+name,oid+' · Rs.'+total+' · Flat '+flat+(adminSent?' · Host notified ✈️':''));
+  addAlert('✅','t','New order — '+name,
+    oid+' · Rs.'+total+' · Flat '+flat+(adminSent?' · Host notified ✈️ + 📸':''));
+
   btn.disabled=false;btn.innerHTML='🎉 Place Order & Notify Host';
   document.getElementById('placeBtn').style.display='none';
   document.getElementById('notifyDabbaBtn').style.display='flex';
@@ -1335,29 +1458,34 @@ async function placeOrder(){
   succ.style.display='block';succ.scrollIntoView({behavior:'smooth'});
   const tcBox=document.getElementById('tele-confirm-box');
   tcBox.style.display='block';
-  tcBox.querySelector('.tc-conf-t').textContent=adminSent?'✈️ Host notified on Telegram!':configured?'⚠️ Telegram failed — check token':'📋 Order saved in Admin panel';
+  tcBox.querySelector('.tc-conf-t').textContent=adminSent
+    ?'✈️ Host notified on Telegram + payment screenshot sent!'
+    :configured?'⚠️ Telegram failed — check bot token'
+    :'📋 Order saved. Configure Telegram in Admin → Settings.';
   tcBox.querySelector('.tc-conf-b').textContent=adminSent
     ?'Tap below to message the bot — you\'ll get an alert when your dabba is packed.'
-    :configured?'Order recorded. Host will see it in Admin panel.'
-    :'To enable Telegram: Admin → Settings → enter Bot Token + Chat ID.';
+    :configured?'Order is recorded in Admin panel.'
+    :'Admin → Settings → enter Bot Token + Admin Chat ID to enable.';
   document.getElementById('track-steps').innerHTML=`
     <div class="tstep"><div class="tsi done">✅</div><div><div class="tst">Order confirmed ${oid}</div><div class="tstime">Just now${adminSent?' · Host notified ✈️':''}</div></div></div>
-    <div class="tstep"><div class="tsi done">💳</div><div><div class="tst">Payment screenshot received</div><div class="tstime">Will be verified</div></div></div>
+    <div class="tstep"><div class="tsi done">💳</div><div><div class="tst">Payment screenshot${adminSent?' sent to host via Telegram':' attached'}</div><div class="tstime">Will be verified</div></div></div>
     <div class="tstep"><div class="tsi pend">📦</div><div><div class="tst">Drop your dabba by 11:30 AM</div><div class="tstime">${drop}</div></div></div>
     <div class="tstep"><div class="tsi pend">🍲</div><div><div class="tst">Meal being cooked</div><div class="tstime">Ready ~12:30 PM</div></div></div>
     <div class="tstep"><div class="tsi pend">🎉</div><div><div class="tst">Dabba packed — you'll be notified on Telegram</div><div class="tstime">One tap below to activate</div></div></div>`;
   renderAdmin();
-  toast(adminSent?'✈️':'✅','Order placed, '+name+'!',adminSent?'Host notified on Telegram':'Rs.'+total+' recorded in Admin');
+  toast(adminSent?'✈️':'✅','Order placed, '+name+'!',
+    adminSent?'Host notified + screenshot sent via Telegram':'Recorded in Admin panel');
 }
 
 async function notifyDabbaDropped(){
   const order=orders.slice().reverse().find(o=>o.status==='confirmed')||orders[orders.length-1];
   const sent=order?await teleNotifyAdminDabba(order):false;
-  addAlert('📦','t','Dabba dropped!',(order?order.name+' (Flat '+order.flat+') ':'')+' dropped their dabba'+(sent?' · Host notified ✈️':''));
-  toast('📦',sent?'Host notified! ✈️':'Dabba drop recorded',sent?'Telegram sent to host':'Logged in Admin panel.');
+  addAlert('📦','t','Dabba dropped!',(order?order.name+' (Flat '+order.flat+') ':'')+' dropped dabba'+(sent?' · Host notified ✈️':''));
+  toast('📦',sent?'Host notified! ✈️':'Dabba drop recorded',sent?'Telegram sent':'Logged in Admin.');
 }
+
 function resetAll(){
-  cart={};
+  cart={};_screenshotDataUrl='';
   document.getElementById('placeBtn').style.display='flex';
   document.getElementById('notifyDabbaBtn').style.display='none';
   document.getElementById('success-sec').style.display='none';
@@ -1367,7 +1495,7 @@ function resetAll(){
   updateCartBadge();showPage('home');
 }
 
-// ── Kitchen ───────────────────────────────────────
+// ── Kitchen ───────────────────────────────────────────────────
 function loadYT(){
   const url=document.getElementById('yt-url-inp').value.trim();
   if(!url){toast('⚠️','No URL','Paste a YouTube live URL first.');return;}
@@ -1386,18 +1514,21 @@ function loadYT(){
   iframe.allow='autoplay;encrypted-media';
   iframe.style.cssText='width:100%;height:100%;border:none;position:absolute;top:0;left:0';
   wrap.style.position='relative';wrap.appendChild(iframe);
-  toast('▶️','Stream loaded!','YouTube live now showing.');
+  toast('▶️','Stream loaded!','YouTube live showing.');
 }
 function loadDriveAlbum(){
   const url=document.getElementById('drive-album-inp').value.trim();
-  if(!url){toast('⚠️','No link','Paste a Google Drive or Photos link.');return;}
+  if(!url){toast('⚠️','No link','Paste a Google Photos/Drive link.');return;}
   window.open(url,'_blank');
-  toast('📁','Opening album…','Download photos and add via + Add Photo.');
 }
 function addMoments(e){
   Array.from(e.target.files).forEach(f=>{
     const r=new FileReader();
-    r.onload=ev=>{kitchenMoments.push(ev.target.result);renderKitchenGrid();};
+    r.onload=ev=>{
+      kitchenMoments.push(ev.target.result);
+      lsSave(LS.MOMENTS,kitchenMoments);
+      renderKitchenGrid();
+    };
     r.readAsDataURL(f);
   });
 }
@@ -1407,13 +1538,14 @@ function renderKitchenGrid(){
     `<div class="kgi"><img src="${url}" alt="moment ${i}"/><button class="kgi-del" onclick="deleteMoment(${i})">✕</button></div>`
   ).join('')+`<div class="kgi kgi-add" onclick="document.getElementById('moment-inp').click()">📷</div>`;
 }
-function deleteMoment(i){kitchenMoments.splice(i,1);renderKitchenGrid();}
+function deleteMoment(i){kitchenMoments.splice(i,1);lsSave(LS.MOMENTS,kitchenMoments);renderKitchenGrid();}
 
-// ── Admin ─────────────────────────────────────────
+// ── Admin ─────────────────────────────────────────────────────
 function renderAdmin(){
   const stO=document.getElementById('st-orders');if(stO)stO.textContent=orders.length;
   const stR=document.getElementById('st-rev');if(stR)stR.textContent='Rs.'+orders.reduce((s,o)=>s+o.total,0);
   const stS=document.getElementById('st-subs');if(stS)stS.textContent=subs;
+  syncPublishBtn();
   const list=document.getElementById('admin-orders');if(!list)return;
   if(!orders.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:.72rem">No orders yet.</div>';return;}
   list.innerHTML=orders.slice().reverse().map(o=>`
@@ -1432,6 +1564,7 @@ function renderAdmin(){
       </div>
     </div>`).join('');
 }
+
 async function notifyCust(oid){
   const o=orders.find(x=>x.oid===oid);if(!o)return;
   const sent=await teleNotifyCustomer(o);
@@ -1442,12 +1575,9 @@ function markReady(oid){
   const ob=document.getElementById('ob-'+oid);if(ob){ob.textContent='ready';ob.className='ocbadge ready';}
   const rb=document.getElementById('rb-'+oid);if(rb){rb.textContent='✓ Packed';rb.disabled=true;}
   const o=orders.find(x=>x.oid===oid);
-  if(o){o.status='ready';notifyCust(oid);}
+  if(o){o.status='ready';lsSave(LS.ORDERS,orders);notifyCust(oid);}
 }
-async function markAllReady(){
-  orders.forEach(o=>markReady(o.oid));
-  toast('✈️','All customers notified!','Dabba packed alerts sent to everyone.');
-}
+async function markAllReady(){orders.forEach(o=>markReady(o.oid));}
 async function sendDabbaReminder(){
   let sent=0;
   for(const o of orders){
@@ -1456,7 +1586,6 @@ async function sendDabbaReminder(){
       '📦 <b>Drop Dabba Reminder</b>\n\nHi '+o.name+', please drop your dabba at <b>'+o.drop+'</b> by <b>11:30 AM</b>.\n\nYour meal is being freshly prepared! 🍲');
     if(ok)sent++;
   }
-  addAlert('📦','t','Drop reminder sent','Sent to '+orders.length+' customer(s)'+(sent?' · '+sent+' via Telegram':''));
   toast('📦','Reminder sent!',orders.length+' customers notified.');
 }
 async function sendBulk(){
@@ -1465,26 +1594,38 @@ async function sendBulk(){
   const useTele=document.getElementById('bch-tele').classList.contains('on');
   let sent=0;
   if(useTele)sent=await telegramBroadcast('<b>BYOD Kitchen:</b>\n\n'+msg);
-  addAlert('📢',useTele?'t':'w','Broadcast sent',msg.slice(0,80)+(msg.length>80?'…':''));
+  addAlert('📢',useTele?'t':'w','Broadcast sent',msg.slice(0,80));
   toast('📢','Broadcast sent!','Telegram: '+sent+' delivered.');
   document.getElementById('bulk-msg').value='';
 }
+
+// Save bot config + persist to localStorage
 function saveBotConfig(){
   const tok=document.getElementById('cfg-token').value.trim();
   const cid=document.getElementById('cfg-chatid').value.trim();
   if(!tok||!cid){toast('⚠️','Fill both fields','Enter Bot Token and Admin Chat ID.');return;}
   TELE_CONFIG.BOT_TOKEN=tok;TELE_CONFIG.ADMIN_CHAT_ID=cid;
-  document.getElementById('cfg-status').textContent='✅ Saved — Telegram active';
-  toast('✅','Telegram configured!','All notification flows now active.');
-}
-// Publish next day menu — re-enables ordering
-function publishMenu(){
-  menuPublishedToday=true;orders=[];
-  updateOrderState();renderAdmin();
-  toast('📢','Menu published!','Orders are now open until 9:30 AM.');
-  addAlert('🍲','t',"Today's menu is live!",'Orders open. Cutoff at 9:30 AM.');
+  lsSave(LS.TELE,{BOT_TOKEN:tok,ADMIN_CHAT_ID:cid});
+  document.getElementById('cfg-status').textContent='✅ Saved permanently — Telegram active';
+  toast('✅','Telegram saved!','Config stored in browser. Won\'t reset on reload.');
 }
 
+// Publish/Unpublish toggle — persisted
+function publishMenu(){
+  menuPublishedToday=!menuPublishedToday;
+  lsSave(LS.PUBLISHED,menuPublishedToday);
+  if(menuPublishedToday){
+    orders=[];lsSave(LS.ORDERS,[]);
+    addAlert('🍲','t',"Today's menu is live!",'Orders open. SI cutoff at 9:30 AM.');
+    toast('📢','Menu published!','Orders are now open!');
+  } else {
+    toast('🔴','Menu unpublished','Orders closed.');
+    addAlert('🔴','t','Menu unpublished','Ordering disabled.');
+  }
+  syncPublishBtn();updateOrderState();renderAdmin();
+}
+
+// ── Admin — Edit Menu (with ingredients + saved to localStorage) ─────────────
 function renderAdminMenuEdit(){
   ['si','sv','pb','ck'].forEach(cat=>{
     const el=document.getElementById('ed-'+cat);if(!el)return;
@@ -1500,26 +1641,42 @@ function renderAdminMenuEdit(){
           <div class="ed-avail"><button class="tog ${d.avail?'on':''}" id="edt-${d.id}" onclick="this.classList.toggle('on')"></button><span>Available</span></div>
         </div>
         <div class="ed-photo-row">
-          <input class="ed-photo-inp" id="edph-${d.id}" value="${d.photo||''}" placeholder="Paste Google Drive image URL…" oninput="previewDishPhoto('${d.id}')"/>
-          <div class="ed-photo-prev" id="edphp-${d.id}">${d.photo?`<img src="${d.photo}" onerror="this.outerHTML='📷'" alt=""/>`:'📷'}</div>
+          <input class="ed-photo-inp" id="edph-${d.id}" value="${d.photo||''}" placeholder="Paste Google Photos lh3 link or Drive file link…" oninput="previewDishPhoto('${d.id}')"/>
+          <div class="ed-photo-prev" id="edphp-${d.id}">${d.photo?`<img src="${convertGoogleUrl(d.photo)||d.photo}" onerror="this.outerHTML='📷'" alt=""/>`:'📷'}</div>
         </div>
+        <div class="ed-photo-hint" id="edph-hint-${d.id}" style="display:none;font-size:.62rem;color:#f59e0b;line-height:1.5;margin-top:3px;padding:6px 8px;background:rgba(245,158,11,.07);border-radius:6px"></div>
         <div class="ed-ing-row">
           <label class="ed-ing-lbl">🌿 Ingredients</label>
-          <textarea class="ed-ing-inp" id="eding-${d.id}" rows="2" placeholder="List ingredients here — shown to customers as a tooltip on the menu…">${INGREDIENTS[d.id]||''}</textarea>
+          <textarea class="ed-ing-inp" id="eding-${d.id}" rows="2" placeholder="List ingredients — shown to customers as a tooltip on the menu…">${INGREDIENTS[d.id]||''}</textarea>
         </div>
       </div>`).join('');
   });
 }
+
 function previewDishPhoto(id){
-  const url=document.getElementById('edph-'+id).value.trim();
+  const raw=document.getElementById('edph-'+id).value.trim();
   const prev=document.getElementById('edphp-'+id);
-  prev.innerHTML=url?`<img src="${url}" onerror="this.outerHTML='❌'" alt=""/>`:'📷';
+  const hint=document.getElementById('edph-hint-'+id);
+  if(!raw){prev.innerHTML='📷';if(hint)hint.style.display='none';return;}
+  const converted=convertGoogleUrl(raw);
+  if(converted===null){
+    prev.innerHTML='📷';
+    if(hint){hint.innerHTML='⚠️ Google Photos short links can\'t load directly.<br>Open photo → tap ⋮ → <b>Share</b> → copy the <b>lh3.googleusercontent.com</b> URL.';hint.style.display='block';}
+    return;
+  }
+  if(hint)hint.style.display='none';
+  document.getElementById('edph-'+id).value=converted;
+  prev.innerHTML='<img src="'+converted+'" onerror="this.outerHTML=\'❌ Cannot load\'" alt=""/>';
 }
+
 function addDish(cat){
   const emos={si:'🍲',sv:'🥪',pb:'🫓',ck:'🍪'};
-  MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',d:'Description',p:60,avail:true,photo:''});
-  renderAdminMenuEdit();toast('➕','Dish added!','Edit name, price, photo URL then save.');
+  MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',p:60,avail:true,photo:''});
+  lsSave(LS.MENU,MENU);
+  renderAdminMenuEdit();toast('➕','Dish added!','Edit name, price, photo & ingredients then save.');
 }
+
+// Save menu + ingredients — both persisted to localStorage
 function saveMenu(){
   ['si','sv','pb','ck'].forEach(cat=>{
     MENU[cat].forEach(d=>{
@@ -1531,8 +1688,12 @@ function saveMenu(){
       if(ing)INGREDIENTS[d.id]=ing.value.trim();
     });
   });
-  renderBanner();toast('💾','Menu saved!','Dishes, prices, photos & ingredients updated.');
+  lsSave(LS.MENU,MENU);
+  lsSave(LS.INGR,INGREDIENTS);
+  renderBanner();
+  toast('💾','Saved permanently!','Menu, photos & ingredients stored in browser. Won\'t reset on reload.');
 }
+
 function switchAdminTab(name,btn){
   document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
@@ -1542,7 +1703,7 @@ function switchAdminTab(name,btn){
   if(name==='kitchen-sheet')renderKitchenSheet();
 }
 
-// ── Kitchen Sheet ─────────────────────────────────
+// ── Kitchen Sheet ─────────────────────────────────────────────
 function renderKitchenSheet(){
   const sum=document.getElementById('ks-summary'),tal=document.getElementById('ks-tally'),ord=document.getElementById('ks-orders');
   if(!sum||!tal||!ord)return;
@@ -1572,7 +1733,7 @@ function printKitchenSheet(){
   setTimeout(()=>{document.querySelectorAll('.asec').forEach(s=>s.style.display='');switchAdminTab('kitchen-sheet',null);},600);
 }
 
-// ── Reviews ───────────────────────────────────────
+// ── Reviews ───────────────────────────────────────────────────
 function renderReviews(){
   const strip=document.getElementById('reviews-strip');
   if(strip)strip.innerHTML=REVIEWS.map(r=>`
@@ -1605,18 +1766,18 @@ function submitReview(){
   const text=document.getElementById('rev-text').value.trim();
   if(!name||!text){toast('⚠️','Fill in details','Name and review are required.');return;}
   const ordered=orders.find(o=>o.flat===flat);
-  REVIEWS.unshift({name,flat:flat||'—',stars:selectedStars,text,dishes:ordered?ordered.items.map(i=>i.n):['Sattvic meal'],date:'Just now'});
+  REVIEWS.unshift({name,flat:flat||'—',stars:selectedStars,text,dishes:ordered?ordered.items.map(i=>i.n):['BYOD dishes'],date:'Just now'});
   renderReviews();
   ['rev-name','rev-flat','rev-text'].forEach(id=>document.getElementById(id).value='');
-  toast('⭐','Review submitted!','Thank you for your feedback!');
+  toast('⭐','Review submitted!','Thank you!');
 }
 function copyReviewLink(){
   const url=location.href.split('#')[0]+'#reviews';
   navigator.clipboard?.writeText(url).catch(()=>{});
-  toast('🔗','Review link copied!','Share this with customers after delivery.');
+  toast('🔗','Review link copied!','Share with customers after delivery.');
 }
 
-// ── Alerts ────────────────────────────────────────
+// ── Alerts ────────────────────────────────────────────────────
 function renderNotifFeed(){
   const el=document.getElementById('notif-feed');if(!el)return;
   el.innerHTML=notifLog.map(n=>`
@@ -1643,7 +1804,7 @@ function enableWebPush(){
   });
 }
 
-// ── Toast ─────────────────────────────────────────
+// ── Toast ─────────────────────────────────────────────────────
 let _tT;
 function toast(ico,title,body){
   clearTimeout(_tT);
@@ -1656,7 +1817,7 @@ function toast(ico,title,body){
 }
 function hideToast(){document.getElementById('toast').classList.remove('show');}
 
-// ── Nav ───────────────────────────────────────────
+// ── Nav ───────────────────────────────────────────────────────
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
@@ -1667,10 +1828,9 @@ function showPage(name){
   if(name==='admin')renderAdmin();
 }
 
-// Update footer BYOD Review button to use new tap handler
 document.addEventListener('DOMContentLoaded',()=>{
   const nb=document.getElementById('nav-byod');
-  if(nb){ nb.removeAttribute('onclick'); nb.addEventListener('click',handleReviewFooterTap); }
+  if(nb){nb.removeAttribute('onclick');nb.addEventListener('click',handleReviewFooterTap);}
 });
 
 init();
