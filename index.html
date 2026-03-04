@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba</title>
+<title>BYOD — Bring Your Own Dabba v7</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -116,6 +116,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .min-note{margin:8px 11px 0;background:rgba(244,163,37,.06);border:1px solid rgba(244,163,37,.15);border-radius:8px;padding:7px 10px;font-size:.65rem;color:var(--saff);display:flex;align-items:center;gap:4px}
 
 /* dish card */
+
+/* ── Ingredient tooltip ─────────────────── */
+.dname-wrap{position:relative;display:inline-flex;align-items:center;gap:5px}
+.ing-btn{width:16px;height:16px;border-radius:50%;background:rgba(244,163,37,.15);border:1px solid rgba(244,163,37,.3);color:var(--saff);font-size:.55rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
+.ing-tip{position:absolute;left:0;top:calc(100% + 6px);background:#1a1610;border:1px solid rgba(244,163,37,.25);border-radius:10px;padding:10px 12px;width:220px;z-index:50;opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s,transform .18s;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.ing-tip.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.ing-tip-title{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--saff);margin-bottom:6px}
+.ing-tip-body{font-size:.68rem;color:var(--muted);line-height:1.55}
+
 .dcard{margin:8px 11px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.2s;position:relative}
 .dcard:active{transform:scale(.985)}
 .dcard.sel{border-color:var(--green)}
@@ -482,7 +491,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v3.0</span>
+      <span class="ver-badge" id="ver-badge">v7.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -607,8 +616,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
           <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
           <div class="fld"><label>Flat Number</label><input id="cf-flat" placeholder="e.g. H-302"/></div>
-          <div class="fld"><label>Block / Tower</label><input id="cf-block" placeholder="e.g. Block H"/></div>
-          <div class="fld"><label>Apartment Name</label><input id="cf-apt" placeholder="e.g. Green Valley"/></div>
           <div class="fld"><label>Portions</label><select id="cf-portions"><option>1 portion</option><option>2 portions</option><option>3 portions</option><option>4 portions</option></select></div>
           <div class="fld"><label>Drop-off Point</label><select id="cf-drop"><option>H-002 (Direct)</option><option>Exit Gate Security</option></select></div>
           
@@ -737,7 +744,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v3.0</span>
+          <span class="ver-badge">v7.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -748,7 +755,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="atab" onclick="switchAdminTab('broadcast',this)">📢 Broadcast</button>
       </div>
       <div class="asec on" id="atab-orders">
-        <div class="stats-grid" style="margin-top:9px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:9px 0 8px"><div style="font-size:.65rem;color:var(--muted)">Tap <b>Publish Menu</b> each morning to open orders</div><button onclick="publishMenu()" style="background:rgba(78,158,107,.15);border:1px solid rgba(78,158,107,.3);border-radius:8px;padding:5px 11px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish Menu</button></div><div class="stats-grid" style="margin-top:0">
           <div class="sbox"><div class="sbn s" id="st-orders">0</div><div class="sbl">Orders</div></div>
           <div class="sbox"><div class="sbn g" id="st-rev">₹0</div><div class="sbl">Revenue</div></div>
           <div class="sbox"><div class="sbn t" id="st-subs">0</div><div class="sbl">Tele Linked</div></div>
@@ -892,7 +899,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
   <nav class="bnav">
     <button class="ni on" id="nav-home"    onclick="showPage('home')"><span class="ni-ico">🏠</span><span class="ni-lbl">Home</span></button>
     <button class="ni"    id="nav-submenu" onclick="showPage('submenu')"><span class="ni-ico">🍽️</span><span class="ni-lbl">Menu</span><div class="cbadge" id="cbadge"></div></button>
-    <button class="ni"    id="nav-byod"    onclick="handleAdminTap()"><span class="ni-ico" style="font-family:'Playfair Display',serif;font-size:.7rem;font-weight:900;line-height:1.1">BYOD</span><span class="ni-lbl">Admin</span></button>
+    <button class="ni"    id="nav-byod"    onclick="handleReviewFooterTap()"><span class="ni-ico" style="font-family:'Playfair Display',serif;font-size:.62rem;font-weight:900;line-height:1.1">BYOD</span><span class="ni-lbl">Review</span></button>
     <button class="ni"    id="nav-admin"   style="display:none"><span class="ni-ico">📊</span><span class="ni-lbl">Admin</span></button>
     <button class="ni"    id="nav-alerts"  onclick="showPage('alerts')"><span class="ni-ico">🔔</span><span class="ni-lbl">Alerts</span></button>
   </nav>
@@ -902,6 +909,25 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 // ═══════════════════════════════════════════════
 // BYOD v3.0 — Bring Your Own Dabba
 // ═══════════════════════════════════════════════
+
+const INGREDIENTS = {
+  si1:'Toor dal, tomatoes, tamarind, drumstick, carrots, curry leaves, mustard seeds, coconut oil.',
+  si2:'Yam, raw banana, drumstick, beans, coconut, yogurt, turmeric, green chilli, coconut oil.',
+  si3:'Chana dal, raw banana, yam, fresh coconut, cumin, curry leaves, coconut oil.',
+  si4:'Sun-dried manathakkali, tamarind, sesame oil, black pepper, cumin, curry leaves.',
+  si5:'Pepper, cumin, tomato, tamarind, turmeric, curry leaves — light digestive broth.',
+  si6:'Seasonal vegetables, fresh coconut, mustard, urad dal, curry leaves, coconut oil.',
+  sv1:'Rolled oats, mixed vegetables, mustard, curry leaves, green chilli, mild masala.',
+  sv2:'Ragi flour, urad dal, chana dal — steamed; served with sambar and fresh chutney.',
+  sv3:'Rice-lentil batter, mixed vegetables stuffed — crispy and golden on tawa.',
+  pb1:'Whole wheat flour, fresh methi leaves, ajwain, ghee — no refined flour.',
+  pb2:'Whole wheat flour, spiced mashed potato filling, ghee — no refined flour.',
+  pb3:'Durum wheat pasta, tomato, bell peppers, herbs — no onion, no garlic, Jain-safe.',
+  ck1:'Ragi flour, jaggery, ghee, cardamom — no refined sugar, no maida.',
+  ck2:'Whole wheat flour, active sourdough starter, salt — slow 24h ferment, no yeast.',
+  ck3:'Wheat, oats, flax seeds, sunflower seeds, sesame — dense and nutritious.',
+  ck4:'Fresh coconut, jaggery, cardamom — traditional 3-ingredient sweet.',
+};
 
 let MENU = {
   si:[
@@ -934,183 +960,218 @@ let REVIEWS = [
   {name:'Priya M.',flat:'H-204',stars:5,text:'The Avial was absolutely divine — 14 fresh vegetables, you could taste the love! Ordering every week since.',dishes:['Avial','Sambar','Poriyal'],date:'2 days ago'},
   {name:'Ramesh K.',flat:'G-101',stars:5,text:'Authentic South Indian flavours, exactly like home. The Rasam is outstanding. Packaging always clean.',dishes:['Rasam','Kootu'],date:'4 days ago'},
   {name:'Sunita & Arun',flat:'H-310',stars:5,text:'No onion or garlic — perfect for strict Jains. The only home-cooked option in our complex.',dishes:['Vatha Kuzhambu','Sambar'],date:'1 week ago'},
-  {name:'Deepa V.',flat:'F-205',stars:4,text:'Ragi cookies are our family favourite. Kids love them. Would love more variety in the savoury section.',dishes:['Ragi Cookies','Coconut Ladoo'],date:'1 week ago'},
-  {name:'Anand S.',flat:'H-108',stars:5,text:'The cooking is pure gold. Low-flame makes all the difference — vegetables retain their nutrition.',dishes:['Avial','Kootu','Rasam'],date:'2 weeks ago'},
+  {name:'Deepa V.',flat:'F-205',stars:4,text:'Ragi cookies are our family favourite. Kids love them.',dishes:['Ragi Cookies','Coconut Ladoo'],date:'1 week ago'},
+  {name:'Anand S.',flat:'H-108',stars:5,text:'Pure gold. Low-flame cooking makes all the difference — vegetables retain their nutrition and flavour.',dishes:['Avial','Kootu','Rasam'],date:'2 weeks ago'},
 ];
 
 let cart={}, currentCat='si', orders=[], teleLinked=false, webPushOk=false;
 let teleUser='', subs=0, selectedStars=5, kitchenMoments=[];
 
-// ── Telegram config ──────────────────────────────
-const TELE_CONFIG = { BOT_TOKEN:'', ADMIN_CHAT_ID:'' };
-function teleReady(){ return !!(TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.ADMIN_CHAT_ID); }
+// ── Order cutoff ─────────────────────────────────
+let menuPublishedToday = false;
+function isOrderOpen(){
+  if(!menuPublishedToday) return false;
+  const now=new Date(), cut=new Date(); cut.setHours(9,30,0,0);
+  return now < cut;
+}
+function getOrderStatus(){
+  if(!menuPublishedToday) return {open:false,msg:"Today's menu not yet published. Check back soon!"};
+  const now=new Date(), cut=new Date(); cut.setHours(9,30,0,0);
+  if(now>=cut) return {open:false,msg:'Orders closed at 9:30 AM. See you tomorrow!'};
+  return {open:true,msg:''};
+}
+function updateOrderState(){
+  const s=getOrderStatus();
+  const pb=document.getElementById('placeBtn');
+  const cb=document.getElementById('order-closed-banner');
+  const sb=document.getElementById('sm-checkout-btn');
+  if(pb){ pb.disabled=!s.open; pb.style.opacity=s.open?'1':'.45'; }
+  if(cb){ cb.style.display=s.open?'none':'block'; if(!s.open) cb.textContent=s.msg; }
+  if(sb && !s.open){ sb.disabled=true; sb.textContent=s.msg; }
+}
 
+// ── Telegram ─────────────────────────────────────
+const TELE_CONFIG = { BOT_TOKEN:'', ADMIN_CHAT_ID:'' };
+function teleReady(){
+  return !!(TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.BOT_TOKEN.includes(':') &&
+            TELE_CONFIG.ADMIN_CHAT_ID && TELE_CONFIG.ADMIN_CHAT_ID.length > 3);
+}
 async function telegramSend(chatId, text){
   if(!TELE_CONFIG.BOT_TOKEN || !chatId) return false;
-  try {
-    const r = await fetch('https://api.telegram.org/bot' + TELE_CONFIG.BOT_TOKEN + '/sendMessage', {
+  try{
+    const r=await fetch('https://api.telegram.org/bot'+TELE_CONFIG.BOT_TOKEN+'/sendMessage',{
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({chat_id:chatId, text, parse_mode:'HTML'})
+      body:JSON.stringify({chat_id:String(chatId),text,parse_mode:'HTML'})
     });
-    const d = await r.json();
+    const d=await r.json();
+    if(!d.ok) console.warn('Telegram:',d.description);
     return d.ok;
-  } catch(e){ return false; }
+  }catch(e){ console.warn('Telegram fetch failed:',e); return false; }
 }
-
 async function teleNotifyAdmin(o){
   if(!teleReady()) return false;
-  const items = o.items.map(i => '  • ' + i.e + ' ' + i.n + ' x' + i.qty + ' — Rs.' + (i.p*i.qty)).join('\n');
-  return await telegramSend(TELE_CONFIG.ADMIN_CHAT_ID,
-    '🛒 <b>New Order — ' + o.oid + '</b>\n\n' +
-    '👤 ' + o.name + '\n📱 ' + (o.phone||'—') + '\n🏠 ' + o.flat + ' · ' + o.drop + '\n\n' +
-    '<b>Items:</b>\n' + items + '\n\n' +
-    '💰 Total: Rs.' + o.total + ' · ' + o.portions + '\n⏰ Drop dabba by 11:30 AM');
+  const items=o.items.map(i=>'  '+i.e+' '+i.n+' x'+i.qty+' — Rs.'+(i.p*i.qty)).join('\n');
+  return telegramSend(TELE_CONFIG.ADMIN_CHAT_ID,
+    '🛒 <b>New Order — '+o.oid+'</b>\n\n'+
+    '👤 '+o.name+'\n📱 '+(o.phone||'—')+'\n🏠 Flat '+o.flat+'\n📍 Drop: '+o.drop+'\n\n'+
+    '<b>Items:</b>\n'+items+'\n\n'+
+    '💰 Rs.'+o.total+' · '+o.portions+'\n⏰ Expect dabba by 11:30 AM');
 }
-
 async function teleNotifyAdminDabba(o){
   if(!teleReady()) return false;
-  return await telegramSend(TELE_CONFIG.ADMIN_CHAT_ID,
-    '📦 <b>Dabba Dropped!</b>\n\n' +
-    '👤 ' + o.name + ' has placed their dabba.\n🏠 ' + o.flat + ' · ' + o.drop +
-    '\n🛒 ' + o.oid + ' — Rs.' + o.total + '\n\n✅ Ready to pack once cooking is done.');
+  return telegramSend(TELE_CONFIG.ADMIN_CHAT_ID,
+    '📦 <b>Dabba Dropped!</b>\n\n'+
+    '👤 '+o.name+' (Flat '+o.flat+') dropped their dabba.\n'+
+    '📍 '+o.drop+'\n🛒 '+o.oid+' — Rs.'+o.total+'\n\n✅ Ready to pack.');
 }
-
 async function teleNotifyCustomer(o){
-  if(!teleReady() || !o.teleUserId) return false;
-  return await telegramSend(o.teleUserId,
-    '✅ <b>Your Dabba is Ready!</b>\n\n' +
-    '🍲 ' + o.items.map(i => i.e + ' ' + i.n).join(', ') + '\n' +
-    '📦 Packed and waiting.\n📍 Collect from: <b>' + o.drop + '</b>\n⏰ Please pick up by 2:00 PM\n\n' +
-    'Thank you for ordering from BYOD Kitchen! 🙏');
+  if(!teleReady()||!o.teleUserId) return false;
+  return telegramSend(o.teleUserId,
+    '✅ <b>Your Dabba is Ready!</b>\n\n'+
+    '🍲 '+o.items.map(i=>i.e+' '+i.n).join(', ')+'\n'+
+    '📦 Packed and waiting.\n📍 Collect from: <b>'+o.drop+'</b>\n'+
+    '⏰ Please pick up by 2:00 PM\n\nThank you for ordering from BYOD Kitchen! 🙏');
 }
-
 async function telegramBroadcast(text){
   if(!teleReady()) return 0;
-  const ids = [...new Set(orders.filter(o=>o.teleUserId).map(o=>o.teleUserId))];
-  for(const id of ids) await telegramSend(id, text);
+  const ids=[...new Set(orders.filter(o=>o.teleUserId).map(o=>o.teleUserId))];
+  for(const id of ids) await telegramSend(id,text);
   return ids.length;
 }
 
-const notifLog = [
+// ── Alert log ─────────────────────────────────────
+const notifLog=[
   {ico:'🍲',title:"Today's menu is live!",body:'Sambar, Avial, Kootu, Rasam ready. Order by 9:30 AM.',time:'7:30 AM · Today',via:'t',unread:true},
   {ico:'⏰',title:'Order deadline in 30 min',body:'Place order before 9:30 AM cutoff.',time:'9:00 AM · Yesterday',via:'t',unread:false},
   {ico:'✅',title:'Order #BYOD-1041 confirmed',body:'Dabba packed and ready!',time:'12:30 PM · Yesterday',via:'t',unread:false},
 ];
-
-function addAlert(ico, via, title, body){
-  const t = new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}) + ' · Today';
-  notifLog.unshift({ico, via, title, body, time:t, unread:true});
+function addAlert(ico,via,title,body){
+  const t=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})+' · Today';
+  notifLog.unshift({ico,via,title,body,time:t,unread:true});
   renderNotifFeed();
-  if(webPushOk && Notification.permission==='granted') new Notification(title, {body});
+  if(webPushOk&&Notification.permission==='granted') new Notification(title,{body});
 }
 
-// ── Admin access — triple tap ────────────────────
-let _tapCount=0, _tapTimer=null;
+// ── Admin triple-tap access ───────────────────────
+let _tapC=0,_tapT=null;
 function handleAdminTap(){
-  _tapCount++;
-  clearTimeout(_tapTimer);
-  if(_tapCount >= 3){ _tapCount=0; openAdminModal(); }
-  else { _tapTimer = setTimeout(()=>{ _tapCount=0; }, 600); }
+  _tapC++; clearTimeout(_tapT);
+  if(_tapC>=3){_tapC=0;openAdminModal();}
+  else _tapT=setTimeout(()=>{_tapC=0;},600);
 }
+
+// ── Footer BYOD Review — single tap=reviews, triple tap=admin
+let _rTapC=0,_rTapT=null;
+function handleReviewFooterTap(){
+  _rTapC++; clearTimeout(_rTapT);
+  if(_rTapC>=3){_rTapC=0;openAdminModal();}
+  else{
+    _rTapT=setTimeout(()=>{
+      if(_rTapC>0) showPage('reviews');
+      _rTapC=0;
+    },400);
+  }
+}
+
 function openAdminModal(){
-  const m = document.getElementById('admin-modal');
-  m.style.display = 'flex';
-  const inp = document.getElementById('admin-pw-inp');
-  inp.value = '';
-  document.getElementById('admin-pw-err').textContent = '';
-  setTimeout(()=> inp.focus(), 120);
+  const m=document.getElementById('admin-modal'); m.style.display='flex';
+  const inp=document.getElementById('admin-pw-inp'); inp.value='';
+  document.getElementById('admin-pw-err').textContent='';
+  setTimeout(()=>inp.focus(),120);
 }
-function closeAdminModal(){
-  document.getElementById('admin-modal').style.display = 'none';
-}
+function closeAdminModal(){ document.getElementById('admin-modal').style.display='none'; }
 function checkAdminPw(){
-  const val = document.getElementById('admin-pw-inp').value;
-  if(val === 'ZXC'){
-    closeAdminModal();
-    showPage('admin');
-    renderAdmin();
-  } else {
-    document.getElementById('admin-pw-err').textContent = 'Incorrect password. Try again.';
-    document.getElementById('admin-pw-inp').value = '';
+  const val=document.getElementById('admin-pw-inp').value;
+  if(val==='ZXC'){ closeAdminModal(); showPage('admin'); renderAdmin(); }
+  else{
+    document.getElementById('admin-pw-err').textContent='Incorrect password. Try again.';
+    document.getElementById('admin-pw-inp').value='';
     document.getElementById('admin-pw-inp').focus();
   }
 }
 
 // ── Init ─────────────────────────────────────────
 function init(){
-  const d = new Date();
-  const hdr = document.getElementById('hdrDate');
-  if(hdr) hdr.textContent = d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
-  const adm = document.getElementById('admDate');
-  if(adm) adm.textContent = d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  renderBanner();
-  renderNotifFeed();
-  renderAdminMenuEdit();
-  renderReviews();
-  renderKitchenGrid();
-  countdown();
-  setInterval(countdown, 1000);
-  if(location.hash === '#reviews') showPage('reviews');
+  const d=new Date();
+  const hdr=document.getElementById('hdrDate');
+  if(hdr) hdr.textContent=d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
+  const adm=document.getElementById('admDate');
+  if(adm) adm.textContent=d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  menuPublishedToday=true; // demo: menu is live; in production set via publishMenu()
+  renderBanner(); updateOrderState(); renderNotifFeed();
+  renderAdminMenuEdit(); renderReviews(); renderKitchenGrid();
+  countdown(); setInterval(countdown,1000); setInterval(updateOrderState,30000);
+  if(location.hash==='#reviews') showPage('reviews');
 }
 
-// ── Home / Banner ────────────────────────────────
+// ── Banner ────────────────────────────────────────
 function renderBanner(){
-  const dishes = MENU.si.filter(x=>x.avail).slice(0,4);
-  const tot = dishes.reduce((s,x)=>s+x.p, 0);
-  document.getElementById('tb-total').textContent = 'Full set Rs.' + tot;
-  document.getElementById('tb-items').innerHTML = dishes.map(x=>
-    `<div class="tbi">${x.e} ${x.n}<span class="tp">Rs.${x.p}</span></div>`
-  ).join('');
-  ['si','sv','pb','ck'].forEach(cat => {
-    const el = document.getElementById('cnt-' + cat);
-    if(el) el.textContent = MENU[cat].filter(x=>x.avail).length + ' items';
+  const dishes=MENU.si.filter(x=>x.avail).slice(0,4);
+  const tot=dishes.reduce((s,x)=>s+x.p,0);
+  document.getElementById('tb-total').textContent='Full set Rs.'+tot;
+  document.getElementById('tb-items').innerHTML=dishes.map(x=>
+    `<div class="tbi">${x.e} ${x.n}<span class="tp">Rs.${x.p}</span></div>`).join('');
+  ['si','sv','pb','ck'].forEach(cat=>{
+    const el=document.getElementById('cnt-'+cat);
+    if(el) el.textContent=MENU[cat].filter(x=>x.avail).length+' items';
   });
 }
 function orderAll(){
-  cart = {};
-  MENU.si.filter(x=>x.avail).slice(0,4).forEach(x=>{ cart[x.id]=1; });
+  const s=getOrderStatus();
+  if(!s.open){toast('⏰','Orders closed',s.msg);return;}
+  cart={};
+  MENU.si.filter(x=>x.avail).slice(0,4).forEach(x=>{cart[x.id]=1;});
   showPage('submenu'); loadSubMenu('si');
   toast('✅','Full menu added!','All 4 South Indian dishes in your order.');
 }
 function countdown(){
-  const now = new Date(), dl = new Date();
-  dl.setHours(9,30,0,0);
-  const el = document.getElementById('cd'); if(!el) return;
-  if(now > dl){ el.textContent='Closed'; return; }
-  const df = dl - now;
-  const h = Math.floor(df/3600000), m = Math.floor((df%3600000)/60000), s = Math.floor((df%60000)/1000);
-  el.textContent = h + 'h ' + String(m).padStart(2,'0') + 'm ' + String(s).padStart(2,'0') + 's';
+  const now=new Date(),dl=new Date(); dl.setHours(9,30,0,0);
+  const el=document.getElementById('cd'); if(!el) return;
+  if(now>dl){el.textContent='Closed';return;}
+  const df=dl-now,h=Math.floor(df/3600000),m=Math.floor((df%3600000)/60000),s=Math.floor((df%60000)/1000);
+  el.textContent=h+'h '+String(m).padStart(2,'0')+'m '+String(s).padStart(2,'0')+'s';
 }
 
-// ── Submenu ──────────────────────────────────────
+// ── Ingredient tooltip ────────────────────────────
+function showIngTip(id){
+  document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show'));
+  const tip=document.getElementById('ing-'+id);
+  if(tip) tip.classList.add('show');
+}
+function hideAllIngTips(){ document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show')); }
+
+// ── Submenu ───────────────────────────────────────
 function loadSubMenu(cat){
-  currentCat = cat;
-  const names = {si:'South Indian Àla Carte',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
-  document.getElementById('sm-title').textContent = names[cat];
-  document.getElementById('sm-sub').textContent = MENU[cat].filter(x=>x.avail).length + ' items available today';
-  document.getElementById('dish-list').innerHTML = MENU[cat].filter(x=>x.avail).map(d => {
-    const sel = !!cart[d.id];
-    const imgHtml = d.photo
+  currentCat=cat;
+  const names={si:'South Indian Àla Carte',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  document.getElementById('sm-title').textContent=names[cat];
+  document.getElementById('sm-sub').textContent=MENU[cat].filter(x=>x.avail).length+' items available today';
+  document.getElementById('dish-list').innerHTML=MENU[cat].filter(x=>x.avail).map(d=>{
+    const sel=!!cart[d.id];
+    const imgHtml=d.photo
       ? `<img src="${d.photo}" alt="${d.n}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover"/>`
       : `<span style="position:relative;z-index:1">${d.e}</span>`;
+    const ing=INGREDIENTS[d.id]||d.d;
     return `<div class="dcard${sel?' sel':''}" id="dc-${d.id}" onclick="toggleDish('${d.id}')">
       <div class="dimg" id="dimg-${d.id}">${imgHtml}</div>
       <div class="dsel-badge">✓</div>
       <div class="dinfo">
-        <div class="dname">${d.n}</div>
+        <div class="dname-wrap">
+          <span class="dname">${d.n}</span>
+          <button class="ing-btn" onclick="event.stopPropagation();showIngTip('${d.id}')" title="What's in it?">i</button>
+          <div class="ing-tip" id="ing-${d.id}">
+            <div class="ing-tip-title">What's in it?</div>
+            <div class="ing-tip-body">${ing}</div>
+          </div>
+        </div>
         <div class="ddesc">${d.d}</div>
         <div class="dfoot">
           <div class="dtags">
-            <span class="dtag">🧄 No ONG</span>
-            <span class="dtag">🔥 Low Flame</span>
-            <span class="dtag">🏠 Home Made</span>
+            <span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
             <div class="dprice">Rs.${d.p}</div>
-            <label style="cursor:pointer;background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.2);border-radius:5px;padding:2px 7px;font-size:.58rem;color:var(--saff);font-weight:600" title="Add photo" onclick="event.stopPropagation()">
-              📷
-              <input type="file" accept="image/*" style="display:none" data-dish="${d.id}" onchange="uploadDishPhoto(this)">
-            </label>
+            <label style="cursor:pointer;background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.2);border-radius:5px;padding:2px 7px;font-size:.58rem;color:var(--saff);font-weight:600" onclick="event.stopPropagation()">📷<input type="file" accept="image/*" style="display:none" data-dish="${d.id}" onchange="uploadDishPhoto(this)"></label>
           </div>
         </div>
       </div>
@@ -1124,74 +1185,77 @@ function loadSubMenu(cat){
       </div>
     </div>`;
   }).join('');
-  updateCheckBtn();
+  document.getElementById('dish-list').addEventListener('click',e=>{
+    if(!e.target.closest('.ing-btn')&&!e.target.closest('.ing-tip')) hideAllIngTips();
+  },{capture:true,once:false});
+  updateCheckBtn(); updateOrderState();
 }
 
 function uploadDishPhoto(input){
-  const id = input.dataset.dish;
-  const f = input.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
+  const id=input.dataset.dish, f=input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
     for(const cat of ['si','sv','pb','ck']){
-      const dish = MENU[cat].find(d=>d.id===id);
-      if(dish){ dish.photo = ev.target.result; break; }
+      const dish=MENU[cat].find(d=>d.id===id);
+      if(dish){dish.photo=ev.target.result;break;}
     }
-    const imgWrap = document.getElementById('dimg-'+id);
-    if(imgWrap) imgWrap.innerHTML = `<img src="${ev.target.result}" alt="" style="width:100%;height:100%;object-fit:cover"/>`;
+    const w=document.getElementById('dimg-'+id);
+    if(w) w.innerHTML=`<img src="${ev.target.result}" alt="" style="width:100%;height:100%;object-fit:cover"/>`;
     toast('📷','Photo added!','Dish photo updated.');
   };
   r.readAsDataURL(f);
 }
 
 function toggleDish(id){
-  if(cart[id]){ delete cart[id]; document.getElementById('dc-'+id).classList.remove('sel'); }
-  else{ cart[id]=1; document.getElementById('dc-'+id).classList.add('sel'); }
+  if(cart[id]){delete cart[id];document.getElementById('dc-'+id).classList.remove('sel');}
+  else{cart[id]=1;document.getElementById('dc-'+id).classList.add('sel');}
   updateCheckBtn(); updateCartBadge();
 }
-function chgQty(id, delta){
+function chgQty(id,delta){
   if(!cart[id]) return;
-  cart[id] = Math.max(1,(cart[id]||1)+delta);
-  const dish = findDish(id);
-  document.getElementById('qn-'+id).textContent = cart[id];
-  document.getElementById('qs-'+id).textContent = 'Rs.' + dish.p * cart[id];
+  cart[id]=Math.max(1,(cart[id]||1)+delta);
+  const dish=findDish(id);
+  document.getElementById('qn-'+id).textContent=cart[id];
+  document.getElementById('qs-'+id).textContent='Rs.'+dish.p*cart[id];
   updateCartBadge();
 }
-function findDish(id){ return [...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d=>d.id===id); }
-function getItems(){ return Object.keys(cart).map(id=>({...findDish(id),qty:cart[id]})); }
-function getTotal(){ return getItems().reduce((s,i)=>s+i.p*i.qty, 0); }
+function findDish(id){return [...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d=>d.id===id);}
+function getItems(){return Object.keys(cart).map(id=>({...findDish(id),qty:cart[id]}));}
+function getTotal(){return getItems().reduce((s,i)=>s+i.p*i.qty,0);}
 function updateCheckBtn(){
-  const n = Object.keys(cart).length;
-  const btn = document.getElementById('sm-checkout-btn');
-  btn.disabled = n < 2;
-  btn.textContent = n < 2 ? `Select ${2-n} more…` : `Checkout (${n} items) →`;
+  const s=getOrderStatus(),n=Object.keys(cart).length;
+  const btn=document.getElementById('sm-checkout-btn');
+  if(!s.open){btn.disabled=true;btn.textContent=s.msg;}
+  else{btn.disabled=n<2;btn.textContent=n<2?`Select ${2-n} more…`:`Checkout (${n} items) →`;}
   updateCartBadge();
 }
 function updateCartBadge(){
-  const n = Object.keys(cart).length;
-  const b = document.getElementById('cbadge');
-  b.textContent = n; b.style.display = n ? 'flex' : 'none';
+  const n=Object.keys(cart).length,b=document.getElementById('cbadge');
+  b.textContent=n; b.style.display=n?'flex':'none';
 }
 function goCheckout(){
-  if(Object.keys(cart).length < 2){ toast('⚠️','Min 2 items','Select at least 2 dishes.'); return; }
+  const s=getOrderStatus();
+  if(!s.open){toast('⏰','Orders closed',s.msg);return;}
+  if(Object.keys(cart).length<2){toast('⚠️','Min 2 items','Select at least 2 dishes.');return;}
   showPage('checkout');
-  const items = getItems(), tot = getTotal();
-  document.getElementById('co-items').innerHTML = items.map(i => `
+  const items=getItems(),tot=getTotal();
+  document.getElementById('co-items').innerHTML=items.map(i=>`
     <div class="cline">
-      <div class="climg">${i.photo ? `<img src="${i.photo}" onerror="this.outerHTML='<span>${i.e}</span>'" alt=""/>` : `<span>${i.e}</span>`}</div>
+      <div class="climg">${i.photo?`<img src="${i.photo}" onerror="this.outerHTML='<span>${i.e}</span>'" alt=""/>`:`<span>${i.e}</span>`}</div>
       <div class="clinfo"><div class="clname">${i.n}</div><div class="clqty">× ${i.qty}</div></div>
       <div class="clprice">Rs.${i.p*i.qty}</div>
     </div>`).join('');
-  document.getElementById('co-sub').textContent = 'Rs.' + tot;
-  document.getElementById('co-tot').textContent = 'Rs.' + tot;
+  document.getElementById('co-sub').textContent='Rs.'+tot;
+  document.getElementById('co-tot').textContent='Rs.'+tot;
 }
 
-// ── Checkout ─────────────────────────────────────
+// ── Checkout ──────────────────────────────────────
 function handleSS(e){
-  const f = e.target.files[0]; if(!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
-    document.getElementById('ss-img').src = ev.target.result;
-    document.getElementById('ss-prev').style.display = 'block';
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    document.getElementById('ss-img').src=ev.target.result;
+    document.getElementById('ss-prev').style.display='block';
     toast('📎','Screenshot uploaded!','Payment proof attached.');
   };
   r.readAsDataURL(f);
@@ -1201,20 +1265,17 @@ function copyUPI(){
   toast('📋','UPI ID copied!','Paste in your payment app.');
 }
 function linkTele(ctx){
-  const inp = document.getElementById(ctx==='co' ? 'co-tele-inp' : 'tele-main-inp');
-  const val = (inp.value||'').trim();
-  if(!val || !val.startsWith('@')){ toast('⚠️','Invalid username','Enter your @username'); return; }
-  teleLinked=true; teleUser=val; subs++;
-  const st = document.getElementById('st-subs'); if(st) st.textContent = subs;
+  const inp=document.getElementById(ctx==='co'?'co-tele-inp':'tele-main-inp');
+  const val=(inp.value||'').trim();
+  if(!val||!val.startsWith('@')){toast('⚠️','Invalid username','Enter your @username');return;}
+  teleLinked=true;teleUser=val;subs++;
+  const st=document.getElementById('st-subs');if(st) st.textContent=subs;
   document.getElementById('pill-tele').classList.add('at');
-  document.getElementById('pill-tele-lbl').textContent = 'Linked ' + val;
-  if(ctx==='co'){
-    const el = document.getElementById('co-tele-linked'); if(el) el.style.display='flex';
-  } else {
-    const el = document.getElementById('tele-linked-main'); if(el) el.style.display='flex';
-  }
-  addAlert('✈️','t','Telegram linked', val + ' connected to BYOD bot.');
-  toast('✈️','Telegram linked!','Alerts will go to ' + val);
+  document.getElementById('pill-tele-lbl').textContent='Linked '+val;
+  if(ctx==='co'){const el=document.getElementById('co-tele-linked');if(el) el.style.display='flex';}
+  else{const el=document.getElementById('tele-linked-main');if(el) el.style.display='flex';}
+  addAlert('✈️','t','Telegram linked',val+' connected to BYOD bot.');
+  toast('✈️','Telegram linked!','Alerts will go to '+val);
 }
 function openTeleBot(){
   window.open('https://t.me/BYODSattvicMeals','_blank');
@@ -1222,130 +1283,122 @@ function openTeleBot(){
 }
 
 async function placeOrder(){
-  const name = document.getElementById('cf-name').value.trim();
-  const phone = document.getElementById('cf-phone').value.trim();
-  const flat = document.getElementById('cf-flat').value.trim();
-  if(!name){ toast('⚠️','Name required','Enter your name.'); return; }
-  if(!flat){ toast('⚠️','Flat required','Enter your flat number.'); return; }
-  const ssImg = document.getElementById('ss-img');
-  if(!ssImg.src || ssImg.src===location.href){ toast('⚠️','Payment screenshot needed','Upload screenshot first.'); return; }
-  const btn = document.getElementById('placeBtn');
-  btn.disabled=true; btn.innerHTML='<span class="spin"></span>Placing…';
+  const s=getOrderStatus();
+  if(!s.open){toast('⏰','Orders closed',s.msg);return;}
+  const name=document.getElementById('cf-name').value.trim();
+  const phone=document.getElementById('cf-phone').value.trim();
+  const flat=document.getElementById('cf-flat').value.trim();
+  if(!name){toast('⚠️','Name required','Enter your name.');return;}
+  if(!flat){toast('⚠️','Flat required','Enter your flat number.');return;}
+  const ssImg=document.getElementById('ss-img');
+  if(!ssImg.src||ssImg.src===location.href){toast('⚠️','Payment screenshot needed','Upload screenshot first.');return;}
+  const btn=document.getElementById('placeBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Placing…';
   await new Promise(r=>setTimeout(r,800));
-  const items=getItems(), total=getTotal();
-  const oid = 'BYOD-' + (1040+orders.length+1);
-  const portions = document.getElementById('cf-portions').value;
-  const drop = document.getElementById('cf-drop').value;
-  const tele = (document.getElementById('co-tele-inp').value||'').trim() || 'Not linked';
-  const teleUid = (document.getElementById('co-tele-uid')?.value||'').trim();
-  const order = {oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',time:new Date()};
+  const items=getItems(),total=getTotal();
+  const oid='BYOD-'+(1040+orders.length+1);
+  const portions=document.getElementById('cf-portions').value;
+  const drop=document.getElementById('cf-drop').value;
+  const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
+  const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
+  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',time:new Date()};
   orders.push(order);
-  const adminSent = await teleNotifyAdmin(order);
-  addAlert('✅','t','New order — '+name, oid+' · Rs.'+total+' · '+flat+(adminSent?' · Host notified ✈️':''));
-  btn.disabled=false; btn.innerHTML='🎉 Place Order & Notify Host';
+  const adminSent=await teleNotifyAdmin(order);
+  const configured=teleReady();
+  addAlert('✅','t','New order — '+name,oid+' · Rs.'+total+' · Flat '+flat+(adminSent?' · Host notified ✈️':''));
+  btn.disabled=false;btn.innerHTML='🎉 Place Order & Notify Host';
   document.getElementById('placeBtn').style.display='none';
   document.getElementById('notifyDabbaBtn').style.display='flex';
-  const succ = document.getElementById('success-sec');
-  succ.style.display='block'; succ.scrollIntoView({behavior:'smooth'});
-  const tcBox = document.getElementById('tele-confirm-box');
+  const succ=document.getElementById('success-sec');
+  succ.style.display='block';succ.scrollIntoView({behavior:'smooth'});
+  const tcBox=document.getElementById('tele-confirm-box');
   tcBox.style.display='block';
-  tcBox.querySelector('.tc-conf-t').textContent = adminSent ? '✈️ Host notified on Telegram!' : '📋 Order saved in Admin panel';
-  tcBox.querySelector('.tc-conf-b').textContent = adminSent
-    ? 'Tap the button below to message the bot — you\'ll get an alert when your dabba is ready.'
-    : 'Add Bot Token in Admin → Settings to enable live Telegram alerts.';
-  document.getElementById('track-steps').innerHTML = `
+  tcBox.querySelector('.tc-conf-t').textContent=adminSent?'✈️ Host notified on Telegram!':configured?'⚠️ Telegram failed — check token':'📋 Order saved in Admin panel';
+  tcBox.querySelector('.tc-conf-b').textContent=adminSent
+    ?'Tap below to message the bot — you\'ll get an alert when your dabba is packed.'
+    :configured?'Order recorded. Host will see it in Admin panel.'
+    :'To enable Telegram: Admin → Settings → enter Bot Token + Chat ID.';
+  document.getElementById('track-steps').innerHTML=`
     <div class="tstep"><div class="tsi done">✅</div><div><div class="tst">Order confirmed ${oid}</div><div class="tstime">Just now${adminSent?' · Host notified ✈️':''}</div></div></div>
     <div class="tstep"><div class="tsi done">💳</div><div><div class="tst">Payment screenshot received</div><div class="tstime">Will be verified</div></div></div>
     <div class="tstep"><div class="tsi pend">📦</div><div><div class="tst">Drop your dabba by 11:30 AM</div><div class="tstime">${drop}</div></div></div>
     <div class="tstep"><div class="tsi pend">🍲</div><div><div class="tst">Meal being cooked</div><div class="tstime">Ready ~12:30 PM</div></div></div>
     <div class="tstep"><div class="tsi pend">🎉</div><div><div class="tst">Dabba packed — you'll be notified on Telegram</div><div class="tstime">One tap below to activate</div></div></div>`;
   renderAdmin();
-  toast(adminSent?'✈️':'✅','Order placed, '+name+'!', adminSent?'Host notified on Telegram':'Rs.'+total+' recorded');
+  toast(adminSent?'✈️':'✅','Order placed, '+name+'!',adminSent?'Host notified on Telegram':'Rs.'+total+' recorded in Admin');
 }
 
 async function notifyDabbaDropped(){
-  const order = orders.slice().reverse().find(o=>o.status==='confirmed') || orders[orders.length-1];
-  const sent = order ? await teleNotifyAdminDabba(order) : false;
-  addAlert('📦','t','Dabba dropped!',
-    (order ? order.name+' ('+order.flat+') ' : '') + 'dropped their dabba' + (sent?' · Host notified ✈️':''));
-  toast('📦', sent?'Host notified! ✈️':'Dabba drop recorded', sent?'Telegram message sent':'Logged in Admin panel.');
+  const order=orders.slice().reverse().find(o=>o.status==='confirmed')||orders[orders.length-1];
+  const sent=order?await teleNotifyAdminDabba(order):false;
+  addAlert('📦','t','Dabba dropped!',(order?order.name+' (Flat '+order.flat+') ':'')+' dropped their dabba'+(sent?' · Host notified ✈️':''));
+  toast('📦',sent?'Host notified! ✈️':'Dabba drop recorded',sent?'Telegram sent to host':'Logged in Admin panel.');
 }
-
 function resetAll(){
-  cart = {};
+  cart={};
   document.getElementById('placeBtn').style.display='flex';
   document.getElementById('notifyDabbaBtn').style.display='none';
   document.getElementById('success-sec').style.display='none';
-  ['cf-name','cf-phone','cf-flat','cf-block','cf-apt'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.value='';
-  });
+  ['cf-name','cf-phone','cf-flat'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('ss-prev').style.display='none';
   document.getElementById('ss-img').src='';
-  updateCartBadge(); showPage('home');
+  updateCartBadge();showPage('home');
 }
 
-// ── Kitchen ──────────────────────────────────────
+// ── Kitchen ───────────────────────────────────────
 function loadYT(){
-  const url = document.getElementById('yt-url-inp').value.trim();
-  if(!url){ toast('⚠️','No URL','Paste a YouTube live URL first.'); return; }
+  const url=document.getElementById('yt-url-inp').value.trim();
+  if(!url){toast('⚠️','No URL','Paste a YouTube live URL first.');return;}
   let embedId='';
   try{
-    const u = new URL(url);
-    if(u.hostname.includes('youtube.com'))
-      embedId = u.searchParams.get('v') || u.pathname.replace('/live/','').replace(/^\//,'');
-    else if(u.hostname.includes('youtu.be'))
-      embedId = u.pathname.replace(/^\//,'');
-  }catch(e){ embedId = url.split('/').pop(); }
-  if(!embedId){ toast('⚠️','Invalid URL','Could not parse YouTube URL.'); return; }
-  const wrap = document.getElementById('live-screen-wrap');
-  const ph = document.getElementById('live-placeholder'); if(ph) ph.remove();
-  const ex = wrap.querySelector('iframe'); if(ex) ex.remove();
-  const iframe = document.createElement('iframe');
-  iframe.src = 'https://www.youtube.com/embed/'+embedId+'?autoplay=1&mute=1';
-  iframe.allow = 'autoplay;encrypted-media';
-  iframe.style.cssText = 'width:100%;height:100%;border:none;position:absolute;top:0;left:0';
-  wrap.style.position='relative'; wrap.appendChild(iframe);
+    const u=new URL(url);
+    if(u.hostname.includes('youtube.com')) embedId=u.searchParams.get('v')||u.pathname.replace('/live/','').replace(/^\//,'');
+    else if(u.hostname.includes('youtu.be')) embedId=u.pathname.replace(/^\//,'');
+  }catch(e){embedId=url.split('/').pop();}
+  if(!embedId){toast('⚠️','Invalid URL','Could not parse YouTube URL.');return;}
+  const wrap=document.getElementById('live-screen-wrap');
+  const ph=document.getElementById('live-placeholder');if(ph)ph.remove();
+  const ex=wrap.querySelector('iframe');if(ex)ex.remove();
+  const iframe=document.createElement('iframe');
+  iframe.src='https://www.youtube.com/embed/'+embedId+'?autoplay=1&mute=1';
+  iframe.allow='autoplay;encrypted-media';
+  iframe.style.cssText='width:100%;height:100%;border:none;position:absolute;top:0;left:0';
+  wrap.style.position='relative';wrap.appendChild(iframe);
   toast('▶️','Stream loaded!','YouTube live now showing.');
 }
 function loadDriveAlbum(){
-  const url = document.getElementById('drive-album-inp').value.trim();
-  if(!url){ toast('⚠️','No link','Paste a Google Drive or Photos link.'); return; }
+  const url=document.getElementById('drive-album-inp').value.trim();
+  if(!url){toast('⚠️','No link','Paste a Google Drive or Photos link.');return;}
   window.open(url,'_blank');
   toast('📁','Opening album…','Download photos and add via + Add Photo.');
 }
 function addMoments(e){
   Array.from(e.target.files).forEach(f=>{
-    const r = new FileReader();
-    r.onload = ev => { kitchenMoments.push(ev.target.result); renderKitchenGrid(); };
+    const r=new FileReader();
+    r.onload=ev=>{kitchenMoments.push(ev.target.result);renderKitchenGrid();};
     r.readAsDataURL(f);
   });
 }
 function renderKitchenGrid(){
-  const grid = document.getElementById('kg-grid'); if(!grid) return;
-  grid.innerHTML = kitchenMoments.map((url,i) => `
-    <div class="kgi">
-      <img src="${url}" alt="moment ${i}"/>
-      <button class="kgi-del" onclick="deleteMoment(${i})">✕</button>
-    </div>`).join('') +
-    `<div class="kgi kgi-add" onclick="document.getElementById('moment-inp').click()">📷</div>`;
+  const grid=document.getElementById('kg-grid');if(!grid)return;
+  grid.innerHTML=kitchenMoments.map((url,i)=>
+    `<div class="kgi"><img src="${url}" alt="moment ${i}"/><button class="kgi-del" onclick="deleteMoment(${i})">✕</button></div>`
+  ).join('')+`<div class="kgi kgi-add" onclick="document.getElementById('moment-inp').click()">📷</div>`;
 }
-function deleteMoment(i){ kitchenMoments.splice(i,1); renderKitchenGrid(); }
+function deleteMoment(i){kitchenMoments.splice(i,1);renderKitchenGrid();}
 
-// ── Admin — Orders ───────────────────────────────
+// ── Admin ─────────────────────────────────────────
 function renderAdmin(){
-  const stO=document.getElementById('st-orders'); if(stO) stO.textContent=orders.length;
-  const stR=document.getElementById('st-rev'); if(stR) stR.textContent='Rs.'+orders.reduce((s,o)=>s+o.total,0);
-  const stS=document.getElementById('st-subs'); if(stS) stS.textContent=subs;
-  const list=document.getElementById('admin-orders'); if(!list) return;
-  if(!orders.length){
-    list.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:.72rem">No orders yet.</div>';
-    return;
-  }
-  list.innerHTML = orders.slice().reverse().map(o => `
+  const stO=document.getElementById('st-orders');if(stO)stO.textContent=orders.length;
+  const stR=document.getElementById('st-rev');if(stR)stR.textContent='Rs.'+orders.reduce((s,o)=>s+o.total,0);
+  const stS=document.getElementById('st-subs');if(stS)stS.textContent=subs;
+  const list=document.getElementById('admin-orders');if(!list)return;
+  if(!orders.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:.72rem">No orders yet.</div>';return;}
+  list.innerHTML=orders.slice().reverse().map(o=>`
     <div class="ocard">
       <div class="oc-top"><span class="oc-id">#${o.oid}</span><span class="ocbadge confirmed" id="ob-${o.oid}">${o.status}</span></div>
       <div class="oc-cust">👤 ${o.name}${o.phone?' · 📱 '+o.phone:''}</div>
-      <div class="oc-addr">🏠 ${o.flat} · ${o.drop}</div>
+      <div class="oc-addr">🏠 Flat ${o.flat} · ${o.drop}</div>
       ${o.tele&&o.tele!=='Not linked'?`<div class="oc-tele">✈️ ${o.tele}</div>`:''}
       <div class="oc-items">${o.items.map(i=>i.e+' '+i.n+' x'+i.qty).join(' · ')}</div>
       <div class="oc-foot">
@@ -1357,18 +1410,17 @@ function renderAdmin(){
       </div>
     </div>`).join('');
 }
-
 async function notifyCust(oid){
-  const o = orders.find(x=>x.oid===oid); if(!o) return;
-  const sent = await teleNotifyCustomer(o);
-  addAlert('✅','t','Dabba ready — '+o.name, 'Order '+oid+' packed'+(sent?' · Customer notified ✈️':''));
-  toast('✈️', o.name+' notified!','Via '+(sent?'Telegram ✈️':'web alert'));
+  const o=orders.find(x=>x.oid===oid);if(!o)return;
+  const sent=await teleNotifyCustomer(o);
+  addAlert('✅','t','Dabba ready — '+o.name,'Order '+oid+' packed'+(sent?' · Customer notified ✈️':''));
+  toast('✈️',o.name+' notified!','Via '+(sent?'Telegram ✈️':'web alert'));
 }
 function markReady(oid){
-  const ob=document.getElementById('ob-'+oid); if(ob){ob.textContent='ready'; ob.className='ocbadge ready';}
-  const rb=document.getElementById('rb-'+oid); if(rb){rb.textContent='✓ Packed'; rb.disabled=true;}
+  const ob=document.getElementById('ob-'+oid);if(ob){ob.textContent='ready';ob.className='ocbadge ready';}
+  const rb=document.getElementById('rb-'+oid);if(rb){rb.textContent='✓ Packed';rb.disabled=true;}
   const o=orders.find(x=>x.oid===oid);
-  if(o){o.status='ready'; notifyCust(oid);}
+  if(o){o.status='ready';notifyCust(oid);}
 }
 async function markAllReady(){
   orders.forEach(o=>markReady(o.oid));
@@ -1377,38 +1429,44 @@ async function markAllReady(){
 async function sendDabbaReminder(){
   let sent=0;
   for(const o of orders){
-    if(!o.teleUserId) continue;
-    const ok = await telegramSend(o.teleUserId,
+    if(!o.teleUserId)continue;
+    const ok=await telegramSend(o.teleUserId,
       '📦 <b>Drop Dabba Reminder</b>\n\nHi '+o.name+', please drop your dabba at <b>'+o.drop+'</b> by <b>11:30 AM</b>.\n\nYour meal is being freshly prepared! 🍲');
-    if(ok) sent++;
+    if(ok)sent++;
   }
   addAlert('📦','t','Drop reminder sent','Sent to '+orders.length+' customer(s)'+(sent?' · '+sent+' via Telegram':''));
-  toast('📦','Reminder sent!', orders.length+' customers notified.');
+  toast('📦','Reminder sent!',orders.length+' customers notified.');
 }
 async function sendBulk(){
-  const msg = document.getElementById('bulk-msg').value.trim();
-  if(!msg){ toast('⚠️','Empty','Write a message.'); return; }
-  const useTele = document.getElementById('bch-tele').classList.contains('on');
+  const msg=document.getElementById('bulk-msg').value.trim();
+  if(!msg){toast('⚠️','Empty','Write a message.');return;}
+  const useTele=document.getElementById('bch-tele').classList.contains('on');
   let sent=0;
-  if(useTele) sent = await telegramBroadcast('<b>BYOD Kitchen:</b>\n\n'+msg);
-  addAlert('📢',useTele?'t':'w','Broadcast sent', msg.slice(0,80)+(msg.length>80?'…':''));
+  if(useTele)sent=await telegramBroadcast('<b>BYOD Kitchen:</b>\n\n'+msg);
+  addAlert('📢',useTele?'t':'w','Broadcast sent',msg.slice(0,80)+(msg.length>80?'…':''));
   toast('📢','Broadcast sent!','Telegram: '+sent+' delivered.');
   document.getElementById('bulk-msg').value='';
 }
 function saveBotConfig(){
-  const tok = document.getElementById('cfg-token').value.trim();
-  const cid = document.getElementById('cfg-chatid').value.trim();
-  if(!tok||!cid){ toast('⚠️','Fill both fields','Enter Bot Token and Admin Chat ID.'); return; }
-  TELE_CONFIG.BOT_TOKEN=tok; TELE_CONFIG.ADMIN_CHAT_ID=cid;
+  const tok=document.getElementById('cfg-token').value.trim();
+  const cid=document.getElementById('cfg-chatid').value.trim();
+  if(!tok||!cid){toast('⚠️','Fill both fields','Enter Bot Token and Admin Chat ID.');return;}
+  TELE_CONFIG.BOT_TOKEN=tok;TELE_CONFIG.ADMIN_CHAT_ID=cid;
   document.getElementById('cfg-status').textContent='✅ Saved — Telegram active';
-  toast('✅','Telegram configured!','All 3 notification flows now active.');
+  toast('✅','Telegram configured!','All notification flows now active.');
+}
+// Publish next day menu — re-enables ordering
+function publishMenu(){
+  menuPublishedToday=true;orders=[];
+  updateOrderState();renderAdmin();
+  toast('📢','Menu published!','Orders are now open until 9:30 AM.');
+  addAlert('🍲','t',"Today's menu is live!",'Orders open. Cutoff at 9:30 AM.');
 }
 
-// ── Admin — Edit Menu ────────────────────────────
 function renderAdminMenuEdit(){
   ['si','sv','pb','ck'].forEach(cat=>{
-    const el=document.getElementById('ed-'+cat); if(!el) return;
-    el.innerHTML = MENU[cat].map(d => `
+    const el=document.getElementById('ed-'+cat);if(!el)return;
+    el.innerHTML=MENU[cat].map(d=>`
       <div class="edcard" id="edc-${d.id}">
         <div class="ed-top">
           <div class="ed-em">${d.e}</div>
@@ -1427,111 +1485,80 @@ function renderAdminMenuEdit(){
   });
 }
 function previewDishPhoto(id){
-  const url = document.getElementById('edph-'+id).value.trim();
-  const prev = document.getElementById('edphp-'+id);
-  prev.innerHTML = url ? `<img src="${url}" onerror="this.outerHTML='❌'" alt=""/>` : '📷';
+  const url=document.getElementById('edph-'+id).value.trim();
+  const prev=document.getElementById('edphp-'+id);
+  prev.innerHTML=url?`<img src="${url}" onerror="this.outerHTML='❌'" alt=""/>`:'📷';
 }
 function addDish(cat){
   const emos={si:'🍲',sv:'🥪',pb:'🫓',ck:'🍪'};
   MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',d:'Description',p:60,avail:true,photo:''});
-  renderAdminMenuEdit();
-  toast('➕','Dish added!','Edit name, price, photo URL then save.');
+  renderAdminMenuEdit();toast('➕','Dish added!','Edit name, price, photo URL then save.');
 }
 function saveMenu(){
   ['si','sv','pb','ck'].forEach(cat=>{
     MENU[cat].forEach(d=>{
-      const n=document.getElementById('edn-'+d.id), p=document.getElementById('edp-'+d.id),
-            t=document.getElementById('edt-'+d.id), ph=document.getElementById('edph-'+d.id);
-      if(n) d.n=n.value; if(p) d.p=parseInt(p.value)||d.p;
-      if(t) d.avail=t.classList.contains('on'); if(ph) d.photo=ph.value.trim();
+      const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),
+            t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id);
+      if(n)d.n=n.value;if(p)d.p=parseInt(p.value)||d.p;
+      if(t)d.avail=t.classList.contains('on');if(ph)d.photo=ph.value.trim();
     });
   });
-  renderBanner();
-  toast('💾','Menu saved & published!','Prices, photos and availability updated.');
+  renderBanner();toast('💾','Menu saved!','Prices, photos and availability updated.');
 }
-function switchAdminTab(name, btn){
+function switchAdminTab(name,btn){
   document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
-  if(btn) btn.classList.add('on');
-  const sec=document.getElementById('atab-'+name); if(sec) sec.classList.add('on');
-  if(name==='orders') renderAdmin();
-  if(name==='kitchen-sheet') renderKitchenSheet();
+  if(btn)btn.classList.add('on');
+  const sec=document.getElementById('atab-'+name);if(sec)sec.classList.add('on');
+  if(name==='orders')renderAdmin();
+  if(name==='kitchen-sheet')renderKitchenSheet();
 }
 
-// ── Admin — Kitchen Sheet ────────────────────────
+// ── Kitchen Sheet ─────────────────────────────────
 function renderKitchenSheet(){
-  const sum=document.getElementById('ks-summary');
-  const tal=document.getElementById('ks-tally');
-  const ord=document.getElementById('ks-orders');
-  if(!sum||!tal||!ord) return;
+  const sum=document.getElementById('ks-summary'),tal=document.getElementById('ks-tally'),ord=document.getElementById('ks-orders');
+  if(!sum||!tal||!ord)return;
   if(!orders.length){
     sum.innerHTML='<div style="width:100%;text-align:center;padding:16px;color:var(--muted);font-size:.78rem">No orders yet.</div>';
-    tal.innerHTML=''; ord.innerHTML=''; return;
+    tal.innerHTML='';ord.innerHTML='';return;
   }
-  const totalPortions=orders.reduce((s,o)=>s+parseInt(o.portions),0);
-  const totalRev=orders.reduce((s,o)=>s+o.total,0);
-  sum.innerHTML=`
-    <div class="ks-stat"><div class="ks-num">${orders.length}</div><div class="ks-lbl">Orders</div></div>
-    <div class="ks-stat"><div class="ks-num">${totalPortions}</div><div class="ks-lbl">Portions</div></div>
-    <div class="ks-stat"><div class="ks-num">Rs.${totalRev}</div><div class="ks-lbl">Revenue</div></div>`;
+  const tp=orders.reduce((s,o)=>s+parseInt(o.portions),0),tr=orders.reduce((s,o)=>s+o.total,0);
+  sum.innerHTML=`<div class="ks-stat"><div class="ks-num">${orders.length}</div><div class="ks-lbl">Orders</div></div><div class="ks-stat"><div class="ks-num">${tp}</div><div class="ks-lbl">Portions</div></div><div class="ks-stat"><div class="ks-num">Rs.${tr}</div><div class="ks-lbl">Revenue</div></div>`;
   const tally={};
-  orders.forEach(o=>o.items.forEach(i=>{
-    if(!tally[i.id]) tally[i.id]={...i,total:0};
-    tally[i.id].total+=i.qty;
-  }));
-  const catLabel={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  orders.forEach(o=>o.items.forEach(i=>{if(!tally[i.id])tally[i.id]={...i,total:0};tally[i.id].total+=i.qty;}));
+  const cL={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   tal.innerHTML=Object.values(tally).sort((a,b)=>b.total-a.total).map(d=>`
-    <div class="ks-tally-row">
-      <div class="ktr-left"><span class="ktr-em">${d.e}</span>
-        <div><div class="ktr-name">${d.n}</div><div class="ktr-cat">${catLabel[d.id.slice(0,2)]||''}</div></div>
-      </div>
-      <div><div class="ktr-count">${d.total}</div><div class="ktr-unit">portion${d.total>1?'s':''}</div></div>
-    </div>`).join('');
+    <div class="ks-tally-row"><div class="ktr-left"><span class="ktr-em">${d.e}</span><div><div class="ktr-name">${d.n}</div><div class="ktr-cat">${cL[d.id.slice(0,2)]||''}</div></div></div><div><div class="ktr-count">${d.total}</div><div class="ktr-unit">portion${d.total>1?'s':''}</div></div></div>`).join('');
   ord.innerHTML=orders.map((o,i)=>`
-    <div class="ks-order-card">
-      <div class="koc-num">${i+1}</div>
-      <div class="koc-body">
-        <div class="koc-name">${o.name}</div>
-        <div class="koc-addr">🏠 ${o.flat} · ${o.drop}</div>
-        <div class="koc-items">${o.items.map(it=>`<span class="koc-item">${it.e} ${it.n} x${it.qty}</span>`).join('')}</div>
-        <div class="koc-portions">📦 ${o.portions}</div>
-      </div>
-      <div class="koc-status" id="koc-chk-${o.oid}" onclick="toggleKocDone('${o.oid}')" title="Mark packed"></div>
-    </div>`).join('');
+    <div class="ks-order-card"><div class="koc-num">${i+1}</div><div class="koc-body"><div class="koc-name">${o.name}</div><div class="koc-addr">🏠 Flat ${o.flat} · ${o.drop}</div><div class="koc-items">${o.items.map(it=>`<span class="koc-item">${it.e} ${it.n} x${it.qty}</span>`).join('')}</div><div class="koc-portions">📦 ${o.portions}</div></div><div class="koc-status" id="koc-chk-${o.oid}" onclick="toggleKocDone('${o.oid}')" title="Mark packed"></div></div>`).join('');
 }
 function toggleKocDone(oid){
   const el=document.getElementById('koc-chk-'+oid);
-  if(el.classList.contains('done')){ el.classList.remove('done'); el.textContent=''; }
-  else{ el.classList.add('done'); el.textContent='✓'; }
+  if(el.classList.contains('done')){el.classList.remove('done');el.textContent='';}
+  else{el.classList.add('done');el.textContent='✓';}
 }
 function printKitchenSheet(){
   document.querySelectorAll('.asec').forEach(s=>s.style.display='none');
-  const ks=document.getElementById('atab-kitchen-sheet'); if(ks) ks.style.display='block';
+  const ks=document.getElementById('atab-kitchen-sheet');if(ks)ks.style.display='block';
   window.print();
-  setTimeout(()=>{
-    document.querySelectorAll('.asec').forEach(s=>s.style.display='');
-    switchAdminTab('kitchen-sheet',null);
-  },600);
+  setTimeout(()=>{document.querySelectorAll('.asec').forEach(s=>s.style.display='');switchAdminTab('kitchen-sheet',null);},600);
 }
 
-// ── Reviews ──────────────────────────────────────
+// ── Reviews ───────────────────────────────────────
 function renderReviews(){
   const strip=document.getElementById('reviews-strip');
-  if(strip) strip.innerHTML=REVIEWS.map(r=>`
+  if(strip)strip.innerHTML=REVIEWS.map(r=>`
     <div class="rev-card-mini" onclick="showPage('reviews')">
-      <div class="rcm-row">
-        <span class="rcm-stars">${'⭐'.repeat(r.stars)}</span>
-        <span class="rcm-name">${r.name}</span>
-      </div>
+      <div class="rcm-row"><span class="rcm-stars">${'⭐'.repeat(r.stars)}</span><span class="rcm-name">${r.name}</span></div>
       <div class="rcm-text">${r.text}</div>
       <div class="rcm-date">${r.flat} · ${r.date}</div>
     </div>`).join('');
   const avg=REVIEWS.reduce((s,r)=>s+r.stars,0)/REVIEWS.length;
-  const rhs=document.getElementById('rh-stars'); if(rhs) rhs.textContent='⭐'.repeat(Math.round(avg));
-  const rht=document.getElementById('rh-title'); if(rht) rht.textContent=avg>=4.5?'Excellent':avg>=4?'Very Good':'Good';
-  const rhu=document.getElementById('rh-sub'); if(rhu) rhu.textContent=avg.toFixed(1)+' average · '+REVIEWS.length+' reviews';
+  const rhs=document.getElementById('rh-stars');if(rhs)rhs.textContent='⭐'.repeat(Math.round(avg));
+  const rht=document.getElementById('rh-title');if(rht)rht.textContent=avg>=4.5?'Excellent':avg>=4?'Very Good':'Good';
+  const rhu=document.getElementById('rh-sub');if(rhu)rhu.textContent=avg.toFixed(1)+' average · '+REVIEWS.length+' reviews';
   const fl=document.getElementById('rev-full-list');
-  if(fl) fl.innerHTML=REVIEWS.map(r=>`
+  if(fl)fl.innerHTML=REVIEWS.map(r=>`
     <div class="rev-full-card">
       <div class="rfc-top"><div class="rfc-name">${r.name}</div><div class="rfc-date">${r.date}</div></div>
       <div class="rfc-stars">${'⭐'.repeat(r.stars)}</div>
@@ -1548,10 +1575,9 @@ function submitReview(){
   const name=document.getElementById('rev-name').value.trim();
   const flat=document.getElementById('rev-flat').value.trim();
   const text=document.getElementById('rev-text').value.trim();
-  if(!name||!text){ toast('⚠️','Fill in details','Name and review are required.'); return; }
+  if(!name||!text){toast('⚠️','Fill in details','Name and review are required.');return;}
   const ordered=orders.find(o=>o.flat===flat);
-  REVIEWS.unshift({name,flat:flat||'—',stars:selectedStars,text,
-    dishes:ordered?ordered.items.map(i=>i.n):['Sattvic meal'],date:'Just now'});
+  REVIEWS.unshift({name,flat:flat||'—',stars:selectedStars,text,dishes:ordered?ordered.items.map(i=>i.n):['Sattvic meal'],date:'Just now'});
   renderReviews();
   ['rev-name','rev-flat','rev-text'].forEach(id=>document.getElementById(id).value='');
   toast('⭐','Review submitted!','Thank you for your feedback!');
@@ -1562,24 +1588,21 @@ function copyReviewLink(){
   toast('🔗','Review link copied!','Share this with customers after delivery.');
 }
 
-// ── Alerts ───────────────────────────────────────
+// ── Alerts ────────────────────────────────────────
 function renderNotifFeed(){
-  const el=document.getElementById('notif-feed'); if(!el) return;
+  const el=document.getElementById('notif-feed');if(!el)return;
   el.innerHTML=notifLog.map(n=>`
     <div class="nitem${n.unread?' unread':''}">
       <div class="ni-dot ${n.via}">${n.ico}</div>
       <div style="flex:1">
         <div class="ni-title">${n.title}</div>
         <div class="ni-body">${n.body}</div>
-        <div class="ni-meta">
-          <span class="ni-time">${n.time}</span>
-          <span class="ni-via ${n.via}">${n.via==='t'?'✈️ Telegram':'🌐 Web'}</span>
-        </div>
+        <div class="ni-meta"><span class="ni-time">${n.time}</span><span class="ni-via ${n.via}">${n.via==='t'?'✈️ Telegram':'🌐 Web'}</span></div>
       </div>
     </div>`).join('');
 }
 function enableWebPush(){
-  if(!('Notification' in window)){ toast('⚠️','Not supported','Use Telegram instead.'); return; }
+  if(!('Notification' in window)){toast('⚠️','Not supported','Use Telegram instead.');return;}
   Notification.requestPermission().then(p=>{
     if(p==='granted'){
       webPushOk=true;
@@ -1588,13 +1611,13 @@ function enableWebPush(){
       document.getElementById('pill-web').classList.add('aw');
       document.getElementById('pill-web-lbl').textContent='Enabled';
       toast('🌐','Web push enabled!','Browser notifications active.');
-    } else toast('⚠️','Permission denied','Allow notifications in browser settings.');
+    }else toast('⚠️','Permission denied','Allow notifications in browser settings.');
   });
 }
 
-// ── Toast ────────────────────────────────────────
+// ── Toast ─────────────────────────────────────────
 let _tT;
-function toast(ico, title, body){
+function toast(ico,title,body){
   clearTimeout(_tT);
   document.getElementById('tIco').textContent=ico;
   document.getElementById('tTitle').textContent=title;
@@ -1603,18 +1626,24 @@ function toast(ico, title, body){
   document.getElementById('toast').classList.add('show');
   _tT=setTimeout(hideToast,5000);
 }
-function hideToast(){ document.getElementById('toast').classList.remove('show'); }
+function hideToast(){document.getElementById('toast').classList.remove('show');}
 
-// ── Nav ──────────────────────────────────────────
+// ── Nav ───────────────────────────────────────────
 function showPage(name){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
-  const pg=document.getElementById('pg-'+name); if(pg) pg.classList.add('on');
+  const pg=document.getElementById('pg-'+name);if(pg)pg.classList.add('on');
   const navMap={home:'nav-home',submenu:'nav-submenu',checkout:'nav-submenu',
-                admin:'nav-admin',alerts:'nav-alerts',reviews:'nav-home'};
-  const nav=document.getElementById(navMap[name]); if(nav) nav.classList.add('on');
-  if(name==='admin') renderAdmin();
+                admin:'nav-admin',alerts:'nav-alerts',reviews:'nav-byod'};
+  const nav=document.getElementById(navMap[name]);if(nav)nav.classList.add('on');
+  if(name==='admin')renderAdmin();
 }
+
+// Update footer BYOD Review button to use new tap handler
+document.addEventListener('DOMContentLoaded',()=>{
+  const nb=document.getElementById('nav-byod');
+  if(nb){ nb.removeAttribute('onclick'); nb.addEventListener('click',handleReviewFooterTap); }
+});
 
 init();
 </script>
