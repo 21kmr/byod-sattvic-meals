@@ -3,397 +3,469 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Soudhamini Kitchen</title>
+<title>BYOD — Soudhamini Kitchen v2.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
-  --bg:#0e0c0a;--surface:#161210;--card:#1e1912;--card2:#262018;
-  --saffron:#f4a325;--saff2:#e8891a;--green:#4e9e6b;--rose:#d45f5f;
-  --tele:#2AABEE;--tele-dark:#1a8bc4;
-  --cream:#f0e8d8;--muted:#6e6458;--border:rgba(244,163,37,.1);
+  --bg:#0e0c0a;--surf:#161210;--card:#1e1912;--card2:#252018;
+  --saff:#f4a325;--saff2:#e8891a;--green:#4e9e6b;--rose:#d45f5f;
+  --tele:#2AABEE;--cream:#f0e8d8;--muted:#6e6458;--border:rgba(244,163,37,.1);
   --r:16px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;overflow:hidden}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.022;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
 .app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;position:relative;overflow:hidden}
 
 /* HEADER */
-.hdr{flex-shrink:0;padding:12px 16px 10px;background:rgba(14,12,10,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:10}
-.brand{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900;letter-spacing:-.01em;line-height:1}
-.brand span{color:var(--saffron)}
-.brand-sub{font-size:.56rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
-.hdr-right{display:flex;align-items:center;gap:7px}
-.hdr-date{font-size:.58rem;color:var(--muted);text-align:right;line-height:1.4}
-.icon-btn{width:32px;height:32px;border-radius:9px;background:var(--card);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;transition:.15s;position:relative;flex-shrink:0}
+.hdr{flex-shrink:0;padding:11px 15px 9px;background:rgba(14,12,10,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:10}
+.brand{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;line-height:1}
+.brand span{color:var(--saff)}
+.brand-sub{font-size:.54rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:6px}
+.hdr-date{font-size:.57rem;color:var(--muted);text-align:right;line-height:1.35}
+.ver-badge{font-size:.52rem;font-weight:700;background:rgba(244,163,37,.12);border:1px solid rgba(244,163,37,.22);color:var(--saff);padding:2px 6px;border-radius:5px;letter-spacing:.04em}
+.icon-btn{width:31px;height:31px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center;transition:.15s;position:relative}
 .icon-btn:active{transform:scale(.88)}
 .icon-btn .bdot{position:absolute;top:-2px;right:-2px;width:7px;height:7px;border-radius:50%;background:var(--rose);border:2px solid var(--bg)}
 
 /* PAGES */
 .pages{flex:1;overflow:hidden;position:relative}
-.page{position:absolute;inset:0;overflow-y:auto;display:none;padding-bottom:72px}
-.page.on{display:block;animation:su .28s cubic-bezier(.22,.85,.45,1)}
-@keyframes su{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.page{position:absolute;inset:0;overflow-y:auto;display:none;padding-bottom:70px}
+.page.on{display:block;animation:su .26s cubic-bezier(.22,.85,.45,1)}
+@keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{display:none}
 
 /* BOTTOM NAV */
-.bnav{position:absolute;bottom:0;left:0;right:0;background:rgba(12,10,8,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);padding:5px 0 max(6px,env(safe-area-inset-bottom));z-index:10}
-.ni{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;padding:5px 2px;color:var(--muted);transition:.2s;position:relative}
-.ni.on{color:var(--saffron)}
+.bnav{position:absolute;bottom:0;left:0;right:0;background:rgba(11,9,7,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(5,1fr);padding:5px 0 max(5px,env(safe-area-inset-bottom));z-index:10}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;padding:4px 2px;color:var(--muted);transition:.2s;position:relative}
+.ni.on{color:var(--saff)}
 .ni-ico{font-size:1.1rem;line-height:1}
-.ni-lbl{font-size:.5rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
-.cbadge{position:absolute;top:2px;right:calc(50% - 17px);background:var(--rose);color:#fff;min-width:14px;height:14px;border-radius:7px;font-size:.52rem;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 2px}
+.ni-lbl{font-size:.49rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.cbadge{position:absolute;top:2px;right:calc(50% - 16px);background:var(--rose);color:#fff;min-width:14px;height:14px;border-radius:7px;font-size:.5rem;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 2px}
 
-/* ══ HOME ══ */
-.home-hero{margin:12px 12px 0;background:linear-gradient(140deg,#221a08 0%,#16110a 100%);border:1px solid rgba(244,163,37,.18);border-radius:20px;padding:20px 18px;position:relative;overflow:hidden}
-.home-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(244,163,37,.12) 0%,transparent 70%);pointer-events:none}
-.home-hero::after{content:'🍲';position:absolute;bottom:-12px;right:8px;font-size:5.5rem;opacity:.1;pointer-events:none}
-.htag{font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--saffron);opacity:.65;margin-bottom:5px}
-.htitle{font-family:'Playfair Display',serif;font-size:1.65rem;font-weight:900;line-height:1.1;margin-bottom:7px}
-.htitle span{color:var(--saffron)}
-.haddr{font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:12px}
+/* ════════════════════════════
+   HOME
+════════════════════════════ */
+.home-hero{margin:11px 11px 0;background:linear-gradient(140deg,#221a08,#16110a);border:1px solid rgba(244,163,37,.18);border-radius:20px;padding:18px 17px;position:relative;overflow:hidden}
+.home-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:radial-gradient(circle,rgba(244,163,37,.11) 0%,transparent 70%);pointer-events:none}
+.home-hero::after{content:'🍲';position:absolute;bottom:-10px;right:8px;font-size:5rem;opacity:.09;pointer-events:none}
+.htag{font-size:.53rem;letter-spacing:.12em;text-transform:uppercase;color:var(--saff);opacity:.62;margin-bottom:4px}
+.htitle{font-family:'Playfair Display',serif;font-size:1.55rem;font-weight:900;line-height:1.1;margin-bottom:6px}
+.htitle span{color:var(--saff)}
+.haddr{font-size:.66rem;color:var(--muted);line-height:1.55;margin-bottom:11px}
 .haddr strong{color:var(--cream)}
-.dl-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.dlchip{display:inline-flex;align-items:center;gap:4px;background:rgba(244,163,37,.09);border:1px solid rgba(244,163,37,.22);border-radius:20px;padding:5px 11px;font-size:.68rem}
-#cd{font-weight:700;color:var(--saffron)}
-.rdychip{display:inline-flex;align-items:center;gap:4px;background:rgba(78,158,107,.09);border:1px solid rgba(78,158,107,.22);border-radius:20px;padding:5px 11px;font-size:.68rem;color:var(--green)}
+.dl-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.dlchip{display:inline-flex;align-items:center;gap:4px;background:rgba(244,163,37,.08);border:1px solid rgba(244,163,37,.2);border-radius:20px;padding:4px 10px;font-size:.65rem}
+#cd{font-weight:700;color:var(--saff)}
+.rdychip{display:inline-flex;align-items:center;gap:4px;background:rgba(78,158,107,.08);border:1px solid rgba(78,158,107,.2);border-radius:20px;padding:4px 10px;font-size:.65rem;color:var(--green)}
 
 /* today banner */
-.today-bar{margin:10px 12px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px 14px}
-.tb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
-.tb-title{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:700}
-.tb-price{font-size:.72rem;color:var(--saffron);font-weight:600}
-.tb-items{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px}
-.tbi{background:rgba(244,163,37,.07);border:1px solid rgba(244,163,37,.14);border-radius:7px;padding:4px 9px;font-size:.68rem;display:flex;align-items:center;gap:4px}
-.tbi .tp{color:var(--saffron);font-weight:700;margin-left:3px}
-.tb-btns{display:flex;gap:7px}
-.btn-vm{flex:1;background:var(--saffron);color:#000;border:none;border-radius:9px;padding:9px;font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s}
+.today-bar{margin:9px 11px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 13px}
+.tb-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.tb-title{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700}
+.tb-price{font-size:.7rem;color:var(--saff);font-weight:600}
+.tb-items{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:11px}
+.tbi{background:rgba(244,163,37,.07);border:1px solid rgba(244,163,37,.13);border-radius:8px;padding:8px 11px;font-size:.78rem;font-weight:500;display:flex;align-items:center;justify-content:space-between;gap:4px}
+.tbi .tp{color:var(--saff);font-weight:700;flex-shrink:0;font-size:.82rem}
+.tb-btns{display:flex;gap:6px}
+.btn-vm{flex:1;background:var(--saff);color:#000;border:none;border-radius:9px;padding:9px;font-family:'Playfair Display',serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:.15s}
 .btn-vm:active{opacity:.82;transform:scale(.97)}
-.btn-oa{flex:1;background:none;border:1.5px solid var(--saffron);color:var(--saffron);border-radius:9px;padding:9px;font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s}
+.btn-oa{flex:1;background:none;border:1.5px solid var(--saff);color:var(--saff);border-radius:9px;padding:9px;font-family:'Playfair Display',serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:.15s}
 .btn-oa:active{background:rgba(244,163,37,.1)}
 
 /* category grid */
-.sec-lbl{padding:14px 12px 8px;font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 12px 12px}
-.ccat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 13px;cursor:pointer;transition:.2s;position:relative;overflow:hidden;min-height:105px;display:flex;flex-direction:column;justify-content:space-between}
+.sec-lbl{padding:13px 11px 7px;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 11px 11px}
+.ccat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px 12px;cursor:pointer;transition:.2s;position:relative;overflow:hidden;min-height:100px;display:flex;flex-direction:column;justify-content:space-between}
 .ccat:active{transform:scale(.95)}
-.ccat-em{font-size:1.9rem;margin-bottom:7px;display:block}
-.ccat-name{font-family:'Playfair Display',serif;font-size:.86rem;font-weight:700;line-height:1.2;margin-bottom:3px}
-.ccat-cnt{font-size:.6rem;color:var(--muted)}
-.ccat-arr{position:absolute;bottom:11px;right:11px;color:var(--saffron);font-size:.75rem;opacity:.55}
-.ccat.si{background:linear-gradient(135deg,#1e180c,#261e0e);border-color:rgba(244,163,37,.18)}
-.ccat.sv{background:linear-gradient(135deg,#0e1812,#101f16);border-color:rgba(78,158,107,.18)}
-.ccat.pb{background:linear-gradient(135deg,#18100e,#1e1210);border-color:rgba(212,95,95,.18)}
-.ccat.ck{background:linear-gradient(135deg,#12101a,#160e22);border-color:rgba(140,100,200,.18)}
+.ccat-em{font-size:1.8rem;margin-bottom:6px;display:block}
+.ccat-name{font-family:'Playfair Display',serif;font-size:.83rem;font-weight:700;line-height:1.2;margin-bottom:2px}
+.ccat-cnt{font-size:.58rem;color:var(--muted)}
+.ccat-arr{position:absolute;bottom:10px;right:10px;color:var(--saff);font-size:.72rem;opacity:.5}
+.ccat.si{background:linear-gradient(135deg,#1e180c,#261e0e);border-color:rgba(244,163,37,.17)}
+.ccat.sv{background:linear-gradient(135deg,#0e1812,#101f15);border-color:rgba(78,158,107,.17)}
+.ccat.pb{background:linear-gradient(135deg,#18100e,#1e1210);border-color:rgba(212,95,95,.17)}
+.ccat.ck{background:linear-gradient(135deg,#12101a,#160e22);border-color:rgba(140,100,200,.17)}
 
-/* ══ SUBMENU ══ */
-.smhdr{padding:14px 12px 10px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border);background:rgba(14,12,10,.85);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}
-.bbtn{width:30px;height:30px;border-radius:8px;background:var(--card);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.smtitle{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700}
-.smsub{font-size:.62rem;color:var(--muted)}
-.min-note{margin:9px 12px 0;background:rgba(244,163,37,.06);border:1px solid rgba(244,163,37,.16);border-radius:9px;padding:8px 11px;font-size:.68rem;color:var(--saffron);display:flex;align-items:center;gap:5px}
+/* ── REVIEWS STRIP on home ── */
+.reviews-strip-wrap{padding:0 11px 11px;position:relative}
+.reviews-strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px}
+.rev-card-mini{flex-shrink:0;width:190px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:7px 10px;cursor:pointer;transition:.25s;position:relative;overflow:hidden;max-height:36px}
+.rev-card-mini:hover{max-height:120px;border-color:rgba(244,163,37,.25);z-index:2;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.rev-card-mini:active{transform:scale(.97)}
+.rcm-row{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.rcm-stars{font-size:.7rem;letter-spacing:.5px;flex-shrink:0}
+.rcm-name{font-size:.68rem;font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.rcm-text{font-size:.63rem;color:var(--muted);line-height:1.45;margin-top:5px;display:none}
+.rev-card-mini:hover .rcm-text{display:block}
+.rcm-date{font-size:.54rem;color:var(--muted);margin-top:3px;opacity:.6;display:none}
+.rev-card-mini:hover .rcm-date{display:block}
+.view-all-reviews{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.68rem;font-weight:600;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif;transition:.15s}
+.view-all-reviews:active{background:var(--card)}
+
+/* ════════════════════════════
+   SUBMENU
+════════════════════════════ */
+.smhdr{padding:12px 11px 9px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);background:rgba(14,12,10,.88);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}
+.bbtn{width:29px;height:29px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.smtitle{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
+.smsub{font-size:.6rem;color:var(--muted)}
+.min-note{margin:8px 11px 0;background:rgba(244,163,37,.06);border:1px solid rgba(244,163,37,.15);border-radius:8px;padding:7px 10px;font-size:.65rem;color:var(--saff);display:flex;align-items:center;gap:4px}
 
 /* dish card */
-.dcard{margin:9px 12px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.2s;position:relative}
+.dcard{margin:8px 11px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.2s;position:relative}
 .dcard:active{transform:scale(.985)}
 .dcard.sel{border-color:var(--green)}
-.dimg{width:100%;height:130px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:3.2rem;position:relative;overflow:hidden}
+.dimg{width:100%;height:128px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
 .dimg img{width:100%;height:100%;object-fit:cover;display:block}
-.dimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(14,12,10,.75) 0%,transparent 55%)}
-.dsel-badge{position:absolute;top:9px;right:9px;background:var(--green);color:#fff;border-radius:50%;width:22px;height:22px;display:none;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;z-index:2}
+.dimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(14,12,10,.75) 0%,transparent 55%);pointer-events:none}
+.dsel-badge{position:absolute;top:8px;right:8px;background:var(--green);color:#fff;border-radius:50%;width:21px;height:21px;display:none;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;z-index:2}
 .dcard.sel .dsel-badge{display:flex}
-.dinfo{padding:11px 13px 10px}
-.dname{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;margin-bottom:2px}
-.ddesc{font-size:.68rem;color:var(--muted);line-height:1.45;margin-bottom:7px}
+.dinfo{padding:10px 12px 9px}
+.dname{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:700;margin-bottom:2px}
+.ddesc{font-size:.66rem;color:var(--muted);line-height:1.44;margin-bottom:6px}
 .dfoot{display:flex;align-items:center;justify-content:space-between}
 .dtags{display:flex;gap:3px;flex-wrap:wrap}
-.dtag{font-size:.55rem;padding:2px 6px;border-radius:4px;background:rgba(244,163,37,.09);color:var(--saffron);font-weight:600;border:1px solid rgba(244,163,37,.14)}
-.dprice{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--saffron)}
-.dqbar{display:none;align-items:center;justify-content:space-between;padding:8px 13px;border-top:1px solid var(--border);background:rgba(78,158,107,.05)}
+.dtag{font-size:.53rem;padding:2px 5px;border-radius:4px;background:rgba(244,163,37,.08);color:var(--saff);font-weight:600;border:1px solid rgba(244,163,37,.13)}
+.dprice{font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;color:var(--saff)}
+.dqbar{display:none;align-items:center;justify-content:space-between;padding:8px 12px;border-top:1px solid var(--border);background:rgba(78,158,107,.05)}
 .dcard.sel .dqbar{display:flex}
-.qctrl{display:flex;align-items:center;gap:9px}
-.qb{width:26px;height:26px;border-radius:7px;border:1.5px solid var(--green);background:none;color:var(--green);font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:.15s}
+.qctrl{display:flex;align-items:center;gap:8px}
+.qb{width:25px;height:25px;border-radius:6px;border:1.5px solid var(--green);background:none;color:var(--green);font-size:.92rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:.15s}
 .qb:active{background:var(--green);color:#fff}
-.qnum{font-weight:700;font-size:.88rem;min-width:15px;text-align:center;color:var(--cream)}
-.qsub{font-size:.72rem;color:var(--muted)}
+.qnum{font-weight:700;font-size:.85rem;min-width:14px;text-align:center;color:var(--cream)}
+.qsub{font-size:.7rem;color:var(--muted)}
 
-/* photos */
-.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:9px 12px 0}
-.phcard{aspect-ratio:1;border-radius:9px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.6rem;cursor:pointer;transition:.2s;border:2px solid transparent;overflow:hidden;position:relative}
-.phcard:active{transform:scale(.93)}
-.phcard.sel-ref{border-color:var(--saffron)}
-.phcard img{width:100%;height:100%;object-fit:cover}
-.phlabel{position:absolute;bottom:0;left:0;right:0;padding:3px;font-size:.5rem;background:rgba(0,0,0,.7);text-align:center}
-.upload-ph{margin:9px 12px 0;background:none;border:1.5px dashed rgba(244,163,37,.18);border-radius:var(--r);padding:14px;text-align:center;cursor:pointer;transition:.2s;width:calc(100% - 24px)}
-.upload-ph:hover{border-color:rgba(244,163,37,.4)}
-.uph-ico{font-size:1.6rem;margin-bottom:4px}
-.uph-t{font-size:.75rem;font-weight:600;margin-bottom:1px}
-.uph-s{font-size:.62rem;color:var(--muted)}
-
-/* ══ CHECKOUT ══ */
-.cosec{padding:12px 12px 0}
-.cotitle{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;margin-bottom:9px;color:var(--saffron)}
-.cline{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px 13px;display:flex;align-items:center;gap:9px;margin-bottom:7px}
-.climg{width:40px;height:40px;border-radius:7px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;overflow:hidden}
+/* ════════════════════════════
+   CHECKOUT
+════════════════════════════ */
+.cosec{padding:11px 11px 0}
+.cotitle{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:700;margin-bottom:8px;color:var(--saff)}
+.cline{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.climg{width:38px;height:38px;border-radius:6px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;overflow:hidden}
 .climg img{width:100%;height:100%;object-fit:cover}
 .clinfo{flex:1}
-.clname{font-weight:600;font-size:.82rem;margin-bottom:1px}
-.clqty{font-size:.67rem;color:var(--muted)}
-.clprice{font-family:'Playfair Display',serif;font-weight:700;color:var(--saffron);font-size:.88rem}
-.tcard{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid rgba(244,163,37,.18);border-radius:var(--r);padding:13px;margin-bottom:9px}
-.trow{display:flex;justify-content:space-between;padding:4px 0;font-size:.78rem;color:var(--muted)}
-.trow.tot{border-top:1px solid var(--border);margin-top:5px;padding-top:9px;font-weight:700;color:var(--cream);font-size:.9rem}
-.trow.tot span:last-child{color:var(--saffron);font-family:'Playfair Display',serif;font-size:1.05rem}
-
-/* payment */
-.paycard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:9px}
-.paytitle{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:5px}
-.qrbox{background:var(--card2);border-radius:11px;padding:14px;text-align:center;margin-bottom:11px;border:1px solid var(--border)}
-.qrwrap{width:130px;height:130px;margin:0 auto 9px;background:#fff;border-radius:9px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.upi-lbl{font-size:.68rem;color:var(--muted);margin-bottom:3px}
-.upi-val{font-size:.82rem;font-weight:600;color:var(--saffron);background:rgba(244,163,37,.07);padding:5px 11px;border-radius:6px;cursor:pointer;border:1px solid rgba(244,163,37,.18);letter-spacing:.02em}
-.copy-hint{font-size:.58rem;color:var(--muted);margin-top:3px}
-.ss-btn{background:none;border:1.5px dashed rgba(244,163,37,.25);border-radius:9px;padding:11px;width:100%;cursor:pointer;color:var(--muted);font-size:.75rem;display:flex;align-items:center;justify-content:center;gap:5px;transition:.2s;font-family:'DM Sans',sans-serif}
-.ss-btn:hover{border-color:var(--saffron);color:var(--saffron)}
-.ss-prev{display:none;width:100%;border-radius:9px;overflow:hidden;margin-top:7px;border:1px solid var(--border)}
-.ss-prev img{width:100%;display:block;max-height:110px;object-fit:cover}
-
-/* dabba */
-.dabba-card{background:linear-gradient(135deg,rgba(78,158,107,.09),rgba(78,158,107,.04));border:1px solid rgba(78,158,107,.18);border-radius:var(--r);padding:14px;margin-bottom:9px}
-.dab-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:var(--green);margin-bottom:3px;display:flex;align-items:center;gap:5px}
-.dab-info{font-size:.7rem;color:var(--muted);line-height:1.6;margin-bottom:11px}
+.clname{font-weight:600;font-size:.8rem;margin-bottom:1px}
+.clqty{font-size:.65rem;color:var(--muted)}
+.clprice{font-family:'Playfair Display',serif;font-weight:700;color:var(--saff);font-size:.85rem}
+.tcard{background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid rgba(244,163,37,.16);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.trow{display:flex;justify-content:space-between;padding:4px 0;font-size:.76rem;color:var(--muted)}
+.trow.tot{border-top:1px solid var(--border);margin-top:4px;padding-top:8px;font-weight:700;color:var(--cream);font-size:.88rem}
+.trow.tot span:last-child{color:var(--saff);font-family:'Playfair Display',serif;font-size:1rem}
+.paycard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:8px}
+.paytitle{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;margin-bottom:10px}
+.qrbox{background:var(--card2);border-radius:10px;padding:13px;text-align:center;margin-bottom:10px;border:1px solid var(--border)}
+.qrwrap{width:120px;height:120px;margin:0 auto 8px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.upi-lbl{font-size:.65rem;color:var(--muted);margin-bottom:2px}
+.upi-val{font-size:.8rem;font-weight:600;color:var(--saff);background:rgba(244,163,37,.07);padding:5px 10px;border-radius:5px;cursor:pointer;border:1px solid rgba(244,163,37,.17)}
+.copy-hint{font-size:.56rem;color:var(--muted);margin-top:2px}
+.ss-btn{background:none;border:1.5px dashed rgba(244,163,37,.22);border-radius:8px;padding:10px;width:100%;cursor:pointer;color:var(--muted);font-size:.72rem;display:flex;align-items:center;justify-content:center;gap:5px;transition:.2s;font-family:'DM Sans',sans-serif}
+.ss-btn:hover{border-color:var(--saff);color:var(--saff)}
+.ss-prev{display:none;width:100%;border-radius:8px;overflow:hidden;margin-top:6px;border:1px solid var(--border)}
+.ss-prev img{width:100%;display:block;max-height:100px;object-fit:cover}
+.dabba-card{background:linear-gradient(135deg,rgba(78,158,107,.09),rgba(78,158,107,.04));border:1px solid rgba(78,158,107,.17);border-radius:var(--r);padding:13px;margin-bottom:8px}
+.dab-title{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:var(--green);margin-bottom:3px}
+.dab-info{font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:10px}
 .dab-info strong{color:var(--cream)}
-.dab-chips{display:flex;gap:7px}
-.dc{flex:1;background:rgba(78,158,107,.07);border:1px solid rgba(78,158,107,.18);border-radius:7px;padding:7px;text-align:center}
-.dc-time{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--green)}
-.dc-lbl{font-size:.57rem;color:var(--muted);margin-top:1px}
-
-/* form */
-.cform{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:9px}
-.fld{margin-bottom:11px}
+.dab-chips{display:flex;gap:6px}
+.dc{flex:1;background:rgba(78,158,107,.07);border:1px solid rgba(78,158,107,.17);border-radius:6px;padding:7px;text-align:center}
+.dc-time{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:var(--green)}
+.dc-lbl{font-size:.55rem;color:var(--muted);margin-top:1px}
+.tele-connect{background:linear-gradient(135deg,rgba(42,171,238,.09),rgba(42,171,238,.04));border:1px solid rgba(42,171,238,.22);border-radius:var(--r);padding:13px;margin-bottom:8px}
+.tc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tc-ico{width:33px;height:33px;border-radius:9px;background:var(--tele);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.tc-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700}
+.tc-sub{font-size:.62rem;color:var(--muted)}
+.tc-steps{list-style:none;margin-bottom:10px}
+.tc-step{display:flex;align-items:flex-start;gap:6px;padding:5px 0;font-size:.67rem;color:var(--muted);border-bottom:1px solid rgba(42,171,238,.08)}
+.tc-step:last-child{border:none}
+.tc-step .sn{width:17px;height:17px;border-radius:50%;background:rgba(42,171,238,.14);color:var(--tele);font-size:.58rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.tc-step strong{color:var(--cream)}
+.tele-id-row{display:flex;gap:6px}
+.tele-id-inp{flex:1;background:var(--surf);border:1.5px solid rgba(42,171,238,.22);border-radius:7px;padding:8px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none}
+.tele-id-inp:focus{border-color:var(--tele)}
+.btn-link-tele{background:rgba(42,171,238,.13);border:1px solid var(--tele);color:var(--tele);border-radius:7px;padding:8px 12px;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.tele-linked-badge{display:none;align-items:center;gap:5px;font-size:.7rem;color:var(--green);background:rgba(78,158,107,.08);border:1px solid rgba(78,158,107,.17);border-radius:7px;padding:6px 9px;margin-top:7px}
+.cform{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.fld{margin-bottom:10px}
 .fld:last-child{margin-bottom:0}
-.fld label{display:block;font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
-.fld input,.fld select,.fld textarea{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;appearance:none;transition:.2s}
-.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--saffron);box-shadow:0 0 0 2px rgba(244,163,37,.07)}
+.fld label{display:block;font-size:.56rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--surf);border:1.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;appearance:none;transition:.2s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--saff);box-shadow:0 0 0 2px rgba(244,163,37,.07)}
 .fld input::placeholder,.fld textarea::placeholder{color:var(--muted)}
 .fld select option{background:var(--card)}
-
-/* telegram connect box */
-.tele-connect{background:linear-gradient(135deg,rgba(42,171,238,.1),rgba(42,171,238,.04));border:1px solid rgba(42,171,238,.25);border-radius:var(--r);padding:14px;margin-bottom:9px}
-.tc-top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
-.tc-ico{width:36px;height:36px;border-radius:10px;background:var(--tele);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
-.tc-title{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700}
-.tc-sub{font-size:.65rem;color:var(--muted)}
-.tc-steps{list-style:none;margin-bottom:11px}
-.tc-step{display:flex;align-items:flex-start;gap:7px;padding:5px 0;font-size:.7rem;color:var(--muted);border-bottom:1px solid rgba(42,171,238,.08)}
-.tc-step:last-child{border:none}
-.tc-step .sn{width:18px;height:18px;border-radius:50%;background:rgba(42,171,238,.15);color:var(--tele);font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.tc-step strong{color:var(--cream)}
-.btn-tele{width:100%;background:var(--tele);color:#fff;border:none;border-radius:10px;padding:11px;font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:7px}
-.btn-tele:active{background:var(--tele-dark);transform:scale(.97)}
-.tele-id-row{display:flex;gap:7px;margin-top:9px}
-.tele-id-inp{flex:1;background:var(--surface);border:1.5px solid rgba(42,171,238,.25);border-radius:8px;padding:9px 11px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none}
-.tele-id-inp:focus{border-color:var(--tele)}
-.btn-link-tele{background:rgba(42,171,238,.15);border:1px solid var(--tele);color:var(--tele);border-radius:8px;padding:9px 14px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
-.tele-linked{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--green);margin-top:7px;display:none}
-
-.btn-place{width:100%;background:linear-gradient(90deg,var(--saffron),var(--saff2));color:#000;border:none;border-radius:var(--r);padding:14px;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:7px;display:flex;align-items:center;justify-content:center;gap:7px}
-.btn-place:active{opacity:.87;transform:scale(.98)}
-.btn-place:disabled{background:var(--muted);cursor:not-allowed;transform:none;color:rgba(255,255,255,.4)}
-.btn-notify-dabba{width:100%;background:none;border:1.5px solid var(--green);color:var(--green);border-radius:var(--r);padding:12px;font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:.15s;display:none;align-items:center;justify-content:center;gap:6px}
+.btn-place{width:100%;background:linear-gradient(90deg,var(--saff),var(--saff2));color:#000;border:none;border-radius:var(--r);padding:13px;font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-place:active{opacity:.86;transform:scale(.98)}
+.btn-place:disabled{background:var(--muted);cursor:not-allowed;transform:none;color:rgba(255,255,255,.35)}
+.btn-notify-dabba{width:100%;background:none;border:1.5px solid var(--green);color:var(--green);border-radius:var(--r);padding:11px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;display:none;align-items:center;justify-content:center;gap:5px;margin-bottom:6px}
 .btn-notify-dabba:active{background:rgba(78,158,107,.1)}
-
-/* success */
-.success-sec{display:none;padding:28px 16px;text-align:center;animation:su .4s ease}
-.s-anim{font-size:3.2rem;margin-bottom:12px;display:block;animation:pop .5s cubic-bezier(.36,1.6,.6,1)}
+.success-sec{display:none;padding:26px 15px;text-align:center;animation:su .4s ease}
+.s-anim{font-size:3rem;margin-bottom:10px;display:block;animation:pop .5s cubic-bezier(.36,1.6,.6,1)}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
-.s-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;margin-bottom:5px}
-.s-sub{font-size:.77rem;color:var(--muted);margin-bottom:18px;line-height:1.6}
-.tele-confirm{background:rgba(42,171,238,.08);border:1px solid rgba(42,171,238,.22);border-radius:12px;padding:12px;margin-bottom:14px;text-align:left}
-.tc-conf-title{font-size:.78rem;font-weight:600;color:var(--tele);margin-bottom:4px;display:flex;align-items:center;gap:5px}
-.tc-conf-body{font-size:.7rem;color:var(--muted);line-height:1.5}
-.track-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;text-align:left;margin-bottom:14px}
-.tstep{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--border)}
+.s-title{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:900;margin-bottom:4px}
+.s-sub{font-size:.74rem;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.tele-confirm{background:rgba(42,171,238,.07);border:1px solid rgba(42,171,238,.2);border-radius:11px;padding:11px;margin-bottom:12px;text-align:left}
+.tc-conf-t{font-size:.75rem;font-weight:600;color:var(--tele);margin-bottom:3px}
+.tc-conf-b{font-size:.67rem;color:var(--muted);line-height:1.45}
+.track-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:left;margin-bottom:12px}
+.tstep{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)}
 .tstep:last-child{border:none}
-.tsi{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
-.tsi.done{background:rgba(78,158,107,.18);color:var(--green)}
-.tsi.pend{background:rgba(110,100,88,.1);color:var(--muted)}
-.tst{font-size:.77rem}
-.tstime{font-size:.62rem;color:var(--muted);margin-top:1px}
-.btn-back{background:none;border:1.5px solid var(--border);border-radius:var(--r);padding:11px 22px;font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:var(--cream);cursor:pointer;transition:.15s}
+.tsi{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.76rem;flex-shrink:0}
+.tsi.done{background:rgba(78,158,107,.16);color:var(--green)}
+.tsi.pend{background:rgba(110,100,88,.09);color:var(--muted)}
+.tst{font-size:.74rem}
+.tstime{font-size:.6rem;color:var(--muted);margin-top:1px}
+.btn-back{background:none;border:1.5px solid var(--border);border-radius:var(--r);padding:10px 20px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:var(--cream);cursor:pointer;transition:.15s}
 .btn-back:active{background:var(--card)}
 
-/* ══ ALERTS PAGE ══ */
-.alerts-page{padding:0 0 8px}
-
-/* header banner */
-.alerts-hero{margin:12px;background:linear-gradient(140deg,rgba(42,171,238,.12),rgba(42,171,238,.04));border:1px solid rgba(42,171,238,.22);border-radius:20px;padding:18px;position:relative;overflow:hidden}
-.alerts-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(42,171,238,.15) 0%,transparent 70%);pointer-events:none}
-.ah-icon{font-size:1.6rem;margin-bottom:6px;position:relative}
-.ah-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:3px;color:var(--tele);position:relative}
-.ah-sub{font-size:.7rem;color:var(--muted);line-height:1.5;position:relative}
-
-/* channel pills */
-.channel-row{display:flex;gap:7px;padding:12px 12px 0;overflow-x:auto}
-.ch-pill{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);cursor:pointer;white-space:nowrap;transition:.2s;font-size:.68rem;font-weight:600;flex-shrink:0}
-.ch-pill.active-tele{border-color:var(--tele);background:rgba(42,171,238,.1);color:var(--tele)}
-.ch-pill.active-web{border-color:var(--green);background:rgba(78,158,107,.1);color:var(--green)}
-.ch-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
-
-/* telegram setup card */
-.tele-setup{margin:10px 12px 0;background:var(--card);border:1px solid rgba(42,171,238,.2);border-radius:var(--r);overflow:hidden}
-.ts-header{background:rgba(42,171,238,.08);padding:12px 14px;display:flex;align-items:center;gap:9px}
-.ts-ico{width:34px;height:34px;border-radius:9px;background:var(--tele);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
-.ts-title{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700}
-.ts-sub{font-size:.62rem;color:var(--muted)}
-.ts-body{padding:12px 14px}
-.ts-step{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);align-items:flex-start}
-.ts-step:last-child{border:none}
-.step-num{width:20px;height:20px;border-radius:50%;background:rgba(42,171,238,.15);color:var(--tele);font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.step-txt{font-size:.7rem;color:var(--muted);line-height:1.5}
-.step-txt strong{color:var(--cream)}
-.step-txt code{background:rgba(42,171,238,.1);color:var(--tele);padding:1px 5px;border-radius:4px;font-size:.68rem}
-.tele-connect-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;background:var(--tele);border:none;border-radius:10px;padding:11px;color:#fff;font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:.15s;margin-top:11px}
-.tele-connect-btn:active{background:var(--tele-dark);transform:scale(.97)}
-.tele-username-row{display:flex;gap:7px;margin-top:9px}
-.tele-inp{flex:1;background:var(--surface);border:1.5px solid rgba(42,171,238,.2);border-radius:8px;padding:9px 11px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none}
+/* ════════════════════════════
+   ALERTS
+════════════════════════════ */
+.alerts-hero{margin:11px;background:linear-gradient(140deg,rgba(42,171,238,.11),rgba(42,171,238,.04));border:1px solid rgba(42,171,238,.2);border-radius:20px;padding:17px;position:relative;overflow:hidden}
+.alerts-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:110px;height:110px;background:radial-gradient(circle,rgba(42,171,238,.14) 0%,transparent 70%);pointer-events:none}
+.ah-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:2px;color:var(--tele);position:relative}
+.ah-sub{font-size:.68rem;color:var(--muted);line-height:1.5;position:relative}
+.ch-row{display:flex;gap:6px;padding:10px 11px 0;overflow-x:auto}
+.chpill{display:flex;align-items:center;gap:4px;padding:5px 11px;border-radius:18px;border:1px solid var(--border);background:var(--card);cursor:pointer;white-space:nowrap;font-size:.65rem;font-weight:600;flex-shrink:0}
+.chpill.at{border-color:var(--tele);background:rgba(42,171,238,.09);color:var(--tele)}
+.chpill.aw{border-color:var(--green);background:rgba(78,158,107,.09);color:var(--green)}
+.tele-setup{margin:9px 11px 0;background:var(--card);border:1px solid rgba(42,171,238,.18);border-radius:var(--r);overflow:hidden}
+.tsh{background:rgba(42,171,238,.07);padding:11px 13px;display:flex;align-items:center;gap:8px}
+.ts-ico{width:32px;height:32px;border-radius:8px;background:var(--tele);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.ts-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700}
+.ts-sub{font-size:.6rem;color:var(--muted)}
+.tsbody{padding:11px 13px}
+.tsstep{display:flex;gap:7px;padding:7px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.tsstep:last-child{border:none}
+.ssn{width:19px;height:19px;border-radius:50%;background:rgba(42,171,238,.13);color:var(--tele);font-size:.6rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.sstxt{font-size:.68rem;color:var(--muted);line-height:1.5}
+.sstxt strong{color:var(--cream)}
+.sstxt code{background:rgba(42,171,238,.1);color:var(--tele);padding:1px 5px;border-radius:3px;font-size:.65rem}
+.tele-connect-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;background:var(--tele);border:none;border-radius:9px;padding:10px;color:#fff;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;margin-top:10px}
+.tele-connect-btn:active{opacity:.85;transform:scale(.97)}
+.tele-urow{display:flex;gap:6px;margin-top:8px}
+.tele-inp{flex:1;background:var(--surf);border:1.5px solid rgba(42,171,238,.18);border-radius:7px;padding:8px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none}
 .tele-inp:focus{border-color:var(--tele)}
 .tele-inp::placeholder{color:var(--muted)}
-.btn-verify{background:rgba(42,171,238,.12);border:1px solid var(--tele);color:var(--tele);border-radius:8px;padding:9px 13px;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:.15s}
-.btn-verify:active{background:rgba(42,171,238,.25)}
-.tele-linked-badge{display:none;align-items:center;gap:6px;font-size:.72rem;color:var(--green);background:rgba(78,158,107,.08);border:1px solid rgba(78,158,107,.18);border-radius:8px;padding:7px 10px;margin-top:8px}
-
-/* notification toggles */
-.notif-group{margin:10px 12px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.ng-header{padding:10px 14px;background:rgba(244,163,37,.04);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.ntrow{display:flex;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border)}
+.btn-verify{background:rgba(42,171,238,.11);border:1px solid var(--tele);color:var(--tele);border-radius:7px;padding:8px 12px;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.tele-linked-main{display:none;align-items:center;gap:5px;font-size:.7rem;color:var(--green);background:rgba(78,158,107,.07);border:1px solid rgba(78,158,107,.17);border-radius:7px;padding:6px 9px;margin-top:7px}
+.notif-group{margin:9px 11px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.ng-hdr{padding:8px 13px;background:rgba(244,163,37,.04);border-bottom:1px solid var(--border);font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:5px}
+.ntrow{display:flex;align-items:center;padding:10px 13px;border-bottom:1px solid var(--border)}
 .ntrow:last-child{border:none}
 .ntl{flex:1}
-.nt-title{font-weight:600;font-size:.82rem;margin-bottom:1px;display:flex;align-items:center;gap:5px}
-.nt-sub{font-size:.65rem;color:var(--muted)}
-.nt-channels{display:flex;gap:4px;margin-top:4px}
-.nch{font-size:.55rem;padding:2px 6px;border-radius:4px;font-weight:700}
-.nch.t{background:rgba(42,171,238,.12);color:var(--tele);border:1px solid rgba(42,171,238,.2)}
-.nch.w{background:rgba(78,158,107,.1);color:var(--green);border:1px solid rgba(78,158,107,.18)}
-.tog{width:38px;height:21px;border-radius:11px;background:rgba(110,100,88,.2);cursor:pointer;position:relative;transition:.25s;border:none;flex-shrink:0}
+.nt-title{font-weight:600;font-size:.8rem;margin-bottom:1px}
+.nt-sub{font-size:.62rem;color:var(--muted)}
+.nt-chs{display:flex;gap:3px;margin-top:4px}
+.nch{font-size:.52rem;padding:2px 5px;border-radius:3px;font-weight:700}
+.nch.t{background:rgba(42,171,238,.1);color:var(--tele);border:1px solid rgba(42,171,238,.18)}
+.nch.w{background:rgba(78,158,107,.09);color:var(--green);border:1px solid rgba(78,158,107,.17)}
+.tog{width:36px;height:20px;border-radius:10px;background:rgba(110,100,88,.18);cursor:pointer;position:relative;transition:.25s;border:none;flex-shrink:0}
 .tog.on{background:var(--tele)}
-.tog::after{content:'';position:absolute;top:2.5px;left:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.25s}
-.tog.on::after{left:19.5px}
-
-/* web push */
-.web-push-card{margin:10px 12px 0;background:var(--card);border:1px solid rgba(78,158,107,.18);border-radius:var(--r);padding:14px}
-.wp-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:6px}
-.wp-sub{font-size:.68rem;color:var(--muted);margin-bottom:11px;line-height:1.5}
-.btn-web-push{width:100%;background:rgba(78,158,107,.12);border:1.5px solid var(--green);color:var(--green);border-radius:10px;padding:10px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s}
+.tog::after{content:'';position:absolute;top:2.5px;left:2.5px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.25s}
+.tog.on::after{left:18.5px}
+.web-push-card{margin:9px 11px 0;background:var(--card);border:1px solid rgba(78,158,107,.17);border-radius:var(--r);padding:13px}
+.wp-title{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:5px}
+.wp-sub{font-size:.65rem;color:var(--muted);margin-bottom:10px;line-height:1.45}
+.btn-web-push{width:100%;background:rgba(78,158,107,.11);border:1.5px solid var(--green);color:var(--green);border-radius:9px;padding:9px;font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s}
 .btn-web-push:active{background:rgba(78,158,107,.2)}
-
-/* notification feed */
-.feed-label{padding:14px 12px 7px;font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.notif-feed{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin:0 12px;overflow:hidden}
-.nitem{display:flex;gap:9px;align-items:flex-start;padding:11px 13px;border-bottom:1px solid var(--border);position:relative}
+.feed-lbl{padding:13px 11px 6px;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.notif-feed{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin:0 11px;overflow:hidden}
+.nitem{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-bottom:1px solid var(--border);position:relative}
 .nitem:last-child{border:none}
 .nitem.unread::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--tele);border-radius:0 2px 2px 0}
-.ni-dot{width:30px;height:30px;border-radius:8px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
-.ni-dot.t{background:rgba(42,171,238,.12)}
-.ni-dot.w{background:rgba(78,158,107,.1)}
-.ni-title{font-weight:600;font-size:.78rem;margin-bottom:1px}
-.ni-body{font-size:.67rem;color:var(--muted);line-height:1.4}
-.ni-meta{display:flex;align-items:center;gap:5px;margin-top:3px}
-.ni-time{font-size:.58rem;color:var(--muted)}
-.ni-via{font-size:.55rem;padding:1px 5px;border-radius:3px;font-weight:700}
-.ni-via.t{background:rgba(42,171,238,.1);color:var(--tele)}
-.ni-via.w{background:rgba(78,158,107,.08);color:var(--green)}
+.ni-dot{width:28px;height:28px;border-radius:7px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.ni-dot.t{background:rgba(42,171,238,.1)}
+.ni-dot.w{background:rgba(78,158,107,.08)}
+.ni-title{font-weight:600;font-size:.76rem;margin-bottom:1px}
+.ni-body{font-size:.65rem;color:var(--muted);line-height:1.4}
+.ni-meta{display:flex;align-items:center;gap:4px;margin-top:2px}
+.ni-time{font-size:.56rem;color:var(--muted)}
+.ni-via{font-size:.52rem;padding:1px 5px;border-radius:3px;font-weight:700}
+.ni-via.t{background:rgba(42,171,238,.09);color:var(--tele)}
+.ni-via.w{background:rgba(78,158,107,.07);color:var(--green)}
 
-/* ══ KITCHEN ══ */
-.kitchen-hero{margin:12px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden}
-.live-screen{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#18100a,#0e0c06);display:flex;align-items:center;justify-content:center;position:relative}
-.live-badge{position:absolute;top:9px;left:9px;background:var(--rose);color:#fff;font-size:.58rem;font-weight:700;letter-spacing:.07em;padding:3px 7px;border-radius:4px;display:flex;align-items:center;gap:3px}
+/* ════════════════════════════
+   KITCHEN
+════════════════════════════ */
+.kitchen-hero{margin:11px;background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.live-screen{width:100%;aspect-ratio:16/9;background:#000;position:relative;overflow:hidden}
+.live-screen iframe{width:100%;height:100%;border:none}
+.live-badge{position:absolute;top:9px;left:9px;background:var(--rose);color:#fff;font-size:.56rem;font-weight:700;letter-spacing:.07em;padding:3px 6px;border-radius:4px;display:flex;align-items:center;gap:3px;z-index:2;pointer-events:none}
 .ldot{width:5px;height:5px;border-radius:50%;background:#fff;animation:bl 1.2s infinite}
 @keyframes bl{0%,100%{opacity:1}50%{opacity:.2}}
-.lp-ico{font-size:2.5rem;opacity:.35;display:block;margin-bottom:6px}
-.lp-txt{font-size:.72rem;color:var(--muted);text-align:center}
-.lp-sub{font-size:.6rem;color:var(--muted);opacity:.5;margin-top:2px;text-align:center}
-.kitchen-info{padding:12px 14px}
-.ki-title{font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;margin-bottom:3px}
-.ki-sub{font-size:.67rem;color:var(--muted);line-height:1.5}
-.kpromises{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:12px}
-.kp{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px;text-align:center}
-.kp-ico{font-size:1.2rem;margin-bottom:3px}
-.kp-t{font-size:.62rem;color:var(--muted);line-height:1.4}
-.kp-t strong{display:block;color:var(--cream);font-size:.68rem;margin-bottom:1px}
-.kg-lbl{padding:0 12px 6px;font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
-.kg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:0 12px 12px}
-.kgi{aspect-ratio:1;border-radius:9px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;border:1px solid var(--border);overflow:hidden}
-.kgi img{width:100%;height:100%;object-fit:cover}
+.live-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;padding:16px}
+.lp-ico{font-size:2.4rem;opacity:.3;margin-bottom:6px}
+.lp-txt{font-size:.7rem;color:var(--muted)}
+.lp-sub{font-size:.6rem;color:var(--muted);opacity:.5;margin-top:2px}
+/* youtube url input */
+.yt-input-wrap{padding:11px 13px;border-top:1px solid var(--border);display:flex;gap:6px;background:var(--card2)}
+.yt-inp{flex:1;background:var(--surf);border:1.5px solid var(--border);border-radius:7px;padding:7px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none}
+.yt-inp:focus{border-color:var(--rose)}
+.yt-inp::placeholder{color:var(--muted)}
+.btn-yt{background:var(--rose);border:none;border-radius:7px;padding:7px 11px;color:#fff;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.kitchen-info{padding:11px 13px}
+.ki-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;margin-bottom:2px}
+.ki-sub{font-size:.64rem;color:var(--muted);line-height:1.5}
+.kpromises{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:11px}
+.kp{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center}
+.kp-ico{font-size:1.15rem;margin-bottom:3px}
+.kp-t{font-size:.6rem;color:var(--muted);line-height:1.35}
+.kp-t strong{display:block;color:var(--cream);font-size:.66rem;margin-bottom:1px}
+/* kitchen moments */
+.km-header{padding:0 11px 7px;display:flex;align-items:center;justify-content:space-between}
+.km-lbl{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.btn-add-moment{background:none;border:1px solid var(--border);border-radius:7px;padding:4px 9px;color:var(--muted);font-size:.62rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.15s}
+.btn-add-moment:active{background:var(--card)}
+.kg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:0 11px 11px}
+.kgi{aspect-ratio:1;border-radius:9px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:1.4rem;border:1px solid var(--border);overflow:hidden;position:relative;cursor:pointer}
+.kgi img{width:100%;height:100%;object-fit:cover;display:block}
+.kgi-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.65);border:none;border-radius:4px;color:#fff;font-size:.6rem;cursor:pointer;padding:2px 5px;display:none}
+.kgi:hover .kgi-del{display:block}
+.kgi-add{border:1.5px dashed rgba(244,163,37,.2);cursor:pointer;transition:.2s}
+.kgi-add:hover{border-color:rgba(244,163,37,.4);background:rgba(244,163,37,.03)}
+/* drive album */
+.drive-album-card{margin:0 11px 11px;background:var(--card);border:1px solid rgba(42,171,238,.18);border-radius:var(--r);padding:13px}
+.da-title{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;margin-bottom:3px;color:var(--tele)}
+.da-sub{font-size:.65rem;color:var(--muted);margin-bottom:9px;line-height:1.45}
+.da-inp-row{display:flex;gap:6px}
+.da-inp{flex:1;background:var(--surf);border:1.5px solid rgba(42,171,238,.18);border-radius:7px;padding:8px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none}
+.da-inp:focus{border-color:var(--tele)}
+.da-inp::placeholder{color:var(--muted)}
+.btn-da{background:var(--tele);border:none;border-radius:7px;padding:8px 12px;color:#fff;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
 
-/* ══ ADMIN ══ */
-.admin-tabs{display:flex;gap:5px;padding:10px 12px 0;overflow-x:auto}
-.atab{padding:5px 12px;border-radius:18px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:.68rem;font-weight:600;white-space:nowrap;transition:.15s;font-family:'DM Sans',sans-serif}
-.atab.on{background:var(--saffron);border-color:var(--saffron);color:#000}
-.asec{display:none;padding:10px 12px 0}
+/* ════════════════════════════
+   ADMIN
+════════════════════════════ */
+.admin-tabs{display:flex;gap:5px;padding:9px 11px 0;overflow-x:auto}
+.atab{padding:5px 11px;border-radius:17px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:.65rem;font-weight:600;white-space:nowrap;transition:.15s;font-family:'DM Sans',sans-serif}
+.atab.on{background:var(--saff);border-color:var(--saff);color:#000}
+.asec{display:none;padding:9px 11px 0}
 .asec.on{display:block}
-.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px}
-.sbox{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px;text-align:center}
-.sbn{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;line-height:1}
-.sbn.s{color:var(--saffron)}.sbn.g{color:var(--green)}.sbn.r{color:var(--rose)}.sbn.t{color:var(--tele)}
-.sbl{font-size:.58rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
-.ocard{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:12px;margin-bottom:7px}
-.oc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:4px}
-.oc-id{font-weight:700;font-size:.82rem;color:var(--saffron)}
-.ocbadge{font-size:.58rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:12px}
-.ocbadge.confirmed{background:rgba(244,163,37,.12);color:var(--saffron)}
-.ocbadge.ready{background:rgba(78,158,107,.12);color:var(--green)}
-.oc-cust{font-size:.72rem;color:var(--muted);margin-bottom:4px}
-.oc-addr{font-size:.68rem;color:var(--muted);margin-bottom:4px}
-.oc-tele{font-size:.67rem;color:var(--tele);margin-bottom:4px;display:flex;align-items:center;gap:3px}
-.oc-items{font-size:.72rem;margin-bottom:7px;line-height:1.5;color:var(--cream)}
-.oc-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px}
-.oc-total{font-family:'Playfair Display',serif;font-weight:700;color:var(--saffron);font-size:.88rem}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:11px}
+.sbox{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px;text-align:center}
+.sbn{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900;line-height:1}
+.sbn.s{color:var(--saff)}.sbn.g{color:var(--green)}.sbn.r{color:var(--rose)}.sbn.t{color:var(--tele)}
+.sbl{font-size:.56rem;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.ocard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:11px;margin-bottom:6px}
+.oc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;flex-wrap:wrap;gap:4px}
+.oc-id{font-weight:700;font-size:.8rem;color:var(--saff)}
+.ocbadge{font-size:.56rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:10px}
+.ocbadge.confirmed{background:rgba(244,163,37,.11);color:var(--saff)}
+.ocbadge.ready{background:rgba(78,158,107,.11);color:var(--green)}
+.oc-cust{font-size:.7rem;color:var(--muted);margin-bottom:3px}
+.oc-addr{font-size:.65rem;color:var(--muted);margin-bottom:3px}
+.oc-tele{font-size:.64rem;color:var(--tele);margin-bottom:3px;display:flex;align-items:center;gap:3px}
+.oc-items{font-size:.7rem;margin-bottom:6px;line-height:1.5;color:var(--cream)}
+.oc-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
+.oc-total{font-family:'Playfair Display',serif;font-weight:700;color:var(--saff);font-size:.85rem}
 .oc-acts{display:flex;gap:4px;flex-wrap:wrap}
-.ocbtn{font-size:.62rem;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--cream);transition:.15s}
+.ocbtn{font-size:.6rem;padding:4px 8px;border-radius:5px;border:1px solid var(--border);background:none;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--cream);transition:.15s}
 .ocbtn:active{background:var(--card2)}
 .ocbtn.g{border-color:var(--green);color:var(--green)}
 .ocbtn.t{border-color:var(--tele);color:var(--tele)}
 
 /* edit menu */
-.edcard{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:11px;margin-bottom:7px}
-.ed-top{display:flex;align-items:center;gap:8px;margin-bottom:9px}
-.ed-em{font-size:1.5rem;width:36px;text-align:center}
-.ed-name{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:6px 9px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none}
-.ed-name:focus{border-color:var(--saffron)}
-.ed-row{display:flex;gap:7px;align-items:center}
-.ed-price{width:72px;background:var(--surface);border:1.5px solid var(--border);border-radius:7px;padding:6px 9px;color:var(--saffron);font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;outline:none;text-align:center}
-.ed-price:focus{border-color:var(--saffron)}
-.ed-avail{display:flex;align-items:center;gap:5px;font-size:.68rem;color:var(--muted);cursor:pointer}
-.add-btn{width:100%;background:none;border:1.5px dashed rgba(244,163,37,.2);border-radius:11px;padding:11px;color:var(--saffron);font-size:.75rem;font-weight:600;cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:7px}
-.add-btn:hover{background:rgba(244,163,37,.04);border-color:rgba(244,163,37,.35)}
-.save-btn{width:100%;background:var(--saffron);color:#000;border:none;border-radius:11px;padding:11px;font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:14px}
+.edcard{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:6px}
+.ed-top{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.ed-em{font-size:1.4rem;width:32px;text-align:center;flex-shrink:0}
+.ed-name{flex:1;background:var(--surf);border:1.5px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none}
+.ed-name:focus{border-color:var(--saff)}
+.ed-row{display:flex;gap:6px;align-items:center;margin-bottom:7px}
+.ed-price{width:68px;background:var(--surf);border:1.5px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--saff);font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700;outline:none;text-align:center}
+.ed-price:focus{border-color:var(--saff)}
+.ed-avail{display:flex;align-items:center;gap:4px;font-size:.65rem;color:var(--muted);cursor:pointer}
+/* photo URL row in admin dish */
+.ed-photo-row{display:flex;gap:5px;align-items:center}
+.ed-photo-inp{flex:1;background:var(--surf);border:1.5px solid var(--border);border-radius:6px;padding:6px 8px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.72rem;outline:none}
+.ed-photo-inp:focus{border-color:var(--saff)}
+.ed-photo-inp::placeholder{color:var(--muted)}
+.ed-photo-prev{width:36px;height:36px;border-radius:6px;background:var(--card2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.9rem;overflow:hidden;flex-shrink:0}
+.ed-photo-prev img{width:100%;height:100%;object-fit:cover}
+.add-btn{width:100%;background:none;border:1.5px dashed rgba(244,163,37,.18);border-radius:10px;padding:10px;color:var(--saff);font-size:.72rem;font-weight:600;cursor:pointer;transition:.15s;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:6px}
+.add-btn:hover{background:rgba(244,163,37,.04);border-color:rgba(244,163,37,.32)}
+.save-btn{width:100%;background:var(--saff);color:#000;border:none;border-radius:10px;padding:11px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:12px}
 .save-btn:active{opacity:.85}
-
-/* broadcast */
-.bulk-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:8px}
-.bulk-title{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.bulk-ta{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;resize:none;min-height:68px;margin-bottom:8px}
-.bulk-ta:focus{border-color:var(--saffron)}
-.bulk-chs{display:flex;gap:7px;margin-bottom:8px}
-.bch{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:none;color:var(--muted);font-size:.68rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;font-family:'DM Sans',sans-serif;transition:.2s}
-.bch.on.t{border-color:var(--tele);background:rgba(42,171,238,.1);color:var(--tele)}
-.bch.on.w{border-color:var(--green);background:rgba(78,158,107,.1);color:var(--green)}
-.bulk-btn{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:var(--cream);cursor:pointer;transition:.15s}
+.bulk-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:7px}
+.bulk-title{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;margin-bottom:7px;display:flex;align-items:center;gap:5px}
+.bulk-ta{width:100%;background:var(--surf);border:1.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;resize:none;min-height:64px;margin-bottom:7px}
+.bulk-ta:focus{border-color:var(--saff)}
+.bulk-chs{display:flex;gap:6px;margin-bottom:7px}
+.bch{flex:1;padding:7px;border-radius:7px;border:1.5px solid var(--border);background:none;color:var(--muted);font-size:.65rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;font-family:'DM Sans',sans-serif;transition:.2s}
+.bch.on.t{border-color:var(--tele);background:rgba(42,171,238,.09);color:var(--tele)}
+.bch.on.w{border-color:var(--green);background:rgba(78,158,107,.09);color:var(--green)}
+.bulk-btn{width:100%;background:var(--surf);border:1px solid var(--border);border-radius:8px;padding:9px;font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700;color:var(--cream);cursor:pointer;transition:.15s}
 .bulk-btn:active{background:var(--card2)}
 
-/* TOAST */
-.toast{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-110%);width:min(440px,calc(100% - 16px));background:var(--card);border:1px solid var(--border);border-bottom:none;border-radius:0 0 16px 16px;padding:12px 14px 10px;z-index:99999;transition:.35s cubic-bezier(.22,.85,.45,1.1);box-shadow:0 8px 28px rgba(0,0,0,.45)}
+/* ════════════════════════════
+   REVIEWS PAGE
+════════════════════════════ */
+.reviews-page{padding:0 0 8px}
+.rev-hero{margin:11px;background:linear-gradient(140deg,rgba(244,163,37,.1),rgba(244,163,37,.04));border:1px solid rgba(244,163,37,.18);border-radius:20px;padding:16px 17px;position:relative;overflow:hidden}
+.rev-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:110px;height:110px;background:radial-gradient(circle,rgba(244,163,37,.13) 0%,transparent 70%);pointer-events:none}
+.rh-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:2px;position:relative}
+.rh-stars{font-size:1.1rem;letter-spacing:2px;margin-bottom:3px;position:relative}
+.rh-sub{font-size:.66rem;color:var(--muted);position:relative}
+.rev-full-card{margin:0 11px 8px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px}
+.rfc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.rfc-name{font-weight:700;font-size:.82rem}
+.rfc-date{font-size:.58rem;color:var(--muted)}
+.rfc-stars{font-size:.85rem;letter-spacing:1px;margin-bottom:4px}
+.rfc-flat{font-size:.62rem;color:var(--muted);margin-bottom:5px;display:flex;align-items:center;gap:3px}
+.rfc-text{font-size:.72rem;color:var(--muted);line-height:1.55}
+.rfc-dishes{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}
+.rfc-dish{font-size:.58rem;padding:2px 6px;border-radius:4px;background:rgba(244,163,37,.08);color:var(--saff);border:1px solid rgba(244,163,37,.14)}
+/* add review */
+.add-review-card{margin:0 11px 8px;background:var(--card);border:1px dashed rgba(244,163,37,.2);border-radius:var(--r);padding:14px}
+.ar-title{font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;margin-bottom:10px}
+.star-picker{display:flex;gap:5px;margin-bottom:10px}
+.star-btn{font-size:1.3rem;cursor:pointer;opacity:.35;transition:.15s;background:none;border:none}
+.star-btn.on{opacity:1}
+.btn-submit-rev{width:100%;background:var(--saff);color:#000;border:none;border-radius:9px;padding:10px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;margin-top:8px}
+.btn-submit-rev:active{opacity:.85}
+
+/* ── KITCHEN SHEET ── */
+.ks-summary{background:linear-gradient(135deg,rgba(244,163,37,.12),rgba(244,163,37,.05));border:1px solid rgba(244,163,37,.22);border-radius:var(--r);padding:13px;margin-top:9px;display:flex;gap:0;overflow:hidden}
+.ks-stat{flex:1;text-align:center;border-right:1px solid rgba(244,163,37,.15)}
+.ks-stat:last-child{border:none}
+.ks-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;line-height:1;color:var(--saff)}
+.ks-lbl{font-size:.56rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.ks-tally-row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.ktr-left{display:flex;align-items:center;gap:8px}
+.ktr-em{font-size:1.3rem}
+.ktr-name{font-weight:600;font-size:.82rem}
+.ktr-cat{font-size:.6rem;color:var(--muted);margin-top:1px}
+.ktr-count{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--saff);min-width:36px;text-align:right}
+.ktr-unit{font-size:.58rem;color:var(--muted);text-align:right;margin-top:1px}
+.ks-order-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 13px;margin-bottom:5px;display:flex;align-items:flex-start;gap:10px}
+.koc-num{width:28px;height:28px;border-radius:50%;background:rgba(244,163,37,.12);border:1px solid rgba(244,163,37,.22);color:var(--saff);font-family:'Playfair Display',serif;font-size:.85rem;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.koc-body{flex:1}
+.koc-name{font-weight:700;font-size:.82rem;margin-bottom:1px}
+.koc-addr{font-size:.65rem;color:var(--muted);margin-bottom:4px}
+.koc-items{display:flex;flex-wrap:wrap;gap:4px}
+.koc-item{background:rgba(244,163,37,.08);border:1px solid rgba(244,163,37,.13);border-radius:5px;padding:3px 7px;font-size:.65rem}
+.koc-portions{font-size:.62rem;color:var(--green);margin-top:4px;font-weight:600}
+.koc-status{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);cursor:pointer;flex-shrink:0;margin-top:3px;transition:.2s;display:flex;align-items:center;justify-content:center;font-size:.7rem}
+.koc-status.done{background:var(--green);border-color:var(--green)}
+@media print{
+  body{background:#fff;color:#000}
+  .bnav,.hdr,.admin-tabs,.atab{display:none!important}
+  .page{display:block!important;position:static!important;overflow:visible!important;padding:0!important}
+  .asec{display:block!important}
+  .ks-summary,.ks-tally-row,.ks-order-card{border:1px solid #ccc;background:#fff}
+  .ks-num,.ktr-count{color:#000}
+}
+.toast{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-110%);width:min(440px,calc(100% - 14px));background:var(--card);border:1px solid var(--border);border-bottom:none;border-radius:0 0 15px 15px;padding:11px 13px 9px;z-index:99999;transition:.33s cubic-bezier(.22,.85,.45,1.1);box-shadow:0 8px 26px rgba(0,0,0,.45)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .t-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px}
-.t-title{font-weight:700;font-size:.82rem;display:flex;align-items:center;gap:5px}
-.t-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.88rem;padding:2px}
-.t-body{font-size:.7rem;color:var(--muted);line-height:1.4}
-.t-via{font-size:.58rem;margin-top:4px;display:flex;align-items:center;gap:4px;color:var(--tele)}
-
-.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(0,0,0,.15);border-top-color:#000;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:4px}
+.t-title{font-weight:700;font-size:.8rem;display:flex;align-items:center;gap:5px}
+.t-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.85rem;padding:2px}
+.t-body{font-size:.67rem;color:var(--muted);line-height:1.4}
+.t-via{font-size:.57rem;margin-top:3px;display:flex;align-items:center;gap:3px;color:var(--tele)}
+.spin{display:inline-block;width:11px;height:11px;border:2px solid rgba(0,0,0,.12);border-top-color:#000;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:4px}
 @keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
@@ -408,14 +480,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <button class="icon-btn" onclick="showPage('alerts')" title="Alerts">🔔<div class="bdot"></div></button>
+      <span class="ver-badge" id="ver-badge">v2.0</span>
+      <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
 
   <!-- TOAST -->
   <div class="toast" id="toast">
     <div class="t-top">
-      <div class="t-title"><span id="tIco">🍲</span><span id="tTitle"></span></div>
+      <div class="t-title"><span id="tIco"></span><span id="tTitle"></span></div>
       <button class="t-close" onclick="hideToast()">✕</button>
     </div>
     <div class="t-body" id="tBody"></div>
@@ -429,18 +502,15 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       <div class="home-hero">
         <div class="htag">No Onion · No Garlic · Home Made · Low Flame</div>
         <div class="htitle">Sattvic<br><span>Dabba</span> Meals</div>
-        <div class="haddr">📍 Drop your dabba at <strong>Soudhamini H-002</strong><br>or Exit Gate Security with flat &amp; block details</div>
+        <div class="haddr">📍 Drop dabba at <strong>Soudhamini H-002</strong> or Exit Gate Security with flat details</div>
         <div class="dl-row">
           <div class="dlchip">⏱ Order by 9:30 AM · <span id="cd">–:–</span></div>
           <div class="rdychip">✅ Ready 12:30 PM</div>
         </div>
       </div>
 
-      <div class="today-bar" id="today-banner">
-        <div class="tb-top">
-          <div class="tb-title">🍽️ Today's Menu</div>
-          <div class="tb-price" id="tb-total">Full set ₹200</div>
-        </div>
+      <div class="today-bar">
+        <div class="tb-top"><div class="tb-title">🍽️ Today's Menu</div><div class="tb-price" id="tb-total">Full set ₹200</div></div>
         <div class="tb-items" id="tb-items"></div>
         <div class="tb-btns">
           <button class="btn-vm" onclick="showPage('submenu');loadSubMenu('si')">View Menu</button>
@@ -448,12 +518,19 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         </div>
       </div>
 
-      <div class="sec-lbl">Choose Category</div>
+      <div class="sec-lbl">Categories</div>
       <div class="cat-grid">
-        <div class="ccat si" onclick="showPage('submenu');loadSubMenu('si')"><span class="ccat-em">🍲</span><div><div class="ccat-name">South Indian Àla Carte</div><div class="ccat-cnt" id="cnt-si">6 dishes</div></div><div class="ccat-arr">→</div></div>
-        <div class="ccat sv" onclick="showPage('submenu');loadSubMenu('sv')"><span class="ccat-em">🥪</span><div><div class="ccat-name">Savoury</div><div class="ccat-cnt" id="cnt-sv">3 items</div></div><div class="ccat-arr">→</div></div>
-        <div class="ccat pb" onclick="showPage('submenu');loadSubMenu('pb')"><span class="ccat-em">🫓</span><div><div class="ccat-name">Paranthas &amp; Pasta</div><div class="ccat-cnt" id="cnt-pb">3 items</div></div><div class="ccat-arr">→</div></div>
-        <div class="ccat ck" onclick="showPage('submenu');loadSubMenu('ck')"><span class="ccat-em">🍪</span><div><div class="ccat-name">Cookies &amp; Breads</div><div class="ccat-cnt" id="cnt-ck">4 items</div></div><div class="ccat-arr">→</div></div>
+        <div class="ccat si" onclick="showPage('submenu');loadSubMenu('si')"><span class="ccat-em">🍲</span><div><div class="ccat-name">South Indian Àla Carte</div><div class="ccat-cnt" id="cnt-si"></div></div><div class="ccat-arr">→</div></div>
+        <div class="ccat sv" onclick="showPage('submenu');loadSubMenu('sv')"><span class="ccat-em">🥪</span><div><div class="ccat-name">Savoury</div><div class="ccat-cnt" id="cnt-sv"></div></div><div class="ccat-arr">→</div></div>
+        <div class="ccat pb" onclick="showPage('submenu');loadSubMenu('pb')"><span class="ccat-em">🫓</span><div><div class="ccat-name">Paranthas &amp; Pasta</div><div class="ccat-cnt" id="cnt-pb"></div></div><div class="ccat-arr">→</div></div>
+        <div class="ccat ck" onclick="showPage('submenu');loadSubMenu('ck')"><span class="ccat-em">🍪</span><div><div class="ccat-name">Cookies &amp; Breads</div><div class="ccat-cnt" id="cnt-ck"></div></div><div class="ccat-arr">→</div></div>
+      </div>
+
+      <!-- REVIEWS STRIP -->
+      <div class="sec-lbl" style="padding-bottom:5px">⭐ Customer Reviews</div>
+      <div class="reviews-strip-wrap">
+        <div class="reviews-strip" id="reviews-strip"></div>
+        <button class="view-all-reviews" onclick="showPage('reviews')">See all reviews →</button>
       </div>
     </div>
 
@@ -461,19 +538,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     <div class="page" id="pg-submenu">
       <div class="smhdr">
         <button class="bbtn" onclick="showPage('home')">←</button>
-        <div><div class="smtitle" id="sm-title">South Indian</div><div class="smsub" id="sm-sub">Select dishes</div></div>
+        <div><div class="smtitle" id="sm-title">Menu</div><div class="smsub" id="sm-sub"></div></div>
       </div>
-      <div class="min-note">ℹ️ Minimum 2 items required to order</div>
+      <div class="min-note">ℹ️ Minimum 2 items to order</div>
       <div id="dish-list"></div>
-      <div class="sec-lbl" style="padding-top:18px">📸 Past Dish Photos</div>
-      <div class="photo-grid" id="sm-photo-grid"></div>
-      <div class="upload-ph" onclick="document.getElementById('ph-input').click()">
-        <input type="file" id="ph-input" accept="image/*" style="display:none" onchange="uploadPhoto(event,'dish')"/>
-        <div class="uph-ico">📷</div>
-        <div class="uph-t">Add Reference Photo</div>
-        <div class="uph-s">Upload past photos — reused when same dish appears</div>
-      </div>
-      <div style="padding:12px">
+      <div style="padding:11px">
         <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0">Go to Checkout →</button>
       </div>
     </div>
@@ -484,23 +553,19 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="bbtn" onclick="showPage('submenu')">←</button>
         <div><div class="smtitle">Checkout</div><div class="smsub">Review · Pay · Notify</div></div>
       </div>
-
       <div class="cosec"><div class="cotitle">🛒 Your Order</div><div id="co-items"></div>
         <div class="tcard"><div class="trow"><span>Subtotal</span><span id="co-sub">₹0</span></div><div class="trow"><span>Packing</span><span>₹0</span></div><div class="trow tot"><span>Total</span><span id="co-tot">₹0</span></div></div>
       </div>
-
       <div class="cosec"><div class="cotitle">💳 Pay via UPI</div>
         <div class="paycard">
-          <div class="paytitle">📲 Scan QR or use UPI ID</div>
+          <div class="paytitle">📲 Scan QR or copy UPI ID</div>
           <div class="qrbox">
-            <div class="qrwrap">
-              <svg width="120" height="120" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg"><rect width="130" height="130" fill="white"/><rect x="8" y="8" width="34" height="34" fill="black" rx="2"/><rect x="12" y="12" width="26" height="26" fill="white" rx="1"/><rect x="16" y="16" width="18" height="18" fill="black" rx="1"/><rect x="88" y="8" width="34" height="34" fill="black" rx="2"/><rect x="92" y="12" width="26" height="26" fill="white" rx="1"/><rect x="96" y="16" width="18" height="18" fill="black" rx="1"/><rect x="8" y="88" width="34" height="34" fill="black" rx="2"/><rect x="12" y="92" width="26" height="26" fill="white" rx="1"/><rect x="16" y="96" width="18" height="18" fill="black" rx="1"/><rect x="50" y="8" width="6" height="6" fill="black" rx="1"/><rect x="58" y="8" width="6" height="6" fill="black" rx="1"/><rect x="66" y="8" width="6" height="6" fill="black" rx="1"/><rect x="50" y="16" width="6" height="6" fill="black" rx="1"/><rect x="66" y="16" width="6" height="6" fill="black" rx="1"/><rect x="58" y="24" width="6" height="6" fill="black" rx="1"/><rect x="8" y="50" width="6" height="6" fill="black" rx="1"/><rect x="16" y="50" width="6" height="6" fill="black" rx="1"/><rect x="8" y="58" width="6" height="6" fill="black" rx="1"/><rect x="24" y="58" width="6" height="6" fill="black" rx="1"/><rect x="8" y="66" width="6" height="6" fill="black" rx="1"/><rect x="16" y="74" width="6" height="6" fill="black" rx="1"/><rect x="50" y="50" width="6" height="6" fill="black" rx="1"/><rect x="58" y="50" width="6" height="6" fill="black" rx="1"/><rect x="66" y="50" width="6" height="6" fill="black" rx="1"/><rect x="74" y="50" width="6" height="6" fill="black" rx="1"/><rect x="82" y="58" width="6" height="6" fill="black" rx="1"/><rect x="50" y="66" width="6" height="6" fill="black" rx="1"/><rect x="66" y="66" width="6" height="6" fill="black" rx="1"/><rect x="74" y="74" width="6" height="6" fill="black" rx="1"/><rect x="50" y="82" width="6" height="6" fill="black" rx="1"/><rect x="58" y="74" width="6" height="6" fill="black" rx="1"/><rect x="82" y="66" width="6" height="6" fill="black" rx="1"/><rect x="82" y="82" width="6" height="6" fill="black" rx="1"/><rect x="88" y="50" width="6" height="6" fill="black" rx="1"/><rect x="96" y="58" width="6" height="6" fill="black" rx="1"/><rect x="104" y="50" width="6" height="6" fill="black" rx="1"/><rect x="112" y="58" width="6" height="6" fill="black" rx="1"/><rect x="88" y="66" width="6" height="6" fill="black" rx="1"/><rect x="104" y="74" width="6" height="6" fill="black" rx="1"/><rect x="50" y="96" width="6" height="6" fill="black" rx="1"/><rect x="66" y="96" width="6" height="6" fill="black" rx="1"/><rect x="74" y="88" width="6" height="6" fill="black" rx="1"/><rect x="58" y="104" width="6" height="6" fill="black" rx="1"/><rect x="74" y="104" width="6" height="6" fill="black" rx="1"/><rect x="82" y="96" width="6" height="6" fill="black" rx="1"/><rect x="88" y="88" width="6" height="6" fill="black" rx="1"/><rect x="96" y="96" width="6" height="6" fill="black" rx="1"/><rect x="104" y="88" width="6" height="6" fill="black" rx="1"/><rect x="112" y="96" width="6" height="6" fill="black" rx="1"/></svg>
-            </div>
+            <div class="qrwrap"><svg width="110" height="110" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg"><rect width="130" height="130" fill="white"/><rect x="8" y="8" width="34" height="34" fill="black" rx="2"/><rect x="12" y="12" width="26" height="26" fill="white" rx="1"/><rect x="16" y="16" width="18" height="18" fill="black" rx="1"/><rect x="88" y="8" width="34" height="34" fill="black" rx="2"/><rect x="92" y="12" width="26" height="26" fill="white" rx="1"/><rect x="96" y="16" width="18" height="18" fill="black" rx="1"/><rect x="8" y="88" width="34" height="34" fill="black" rx="2"/><rect x="12" y="92" width="26" height="26" fill="white" rx="1"/><rect x="16" y="96" width="18" height="18" fill="black" rx="1"/><rect x="50" y="8" width="6" height="6" fill="black" rx="1"/><rect x="58" y="8" width="6" height="6" fill="black" rx="1"/><rect x="66" y="8" width="6" height="6" fill="black" rx="1"/><rect x="50" y="16" width="6" height="6" fill="black" rx="1"/><rect x="66" y="16" width="6" height="6" fill="black" rx="1"/><rect x="58" y="24" width="6" height="6" fill="black" rx="1"/><rect x="8" y="50" width="6" height="6" fill="black" rx="1"/><rect x="16" y="50" width="6" height="6" fill="black" rx="1"/><rect x="8" y="58" width="6" height="6" fill="black" rx="1"/><rect x="24" y="58" width="6" height="6" fill="black" rx="1"/><rect x="8" y="66" width="6" height="6" fill="black" rx="1"/><rect x="16" y="74" width="6" height="6" fill="black" rx="1"/><rect x="50" y="50" width="6" height="6" fill="black" rx="1"/><rect x="58" y="50" width="6" height="6" fill="black" rx="1"/><rect x="66" y="50" width="6" height="6" fill="black" rx="1"/><rect x="74" y="50" width="6" height="6" fill="black" rx="1"/><rect x="82" y="58" width="6" height="6" fill="black" rx="1"/><rect x="50" y="66" width="6" height="6" fill="black" rx="1"/><rect x="66" y="66" width="6" height="6" fill="black" rx="1"/><rect x="74" y="74" width="6" height="6" fill="black" rx="1"/><rect x="50" y="82" width="6" height="6" fill="black" rx="1"/><rect x="58" y="74" width="6" height="6" fill="black" rx="1"/><rect x="82" y="66" width="6" height="6" fill="black" rx="1"/><rect x="82" y="82" width="6" height="6" fill="black" rx="1"/><rect x="88" y="50" width="6" height="6" fill="black" rx="1"/><rect x="96" y="58" width="6" height="6" fill="black" rx="1"/><rect x="104" y="50" width="6" height="6" fill="black" rx="1"/><rect x="112" y="58" width="6" height="6" fill="black" rx="1"/><rect x="88" y="66" width="6" height="6" fill="black" rx="1"/><rect x="104" y="74" width="6" height="6" fill="black" rx="1"/><rect x="50" y="96" width="6" height="6" fill="black" rx="1"/><rect x="66" y="96" width="6" height="6" fill="black" rx="1"/><rect x="74" y="88" width="6" height="6" fill="black" rx="1"/><rect x="58" y="104" width="6" height="6" fill="black" rx="1"/><rect x="74" y="104" width="6" height="6" fill="black" rx="1"/><rect x="82" y="96" width="6" height="6" fill="black" rx="1"/><rect x="88" y="88" width="6" height="6" fill="black" rx="1"/><rect x="96" y="96" width="6" height="6" fill="black" rx="1"/><rect x="104" y="88" width="6" height="6" fill="black" rx="1"/><rect x="112" y="96" width="6" height="6" fill="black" rx="1"/></svg></div>
             <div class="upi-lbl">UPI ID</div>
             <div class="upi-val" onclick="copyUPI()">soudhamini@upi</div>
             <div class="copy-hint">Tap to copy</div>
           </div>
-          <div style="font-size:.68rem;color:var(--muted);margin-bottom:9px">After paying, upload screenshot:</div>
+          <div style="font-size:.65rem;color:var(--muted);margin-bottom:8px">Upload payment screenshot after paying:</div>
           <button class="ss-btn" onclick="document.getElementById('ss-input').click()">
             <input type="file" id="ss-input" accept="image/*" style="display:none" onchange="handleSS(event)"/>
             📎 Upload Payment Screenshot
@@ -508,187 +573,80 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div class="ss-prev" id="ss-prev"><img id="ss-img" src="" alt=""/></div>
         </div>
       </div>
-
-      <div class="cosec"><div class="cotitle">🍱 Dabba Details</div>
+      <div class="cosec"><div class="cotitle">🍱 Dabba Drop-off</div>
         <div class="dabba-card">
-          <div class="dab-title">📍 Drop-off</div>
-          <div class="dab-info">Place your clean dabba at <strong>Soudhamini H-002</strong> or <strong>Exit Gate Security</strong> with your flat details</div>
+          <div class="dab-title">📍 Where to drop</div>
+          <div class="dab-info">Place clean dabba at <strong>Soudhamini H-002</strong> or <strong>Exit Gate Security</strong> with your flat number</div>
           <div class="dab-chips">
-            <div class="dc"><div class="dc-time">11:30 AM</div><div class="dc-lbl">Drop dabba by</div></div>
-            <div class="dc"><div class="dc-time">12:30 PM</div><div class="dc-lbl">Food ready</div></div>
+            <div class="dc"><div class="dc-time">11:30 AM</div><div class="dc-lbl">Drop by</div></div>
+            <div class="dc"><div class="dc-time">12:30 PM</div><div class="dc-lbl">Ready</div></div>
           </div>
         </div>
       </div>
-
-      <!-- TELEGRAM CONNECT IN CHECKOUT -->
-      <div class="cosec"><div class="cotitle">💬 Get Order Updates</div>
-        <div class="tele-connect" id="co-tele-connect">
-          <div class="tc-top">
-            <div class="tc-ico">✈️</div>
-            <div><div class="tc-title">Connect Telegram</div><div class="tc-sub">Receive order confirmation &amp; food-ready alerts</div></div>
-          </div>
+      <div class="cosec"><div class="cotitle">✈️ Telegram Updates</div>
+        <div class="tele-connect" id="co-tele-wrap">
+          <div class="tc-top"><div class="tc-ico">✈️</div><div><div class="tc-title">Link Telegram</div><div class="tc-sub">Get order confirmation &amp; ready alerts</div></div></div>
           <ul class="tc-steps">
-            <li class="tc-step"><div class="sn">1</div><div>Open Telegram and search <strong>@BYODSoudhaminiBot</strong></div></li>
-            <li class="tc-step"><div class="sn">2</div><div>Send <strong>/start</strong> to the bot</div></li>
-            <li class="tc-step"><div class="sn">3</div><div>Enter your Telegram username below to link your account</div></li>
+            <li class="tc-step"><div class="sn">1</div><div>Open Telegram, search <strong>@BYODSoudhaminiBot</strong></div></li>
+            <li class="tc-step"><div class="sn">2</div><div>Send <strong>/start</strong> to the bot. It will reply with your Chat ID.</div></li>
+            <li class="tc-step"><div class="sn">3</div><div>Paste your Telegram username and the Chat ID below to receive ready alerts.</div></li>
           </ul>
-          <div class="tele-id-row">
-            <input class="tele-id-inp" id="co-tele-user" placeholder="@yourusername" type="text"/>
-            <button class="btn-link-tele" onclick="linkTelegram('co')">Link ✓</button>
+          <div class="tele-id-row" style="margin-bottom:6px">
+            <input class="tele-id-inp" id="co-tele-inp" placeholder="@yourusername"/>
+            <button class="btn-link-tele" onclick="linkTele('co')">Link ✓</button>
           </div>
-          <div class="tele-linked" id="co-tele-linked">✅ Telegram linked — you'll get updates!</div>
+          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px">Your Telegram Chat ID (bot will send it on /start):</div>
+          <input class="tele-id-inp" id="co-tele-uid" placeholder="e.g. 123456789" style="width:100%;margin-bottom:0"/>
+          <div class="tele-linked-badge" id="co-tele-linked">✅ Telegram linked! You will get a message when your dabba is ready.</div>
         </div>
       </div>
-
       <div class="cosec"><div class="cotitle">👤 Your Details</div>
         <div class="cform">
-          <div class="fld"><label>Full Name</label><input id="cf-name" type="text" placeholder="Your name"/></div>
-          <div class="fld"><label>📱 Phone (WhatsApp backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
+          <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
+          <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
           <div class="fld"><label>Flat Number</label><input id="cf-flat" placeholder="e.g. H-302"/></div>
           <div class="fld"><label>Block / Tower</label><input id="cf-block" placeholder="e.g. Block H"/></div>
           <div class="fld"><label>Apartment Name</label><input id="cf-apt" placeholder="e.g. Green Valley"/></div>
-          <div class="fld"><label>Portions</label><select id="cf-portions"><option value="1">1 portion</option><option value="2">2 portions</option><option value="3">3 portions</option><option value="4">4 portions</option></select></div>
-          <div class="fld"><label>Dabba Drop-off</label><select id="cf-drop"><option>Soudhamini H-002 (Direct)</option><option>Exit Gate Security</option></select></div>
-          <div class="fld"><label>Notes</label><textarea id="cf-notes" placeholder="Allergies, preferences…" rows="2"></textarea></div>
+          <div class="fld"><label>Portions</label><select id="cf-portions"><option>1 portion</option><option>2 portions</option><option>3 portions</option><option>4 portions</option></select></div>
+          <div class="fld"><label>Drop-off Point</label><select id="cf-drop"><option>Soudhamini H-002 (Direct)</option><option>Exit Gate Security</option></select></div>
+          <div class="fld"><label>Notes</label><textarea id="cf-notes" placeholder="Allergies, special requests…" rows="2"></textarea></div>
         </div>
         <button class="btn-place" id="placeBtn" onclick="placeOrder()">🎉 Place Order &amp; Notify Host</button>
         <button class="btn-notify-dabba" id="notifyDabbaBtn" onclick="notifyDabbaDropped()">📦 I've Dropped My Dabba!</button>
         <div style="height:8px"></div>
       </div>
-
       <div class="success-sec" id="success-sec">
         <span class="s-anim">✅</span>
         <div class="s-title">Order Confirmed!</div>
-        <div class="s-sub">Your order is sent to Soudhamini.<br>Drop dabba by 11:30 AM · Food ready 12:30 PM</div>
+        <div class="s-sub">Sent to Soudhamini. Drop dabba by 11:30 AM · Ready 12:30 PM 🍲</div>
         <div class="tele-confirm" id="tele-confirm-box">
-          <div class="tc-conf-title">✈️ Telegram notification sent!</div>
-          <div class="tc-conf-body">Check your Telegram — Soudhamini's bot has sent your order confirmation &amp; timeline.</div>
+          <div class="tc-conf-t">✈️ Telegram confirmation sent!</div>
+          <div class="tc-conf-b">Check Telegram — bot has sent your order details and timeline.</div>
         </div>
         <div class="track-card" id="track-steps"></div>
-        <button class="btn-notify-dabba" style="display:flex;margin-bottom:10px;width:100%" onclick="notifyDabbaDropped()">📦 I've Dropped My Dabba!</button>
+        <button class="btn-notify-dabba" style="display:flex;width:100%;margin-bottom:9px" onclick="notifyDabbaDropped()">📦 I've Dropped My Dabba!</button>
         <button class="btn-back" onclick="resetAll()">← Order More</button>
       </div>
-    </div>
-
-    <!-- ══ ALERTS ══ -->
-    <div class="page alerts-page" id="pg-alerts">
-
-      <div class="alerts-hero">
-        <div class="ah-icon">🔔</div>
-        <div class="ah-title">Alerts &amp; Notifications</div>
-        <div class="ah-sub">Telegram is your primary channel — instant, free &amp; reliable. Web push as backup.</div>
-      </div>
-
-      <!-- channel status pills -->
-      <div class="channel-row">
-        <div class="ch-pill" id="pill-tele">✈️ Telegram <span class="ch-dot"></span><span id="pill-tele-lbl">Not linked</span></div>
-        <div class="ch-pill" id="pill-web">🌐 Web Push <span class="ch-dot"></span><span id="pill-web-lbl">Not enabled</span></div>
-      </div>
-
-      <!-- Telegram setup -->
-      <div class="tele-setup">
-        <div class="ts-header">
-          <div class="ts-ico">✈️</div>
-          <div><div class="ts-title">Connect Telegram Bot</div><div class="ts-sub">Free · Instant · Works on all phones</div></div>
-        </div>
-        <div class="ts-body">
-          <div class="ts-step"><div class="step-num">1</div><div class="step-txt">Open Telegram and search for <strong>@BYODSoudhaminiBot</strong></div></div>
-          <div class="ts-step"><div class="step-num">2</div><div class="step-txt">Tap <strong>Start</strong> or send <code>/start</code> — the bot will introduce itself</div></div>
-          <div class="ts-step"><div class="step-num">3</div><div class="step-txt">Type <code>/subscribe</code> to register for daily menu alerts</div></div>
-          <div class="ts-step"><div class="step-num">4</div><div class="step-txt">Enter your Telegram username below to link with your orders</div></div>
-        </div>
-        <button class="tele-connect-btn" onclick="openTelegramBot()">✈️ Open @BYODSoudhaminiBot</button>
-        <div class="tele-username-row">
-          <input class="tele-inp" id="tele-username" placeholder="@yourusername" type="text"/>
-          <button class="btn-verify" onclick="linkTelegram('main')">Verify &amp; Link</button>
-        </div>
-        <div class="tele-linked-badge" id="tele-linked-badge">✅ Telegram linked — all alerts will go to your account!</div>
-      </div>
-
-      <!-- notification toggles -->
-      <div class="notif-group">
-        <div class="ng-header">🍲 Daily Menu Alerts</div>
-        <div class="ntrow">
-          <div class="ntl">
-            <div class="nt-title">📋 Today's Menu Published</div>
-            <div class="nt-sub">Sent at 7:30 AM when menu goes live</div>
-            <div class="nt-channels"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div>
-          </div>
-          <button class="tog on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="ntrow">
-          <div class="ntl">
-            <div class="nt-title">⏰ Order Deadline Reminder</div>
-            <div class="nt-sub">30 min before 9:30 AM cutoff</div>
-            <div class="nt-channels"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div>
-          </div>
-          <button class="tog on" onclick="this.classList.toggle('on')"></button>
-        </div>
-      </div>
-
-      <div class="notif-group">
-        <div class="ng-header">🍱 Dabba Reminders</div>
-        <div class="ntrow">
-          <div class="ntl">
-            <div class="nt-title">📦 Drop Dabba Reminder</div>
-            <div class="nt-sub">Sent at 11:00 AM — drop box by 11:30 AM</div>
-            <div class="nt-channels"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div>
-          </div>
-          <button class="tog on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="ntrow">
-          <div class="ntl">
-            <div class="nt-title">✅ Food Ready &amp; Packed</div>
-            <div class="nt-sub">Sent ~12:30 PM — your dabba is ready!</div>
-            <div class="nt-channels"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div>
-          </div>
-          <button class="tog on" onclick="this.classList.toggle('on')"></button>
-        </div>
-      </div>
-
-      <div class="notif-group">
-        <div class="ng-header">🛒 Order Updates</div>
-        <div class="ntrow">
-          <div class="ntl">
-            <div class="nt-title">🎉 Order Confirmation</div>
-            <div class="nt-sub">Instantly after placing order</div>
-            <div class="nt-channels"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div>
-          </div>
-          <button class="tog on" onclick="this.classList.toggle('on')"></button>
-        </div>
-        <div class="ntrow">
-          <div class="ntl">
-            <div class="nt-title">📢 Kitchen Broadcasts</div>
-            <div class="nt-sub">Special announcements from Soudhamini</div>
-            <div class="nt-channels"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div>
-          </div>
-          <button class="tog on" onclick="this.classList.toggle('on')"></button>
-        </div>
-      </div>
-
-      <!-- Web push backup -->
-      <div class="web-push-card">
-        <div class="wp-title">🌐 Web Push <span style="font-size:.62rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400">(backup channel)</span></div>
-        <div class="wp-sub">Browser notifications when you're not on Telegram. Works even when the app is closed.</div>
-        <button class="btn-web-push" id="webPushBtn" onclick="enableWebPush()">Enable Browser Notifications</button>
-      </div>
-
-      <!-- Recent activity feed -->
-      <div class="feed-label">Recent Activity</div>
-      <div class="notif-feed" id="notif-feed"></div>
-
     </div>
 
     <!-- ══ KITCHEN ══ -->
     <div class="page" id="pg-kitchen">
       <div class="kitchen-hero">
-        <div class="live-screen">
+        <div class="live-screen" id="live-screen-wrap">
           <div class="live-badge"><div class="ldot"></div>LIVE</div>
-          <div><span class="lp-ico">📹</span><div class="lp-txt">Kitchen Live Stream</div><div class="lp-sub">Add your stream URL in the code</div></div>
+          <div class="live-placeholder" id="live-placeholder">
+            <span class="lp-ico">📹</span>
+            <div class="lp-txt">Kitchen Live Stream</div>
+            <div class="lp-sub">Paste a YouTube live URL below</div>
+          </div>
+        </div>
+        <div class="yt-input-wrap">
+          <input class="yt-inp" id="yt-url-inp" placeholder="Paste YouTube live URL e.g. https://youtube.com/live/xxxxx"/>
+          <button class="btn-yt" onclick="loadYT()">▶ Load</button>
         </div>
         <div class="kitchen-info">
           <div class="ki-title">🔴 Soudhamini's Kitchen — Live</div>
-          <div class="ki-sub">Watch your Sattvic meal being prepared fresh. No aluminium, no microwave, slow-cooked with love on low flame.</div>
+          <div class="ki-sub">Watch your Sattvic meal being prepared. No aluminium, no microwave, slow-cooked on low flame.</div>
         </div>
       </div>
       <div class="kpromises">
@@ -697,56 +655,133 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <div class="kp"><div class="kp-ico">🚫</div><div class="kp-t"><strong>No Microwave</strong>Traditional only</div></div>
         <div class="kp"><div class="kp-ico">🫕</div><div class="kp-t"><strong>Non-Aluminium</strong>Safe cookware</div></div>
       </div>
-      <div class="kg-lbl">Today's Kitchen</div>
-      <div class="kg-grid">
-        <div class="kgi">🍲</div><div class="kgi">🌿</div><div class="kgi">🥘</div>
-        <div class="kgi">🫙</div><div class="kgi">🌶️</div><div class="kgi">🍋</div>
+
+      <!-- Kitchen Moments -->
+      <div class="km-header">
+        <div class="km-lbl">Today's Kitchen Moments</div>
+        <button class="btn-add-moment" onclick="document.getElementById('moment-inp').click()">+ Add Photo</button>
+        <input type="file" id="moment-inp" accept="image/*" multiple style="display:none" onchange="addMoments(event)"/>
       </div>
+      <div class="kg-grid" id="kg-grid">
+        <div class="kgi kgi-add" onclick="document.getElementById('moment-inp').click()"><span>📷</span></div>
+      </div>
+
+      <!-- Google Drive / Photos Album -->
+      <div class="drive-album-card">
+        <div class="da-title">📁 Google Drive / Photos Album</div>
+        <div class="da-sub">Paste a shared Google Drive folder or Google Photos album link. Photos from the album appear as Kitchen Moments.</div>
+        <div class="da-inp-row">
+          <input class="da-inp" id="drive-album-inp" placeholder="Paste Google Drive / Photos link here…"/>
+          <button class="btn-da" onclick="loadDriveAlbum()">Open →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ALERTS ══ -->
+    <div class="page" id="pg-alerts">
+      <div class="alerts-hero">
+        <div class="ah-title">🔔 Alerts &amp; Notifications</div>
+        <div class="ah-sub">Telegram is primary (free &amp; instant). Web push is your backup channel.</div>
+      </div>
+      <div class="ch-row">
+        <div class="chpill" id="pill-tele">✈️ Telegram · <span id="pill-tele-lbl">Not linked</span></div>
+        <div class="chpill" id="pill-web">🌐 Web Push · <span id="pill-web-lbl">Not enabled</span></div>
+      </div>
+      <div class="tele-setup">
+        <div class="tsh"><div class="ts-ico">✈️</div><div><div class="ts-title">Connect Telegram Bot</div><div class="ts-sub">Free · Instant · Works everywhere</div></div></div>
+        <div class="tsbody">
+          <div class="tsstep"><div class="ssn">1</div><div class="sstxt">Open Telegram and search <strong>@BYODSoudhaminiBot</strong></div></div>
+          <div class="tsstep"><div class="ssn">2</div><div class="sstxt">Tap Start or send <code>/start</code></div></div>
+          <div class="tsstep"><div class="ssn">3</div><div class="sstxt">Send <code>/subscribe</code> to register for daily menu alerts</div></div>
+          <div class="tsstep"><div class="ssn">4</div><div class="sstxt">Enter your Telegram username below to link with orders</div></div>
+        </div>
+        <button class="tele-connect-btn" onclick="openTeleBot()">✈️ Open @BYODSoudhaminiBot</button>
+        <div class="tele-urow">
+          <input class="tele-inp" id="tele-main-inp" placeholder="@yourusername"/>
+          <button class="btn-verify" onclick="linkTele('main')">Verify &amp; Link</button>
+        </div>
+        <div class="tele-linked-main" id="tele-linked-main">✅ Telegram linked — all alerts go to your account!</div>
+      </div>
+      <div class="notif-group">
+        <div class="ng-hdr">🍲 Daily Menu</div>
+        <div class="ntrow"><div class="ntl"><div class="nt-title">📋 Menu Published</div><div class="nt-sub">7:30 AM when menu goes live</div><div class="nt-chs"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div></div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="ntrow"><div class="ntl"><div class="nt-title">⏰ Order Deadline</div><div class="nt-sub">30 min before 9:30 AM cutoff</div><div class="nt-chs"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div></div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="notif-group">
+        <div class="ng-hdr">🍱 Dabba Reminders</div>
+        <div class="ntrow"><div class="ntl"><div class="nt-title">📦 Drop Dabba Reminder</div><div class="nt-sub">11:00 AM — drop box by 11:30 AM</div><div class="nt-chs"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div></div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="ntrow"><div class="ntl"><div class="nt-title">✅ Food Ready!</div><div class="nt-sub">~12:30 PM — dabba packed</div><div class="nt-chs"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div></div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="notif-group">
+        <div class="ng-hdr">🛒 Orders</div>
+        <div class="ntrow"><div class="ntl"><div class="nt-title">🎉 Order Confirmation</div><div class="nt-sub">Instantly after placing</div><div class="nt-chs"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div></div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="ntrow"><div class="ntl"><div class="nt-title">📢 Kitchen Broadcasts</div><div class="nt-sub">Special announcements</div><div class="nt-chs"><span class="nch t">✈️ Telegram</span><span class="nch w">🌐 Web</span></div></div><button class="tog on" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="web-push-card">
+        <div class="wp-title">🌐 Web Push <span style="font-size:.58rem;color:var(--muted);font-family:'DM Sans',sans-serif;font-weight:400">(backup)</span></div>
+        <div class="wp-sub">Browser notifications as a safety net when you're not on Telegram.</div>
+        <button class="btn-web-push" id="webPushBtn" onclick="enableWebPush()">Enable Browser Notifications</button>
+      </div>
+      <div class="feed-lbl">Recent Activity</div>
+      <div class="notif-feed" id="notif-feed"></div>
+      <div style="height:8px"></div>
     </div>
 
     <!-- ══ ADMIN ══ -->
     <div class="page" id="pg-admin">
-      <div style="padding:12px 12px 0;display:flex;align-items:center;justify-content:space-between">
-        <div style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:900">Admin</div>
-        <div style="font-size:.6rem;color:var(--muted)" id="admDate"></div>
+      <div style="padding:11px 11px 0;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <span class="ver-badge">v2.0</span>
+          <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
+        </div>
       </div>
       <div class="admin-tabs">
         <button class="atab on" onclick="switchAdminTab('orders',this)">📦 Orders</button>
+        <button class="atab" onclick="switchAdminTab('kitchen-sheet',this)">🍳 Kitchen Sheet</button>
         <button class="atab" onclick="switchAdminTab('menu',this)">✏️ Menu</button>
         <button class="atab" onclick="switchAdminTab('broadcast',this)">📢 Broadcast</button>
-        <button class="atab" onclick="switchAdminTab('photos',this)">📸 Photos</button>
       </div>
-
       <div class="asec on" id="atab-orders">
-        <div class="stats-grid" style="margin-top:10px">
+        <div class="stats-grid" style="margin-top:9px">
           <div class="sbox"><div class="sbn s" id="st-orders">0</div><div class="sbl">Orders</div></div>
           <div class="sbox"><div class="sbn g" id="st-rev">₹0</div><div class="sbl">Revenue</div></div>
           <div class="sbox"><div class="sbn t" id="st-subs">0</div><div class="sbl">Tele Linked</div></div>
           <div class="sbox"><div class="sbn r">9:30</div><div class="sbl">Cutoff</div></div>
         </div>
-        <div id="admin-orders">
-          <div style="text-align:center;padding:24px;color:var(--muted);font-size:.78rem">No orders yet today.</div>
-        </div>
+        <div id="admin-orders"><div style="text-align:center;padding:22px;color:var(--muted);font-size:.75rem">No orders yet.</div></div>
       </div>
 
+      <!-- KITCHEN SHEET -->
+      <div class="asec" id="atab-kitchen-sheet">
+        <div style="margin-top:9px">
+          <!-- summary bar -->
+          <div class="ks-summary" id="ks-summary"></div>
+          <!-- dish tally -->
+          <div class="sec-lbl" style="padding:10px 0 6px">🍲 Dish Tally — Total Portions Needed</div>
+          <div id="ks-tally"></div>
+          <!-- per order list -->
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0 6px">
+            <div class="sec-lbl" style="padding:0">📋 Order-by-Order</div>
+            <button onclick="printKitchenSheet()" style="background:var(--saff);border:none;border-radius:7px;padding:5px 11px;font-size:.68rem;font-weight:700;color:#000;cursor:pointer;font-family:'DM Sans',sans-serif">🖨 Print</button>
+          </div>
+          <div id="ks-orders"></div>
+          <div style="height:10px"></div>
+        </div>
+      </div>
       <div class="asec" id="atab-menu">
-        <div style="margin-top:10px">
-          <div style="font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-weight:600">🍲 South Indian</div>
-          <div id="ed-si"></div><button class="add-btn" onclick="addDish('si')">+ Add Dish</button>
-          <div style="font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 7px;font-weight:600">🥪 Savoury</div>
-          <div id="ed-sv"></div><button class="add-btn" onclick="addDish('sv')">+ Add Dish</button>
-          <div style="font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 7px;font-weight:600">🫓 Paranthas &amp; Pasta</div>
-          <div id="ed-pb"></div><button class="add-btn" onclick="addDish('pb')">+ Add Dish</button>
-          <div style="font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:10px 0 7px;font-weight:600">🍪 Cookies &amp; Breads</div>
-          <div id="ed-ck"></div><button class="add-btn" onclick="addDish('ck')">+ Add Dish</button>
+        <div style="margin-top:9px">
+          <div class="sec-lbl" style="padding:0 0 7px">🍲 South Indian</div><div id="ed-si"></div><button class="add-btn" onclick="addDish('si')">+ Add Dish</button>
+          <div class="sec-lbl" style="padding:10px 0 7px">🥪 Savoury</div><div id="ed-sv"></div><button class="add-btn" onclick="addDish('sv')">+ Add Dish</button>
+          <div class="sec-lbl" style="padding:10px 0 7px">🫓 Paranthas &amp; Pasta</div><div id="ed-pb"></div><button class="add-btn" onclick="addDish('pb')">+ Add Dish</button>
+          <div class="sec-lbl" style="padding:10px 0 7px">🍪 Cookies &amp; Breads</div><div id="ed-ck"></div><button class="add-btn" onclick="addDish('ck')">+ Add Dish</button>
           <button class="save-btn" onclick="saveMenu()">💾 Save &amp; Publish Menu</button>
         </div>
       </div>
-
       <div class="asec" id="atab-broadcast">
-        <div style="margin-top:10px">
+        <div style="margin-top:9px">
           <div class="bulk-card">
-            <div class="bulk-title">📢 Broadcast Message</div>
+            <div class="bulk-title">📢 Broadcast</div>
             <textarea class="bulk-ta" id="bulk-msg" placeholder="e.g. 🌿 Today's Avial has 14 fresh vegetables! Order before 9:30 AM."></textarea>
             <div class="bulk-chs">
               <button class="bch t on" id="bch-tele" onclick="this.classList.toggle('on')">✈️ Telegram</button>
@@ -755,32 +790,81 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <button class="bulk-btn" onclick="sendBulk()">Send Broadcast →</button>
           </div>
           <div class="bulk-card">
-            <div class="bulk-title">📦 Mark All Orders Ready</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-bottom:9px">Sends "your dabba is packed" Telegram alert to all customers.</div>
+            <div class="bulk-title">📦 Mark All Ready</div>
+            <div style="font-size:.68rem;color:var(--muted);margin-bottom:8px">Sends "dabba packed" Telegram to all today's customers.</div>
             <button class="bulk-btn" onclick="markAllReady()">✅ Notify All — Food Ready!</button>
           </div>
           <div class="bulk-card">
-            <div class="bulk-title">⏰ Send Drop-Dabba Reminder</div>
-            <div style="font-size:.7rem;color:var(--muted);margin-bottom:9px">Remind all who ordered to drop their dabba by 11:30 AM.</div>
-            <button class="bulk-btn" onclick="sendDabbaReminder()">📦 Send Drop Reminder Now</button>
+            <div class="bulk-title">⏰ Drop Dabba Reminder</div>
+            <div style="font-size:.68rem;color:var(--muted);margin-bottom:8px">Remind all who ordered to drop dabba by 11:30 AM.</div>
+            <button class="bulk-btn" onclick="sendDabbaReminder()">📦 Send Reminder Now</button>
           </div>
         </div>
       </div>
 
-      <div class="asec" id="atab-photos">
-        <div style="margin-top:10px">
-          <div style="font-size:.7rem;color:var(--muted);margin-bottom:9px;line-height:1.5">Upload past dish photos. They appear as reference images in the menu when the same dish is listed again.</div>
-          <div class="upload-ph" onclick="document.getElementById('adm-ph-input').click()" style="margin:0 0 9px">
-            <input type="file" id="adm-ph-input" accept="image/*" multiple style="display:none" onchange="uploadPhoto(event,'admin')"/>
-            <div class="uph-ico">📷</div><div class="uph-t">Upload Dish / Kitchen Photos</div><div class="uph-s">JPG, PNG</div>
+      <!-- BOT SETTINGS -->
+      <div class="asec" id="atab-settings">
+        <div style="margin-top:9px">
+          <div style="background:linear-gradient(135deg,rgba(42,171,238,.1),rgba(42,171,238,.04));border:1px solid rgba(42,171,238,.2);border-radius:var(--r);padding:14px;margin-bottom:8px">
+            <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#2AABEE;margin-bottom:4px">Telegram Bot Configuration</div>
+            <div style="font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Enter your bot credentials here. These are used to send real Telegram notifications for orders, dabba drops, and ready alerts. Get these from @BotFather and @userinfobot on Telegram.</div>
+            <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Bot Token (from @BotFather)</div>
+            <input id="cfg-token" style="width:100%;background:var(--surf);border:1.5px solid rgba(42,171,238,.2);border-radius:7px;padding:8px 10px;color:#2AABEE;font-family:monospace;font-size:.76rem;outline:none;margin-bottom:10px" placeholder="7123456789:AAFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+            <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Your Admin Telegram Chat ID (from @userinfobot)</div>
+            <input id="cfg-chatid" style="width:100%;background:var(--surf);border:1.5px solid rgba(42,171,238,.2);border-radius:7px;padding:8px 10px;color:#2AABEE;font-family:monospace;font-size:.76rem;outline:none;margin-bottom:10px" placeholder="123456789"/>
+            <button onclick="saveBotConfig()" style="width:100%;background:#2AABEE;border:none;border-radius:8px;padding:10px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:#fff;cursor:pointer">Save &amp; Activate</button>
+            <div id="cfg-status" style="font-size:.65rem;color:var(--green);margin-top:6px;text-align:center"></div>
           </div>
-          <div class="photo-grid" id="adm-photo-grid"></div>
-          <div style="height:12px"></div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:8px">
+            <div style="font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;margin-bottom:7px">How to get your credentials</div>
+            <div style="font-size:.68rem;color:var(--muted);line-height:1.7">
+              <b style="color:var(--cream)">1. Create your bot</b><br>
+              Open Telegram, search <b style="color:#2AABEE">@BotFather</b>, send <code style="background:rgba(42,171,238,.1);color:#2AABEE;padding:1px 4px;border-radius:3px">/newbot</code>, follow the steps. Copy the token it gives you.<br><br>
+              <b style="color:var(--cream)">2. Get your Chat ID</b><br>
+              Search <b style="color:#2AABEE">@userinfobot</b> on Telegram, send any message. It replies with your numeric ID — paste that above.<br><br>
+              <b style="color:var(--cream)">3. Customer Chat IDs</b><br>
+              Customers must send <code style="background:rgba(42,171,238,.1);color:#2AABEE;padding:1px 4px;border-radius:3px">/start</code> to your bot first. Ask them to DM you their Telegram username so you can look up their chat ID via your bot's getUpdates endpoint. This enables Flow 3 (ready alerts to customer).
+            </div>
+          </div>
+          <div style="height:10px"></div>
         </div>
       </div>
     </div>
 
-  </div>
+    <!-- ══ REVIEWS ══ -->
+    <div class="page reviews-page" id="pg-reviews">
+      <div class="smhdr">
+        <button class="bbtn" onclick="showPage('home')">←</button>
+        <div><div class="smtitle">Customer Reviews</div><div class="smsub" id="rev-avg-sub"></div></div>
+      </div>
+      <div class="rev-hero">
+        <div class="rh-stars" id="rh-stars">⭐⭐⭐⭐⭐</div>
+        <div class="rh-title" id="rh-title">Excellent</div>
+        <div class="rh-sub" id="rh-sub">Based on 0 reviews</div>
+      </div>
+      <div style="padding:0 11px">
+        <div class="sec-lbl" style="padding:11px 0 7px">All Reviews</div>
+        <div id="rev-full-list"></div>
+      </div>
+      <!-- Add review form -->
+      <div class="add-review-card">
+        <div class="ar-title">✍️ Leave a Review</div>
+        <div class="star-picker" id="star-picker">
+          <button class="star-btn on" data-v="1" onclick="setStars(1)">⭐</button>
+          <button class="star-btn on" data-v="2" onclick="setStars(2)">⭐</button>
+          <button class="star-btn on" data-v="3" onclick="setStars(3)">⭐</button>
+          <button class="star-btn on" data-v="4" onclick="setStars(4)">⭐</button>
+          <button class="star-btn on" data-v="5" onclick="setStars(5)">⭐</button>
+        </div>
+        <div class="fld"><label>Your Name</label><input id="rev-name" placeholder="e.g. Meera S."/></div>
+        <div class="fld"><label>Flat / Block</label><input id="rev-flat" placeholder="e.g. H-302"/></div>
+        <div class="fld"><label>Your Review</label><textarea id="rev-text" placeholder="What did you enjoy about the meal?" rows="3"></textarea></div>
+        <button class="btn-submit-rev" onclick="submitReview()">Submit Review ⭐</button>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+
+  </div><!-- /pages -->
 
   <!-- BOTTOM NAV -->
   <nav class="bnav">
@@ -793,119 +877,212 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 </div>
 
 <script>
-// ══ DATA ════════════════════════════════════════════════════
-let MENU={
+// ═══════════ DATA ══════════════════════════════════════════
+let MENU = {
   si:[
-    {id:'si1',e:'🥘',n:'Sambar',d:'Lentil & vegetable stew with tamarind. 150g.',p:60,avail:true},
-    {id:'si2',e:'🌿',n:'Avial',d:'Mixed seasonal vegetables in coconut-yogurt gravy. 150g.',p:80,avail:true},
-    {id:'si3',e:'🍛',n:'Kootu',d:'Lentil & vegetable dry curry with fresh coconut. 150g.',p:60,avail:true},
-    {id:'si4',e:'🌶️',n:'Vatha Kuzhambu',d:'Tangy tamarind gravy with sun-dried vegetables. 150g.',p:60,avail:true},
-    {id:'si5',e:'🍋',n:'Rasam',d:'Digestive pepper-tamarind broth. 150g.',p:40,avail:true},
-    {id:'si6',e:'🥦',n:'Poriyal',d:'Seasonal vegetable stir-fry with coconut & mustard. 150g.',p:50,avail:true},
+    {id:'si1',e:'🥘',n:'Sambar',d:'Lentil & vegetable stew with tamarind. 150g.',p:60,avail:true,photo:''},
+    {id:'si2',e:'🌿',n:'Avial',d:'Mixed seasonal vegetables in coconut-yogurt gravy. 150g.',p:80,avail:true,photo:''},
+    {id:'si3',e:'🍛',n:'Kootu',d:'Lentil & vegetable dry curry with fresh coconut. 150g.',p:60,avail:true,photo:''},
+    {id:'si4',e:'🌶️',n:'Vatha Kuzhambu',d:'Tangy tamarind gravy with sun-dried vegetables. 150g.',p:60,avail:true,photo:''},
+    {id:'si5',e:'🍋',n:'Rasam',d:'Digestive pepper-tamarind broth. 150g.',p:40,avail:true,photo:''},
+    {id:'si6',e:'🥦',n:'Poriyal',d:'Seasonal vegetable stir-fry with coconut & mustard. 150g.',p:50,avail:true,photo:''},
   ],
   sv:[
-    {id:'sv1',e:'🥪',n:'Masala Oats Upma',d:'Savoury oats with vegetables and mild spices.',p:70,avail:true},
-    {id:'sv2',e:'🫔',n:'Ragi Idli',d:'Finger millet idli with sambar & chutney.',p:60,avail:true},
-    {id:'sv3',e:'🥞',n:'Mixed Veg Dosa',d:'Crispy dosa stuffed with mixed vegetables.',p:80,avail:true},
+    {id:'sv1',e:'🥪',n:'Masala Oats Upma',d:'Savoury oats with vegetables and mild spices.',p:70,avail:true,photo:''},
+    {id:'sv2',e:'🫔',n:'Ragi Idli',d:'Finger millet idli with sambar & chutney.',p:60,avail:true,photo:''},
+    {id:'sv3',e:'🥞',n:'Mixed Veg Dosa',d:'Crispy dosa with mixed vegetable filling.',p:80,avail:true,photo:''},
   ],
   pb:[
-    {id:'pb1',e:'🫓',n:'Methi Parantha',d:'Whole wheat fenugreek flatbread with ghee. 2 pieces.',p:70,avail:true},
-    {id:'pb2',e:'🥕',n:'Aloo Parantha',d:'Spiced potato stuffed flatbread. 2 pieces.',p:75,avail:true},
-    {id:'pb3',e:'🍝',n:'Jain Pasta',d:'No-onion no-garlic tomato pasta with Indian spices.',p:90,avail:true},
+    {id:'pb1',e:'🫓',n:'Methi Parantha',d:'Whole wheat fenugreek flatbread with ghee. 2 pcs.',p:70,avail:true,photo:''},
+    {id:'pb2',e:'🥕',n:'Aloo Parantha',d:'Spiced potato stuffed flatbread. 2 pcs.',p:75,avail:true,photo:''},
+    {id:'pb3',e:'🍝',n:'Jain Pasta',d:'No-onion no-garlic tomato pasta.',p:90,avail:true,photo:''},
   ],
   ck:[
-    {id:'ck1',e:'🍪',n:'Ragi Jaggery Cookies',d:'Finger millet cookies with jaggery. 4 pieces.',p:80,avail:true},
-    {id:'ck2',e:'🍞',n:'Whole Wheat Sourdough',d:'Slow-fermented sourdough loaf. 200g.',p:120,avail:true},
-    {id:'ck3',e:'🥐',n:'Multigrain Bread',d:'Nutritious multigrain bread. 200g.',p:110,avail:true},
-    {id:'ck4',e:'🧁',n:'Coconut Ladoo',d:'Traditional coconut ladoo with jaggery. 4 pieces.',p:60,avail:true},
+    {id:'ck1',e:'🍪',n:'Ragi Jaggery Cookies',d:'Finger millet cookies with jaggery. 4 pcs.',p:80,avail:true,photo:''},
+    {id:'ck2',e:'🍞',n:'Whole Wheat Sourdough',d:'Slow-fermented sourdough loaf. 200g.',p:120,avail:true,photo:''},
+    {id:'ck3',e:'🥐',n:'Multigrain Bread',d:'Nutritious multigrain bread. 200g.',p:110,avail:true,photo:''},
+    {id:'ck4',e:'🧁',n:'Coconut Ladoo',d:'Traditional coconut ladoo with jaggery. 4 pcs.',p:60,avail:true,photo:''},
   ]
 };
-const CATS_META={
-  si:{name:'South Indian Àla Carte',sub:'Traditional dishes'},
-  sv:{name:'Savoury',sub:'Light & wholesome'},
-  pb:{name:'Paranthas & Pasta',sub:'Filling mains'},
-  ck:{name:'Cookies & Breads',sub:'Baked fresh'}
-};
-let cart={}, currentCat='si', orders=[], photos=[], teleLinked=false, webPushEnabled=false, subs=0;
-const notifLog=[
-  {ico:'🍲',title:"Today's menu is live!",body:'Sambar, Avial, Kootu, Rasam, Poriyal ready. Order by 9:30 AM.',time:'7:30 AM · Today',via:'t',unread:true},
-  {ico:'⏰',title:'Order deadline in 30 min',body:'Place your order before 9:30 AM cutoff.',time:'9:00 AM · Yesterday',via:'t',unread:false},
-  {ico:'✅',title:'Order #BYOD-1041 confirmed',body:'Your dabba is packed and ready 🍱',time:'12:30 PM · Yesterday',via:'t',unread:false},
+
+let REVIEWS = [
+  {name:'Priya M.',flat:'H-204',stars:5,text:'The Avial was absolutely divine — 14 fresh vegetables, you could taste the love! Have been ordering every week since.',dishes:['Avial','Sambar','Poriyal'],date:'2 days ago'},
+  {name:'Ramesh K.',flat:'G-101',stars:5,text:'Authentic South Indian flavours, exactly like home. The Rasam is outstanding. Packaging is always clean and neat.',dishes:['Rasam','Kootu'],date:'4 days ago'},
+  {name:'Sunita & Arun',flat:'H-310',stars:5,text:'Love that there\'s no onion or garlic. We are strict Jains and this is the only home-cooked meal option in our complex. Highly recommended!',dishes:['Vatha Kuzhambu','Sambar'],date:'1 week ago'},
+  {name:'Deepa V.',flat:'F-205',stars:4,text:'The Ragi cookies are our family\'s favourite. Kids love them. Occasionally would love more variety in the savoury section.',dishes:['Ragi Cookies','Coconut Ladoo'],date:'1 week ago'},
+  {name:'Anand S.',flat:'H-108',stars:5,text:'Soudhamini amma\'s cooking is pure gold. The low-flame cooking makes all the difference — vegetables retain their nutrition and flavour.',dishes:['Avial','Kootu','Rasam'],date:'2 weeks ago'},
 ];
 
-// ══ INIT ════════════════════════════════════════════════════
+let cart={}, currentCat='si', orders=[], teleLinked=false, webPushOk=false, teleUser='', teleUserId='', subs=0, selectedStars=5;
+let kitchenMoments=[];
+
+// ── TELEGRAM CONFIG ─────────────────────────────────────────
+// Fill these in once you create your bot via @BotFather on Telegram
+const TELE_CONFIG = {
+  BOT_TOKEN: '',          // e.g. '7123456789:AAFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+  ADMIN_CHAT_ID: '',      // your personal Telegram user ID (get from @userinfobot)
+};
+function teleReady(){ return TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.ADMIN_CHAT_ID; }
+
+// Core send — fires a Telegram message to any chat_id
+async function telegramSend(chatId, text){
+  if(!TELE_CONFIG.BOT_TOKEN || !chatId) return false;
+  try{
+    const res = await fetch(`https://api.telegram.org/bot${TELE_CONFIG.BOT_TOKEN}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ chat_id: chatId, text, parse_mode:'HTML' })
+    });
+    return res.ok;
+  } catch(e){ console.warn('Telegram send failed', e); return false; }
+}
+
+// ── FLOW 1: Order placed → notify ADMIN ─────────────────────
+async function teleNotifyAdmin(order){
+  if(!teleReady()) return;
+  const itemList = order.items.map(i=>`  • ${i.e} ${i.n} ×${i.qty} — ₹${i.p*i.qty}`).join('\n');
+  const msg =
+`🛒 <b>New Order — ${order.oid}</b>
+
+👤 ${order.name}
+🏠 ${order.flat} · ${order.drop}
+${order.tele&&order.tele!=='Not linked'?`✈️ ${order.tele}`:'📱 No Telegram'}
+
+<b>Items:</b>
+${itemList}
+
+💰 Total: ₹${order.total} · ${order.portions}
+⏰ Drop dabba by 11:30 AM`;
+  await telegramSend(TELE_CONFIG.ADMIN_CHAT_ID, msg);
+}
+
+// ── FLOW 2: Customer drops dabba → notify ADMIN ─────────────
+async function teleNotifyAdminDabbaDropped(order){
+  if(!teleReady()) return;
+  const msg =
+`📦 <b>Dabba Dropped!</b>
+
+👤 ${order.name} has placed their dabba.
+🏠 ${order.flat} · ${order.drop}
+🛒 ${order.oid} — ₹${order.total}
+
+✅ Ready to pack once cooking is done.`;
+  await telegramSend(TELE_CONFIG.ADMIN_CHAT_ID, msg);
+}
+
+// ── FLOW 3: Admin marks ready → notify CUSTOMER ─────────────
+async function teleNotifyCustomerReady(order){
+  if(!teleReady() || !order.teleUserId) return;
+  const msg =
+`✅ <b>Your Dabba is Ready!</b>
+
+🍲 ${order.items.map(i=>`${i.e} ${i.n}`).join(', ')}
+📦 Packed and waiting for you.
+
+🏠 Collect from: <b>${order.drop}</b>
+⏰ Please pick up by 2:00 PM
+
+Thank you for ordering from <b>Soudhamini's Kitchen</b> 🙏`;
+  await telegramSend(order.teleUserId, msg);
+}
+
+// ── Broadcast to all customers who linked Telegram ──────────
+async function telegramBroadcast(text){
+  if(!teleReady()) return 0;
+  const linked = orders.filter(o=>o.teleUserId);
+  const unique = [...new Set(linked.map(o=>o.teleUserId))];
+  for(const id of unique) await telegramSend(id, text);
+  return unique.length;
+}
+
+// ── Resolve @username → chat_id via getUpdates ──────────────
+// In production use a webhook. In demo we store chat_id from /start
+// For now we store what the user types; real resolution needs webhook.
+function storeCustomerChatId(username, chatId){ /* filled by webhook in production */ }
+
+const notifLog=[
+  {ico:'🍲',title:"Today's menu is live!",body:'Sambar, Avial, Kootu, Rasam ready. Order by 9:30 AM.',time:'7:30 AM · Today',via:'t',unread:true},
+  {ico:'⏰',title:'Order deadline in 30 min',body:'Place order before 9:30 AM cutoff.',time:'9:00 AM · Yesterday',via:'t',unread:false},
+  {ico:'✅',title:'Order #BYOD-1041 confirmed',body:'Dabba packed and ready 🍱',time:'12:30 PM · Yesterday',via:'t',unread:false},
+];
+
+// ═══════════ INIT ══════════════════════════════════════════
 function init(){
   const d=new Date();
   document.getElementById('hdrDate').textContent=d.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});
   document.getElementById('admDate').textContent=d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  renderBanner(); renderNotifFeed(); renderAdminMenuEdit(); renderPhotos('sm-photo-grid'); renderPhotos('adm-photo-grid');
+  renderBanner(); renderNotifFeed(); renderAdminMenuEdit(); renderReviews(); renderKitchenGrid();
   countdown(); setInterval(countdown,1000);
-  setTimeout(()=>showToastTele('🍲',"Today's menu is live!",'Sambar, Avial, Kootu, Rasam ready. Order by 9:30 AM.'),1200);
+  setTimeout(()=>toast('🍲',"Today's menu is live!",'Sattvic meals ready. Order by 9:30 AM.'),1100);
 }
 
-// ══ BANNER ══════════════════════════════════════════════════
+// ═══════════ BANNER ════════════════════════════════════════
 function renderBanner(){
   const d=MENU.si.filter(x=>x.avail).slice(0,4);
   const tot=d.reduce((s,x)=>s+x.p,0);
-  document.getElementById('tb-total').textContent=`Full set ₹${tot}`;
+  document.getElementById('tb-total').textContent='Full set ₹'+tot;
   document.getElementById('tb-items').innerHTML=d.map(x=>`<div class="tbi">${x.e} ${x.n}<span class="tp">₹${x.p}</span></div>`).join('');
-  document.getElementById('cnt-si').textContent=MENU.si.filter(x=>x.avail).length+' dishes';
-  document.getElementById('cnt-sv').textContent=MENU.sv.filter(x=>x.avail).length+' items';
-  document.getElementById('cnt-pb').textContent=MENU.pb.filter(x=>x.avail).length+' items';
-  document.getElementById('cnt-ck').textContent=MENU.ck.filter(x=>x.avail).length+' items';
+  ['si','sv','pb','ck'].forEach(c=>document.getElementById('cnt-'+c).textContent=MENU[c].filter(x=>x.avail).length+' items');
 }
 function orderAll(){
   cart={};
   MENU.si.filter(x=>x.avail).slice(0,4).forEach(x=>{cart[x.id]=1;});
   showPage('submenu');loadSubMenu('si');
-  showToastTele('✅','Full menu added!','All 4 South Indian dishes added to your order.');
+  toast('✅','Full menu added!','All 4 South Indian dishes in your order.');
 }
 
-// ══ SUBMENU ═════════════════════════════════════════════════
+// ═══════════ SUBMENU ═══════════════════════════════════════
 function loadSubMenu(cat){
   currentCat=cat;
-  const meta=CATS_META[cat];
-  document.getElementById('sm-title').textContent=meta.name;
-  document.getElementById('sm-sub').textContent=MENU[cat].filter(x=>x.avail).length+' items available';
+  const names={si:'South Indian Àla Carte',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  document.getElementById('sm-title').textContent=names[cat];
+  document.getElementById('sm-sub').textContent=MENU[cat].filter(x=>x.avail).length+' items available today';
   document.getElementById('dish-list').innerHTML=MENU[cat].filter(x=>x.avail).map(d=>{
-    const ph=photos.find(p=>p.dishId===d.id);
     const sel=cart[d.id]>0;
+    const imgHtml=d.photo
+      ?`<img src="${d.photo}" alt="${d.n}" onerror="this.style.display='none'"/>`
+      :`<span style="position:relative;z-index:1">${d.e}</span>`;
     return `<div class="dcard${sel?' sel':''}" id="dc-${d.id}" onclick="toggleDish('${d.id}')">
-      <div class="dimg">${ph?`<img src="${ph.url}" alt=""/>`:`<span style="position:relative;z-index:1">${d.e}</span>`}</div>
+      <div class="dimg" id="dimg-${d.id}">${imgHtml}</div>
       <div class="dsel-badge">✓</div>
       <div class="dinfo">
         <div class="dname">${d.n}</div>
         <div class="ddesc">${d.d}</div>
-        <div class="dfoot"><div class="dtags"><span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span></div><div class="dprice">₹${d.p}</div></div>
+        <div class="dfoot">
+          <div class="dtags"><span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span></div>
+          <div class="dprice">₹${d.p}</div>
+        </div>
       </div>
       <div class="dqbar" id="dqb-${d.id}">
-        <div class="qctrl"><button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',-1)">−</button><span class="qnum" id="qn-${d.id}">${cart[d.id]||1}</span><button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',1)">+</button></div>
+        <div class="qctrl">
+          <button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',-1)">−</button>
+          <span class="qnum" id="qn-${d.id}">${cart[d.id]||1}</span>
+          <button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',1)">+</button>
+        </div>
         <span class="qsub" id="qs-${d.id}">₹${d.p*(cart[d.id]||1)}</span>
       </div>
     </div>`;
   }).join('');
-  renderPhotos('sm-photo-grid');
-  updateCheckoutBtn();
+  updateCheckBtn();
 }
 function toggleDish(id){
   if(cart[id]){delete cart[id];document.getElementById('dc-'+id).classList.remove('sel');}
   else{cart[id]=1;document.getElementById('dc-'+id).classList.add('sel');}
-  updateCheckoutBtn();updateCartBadge();
+  updateCheckBtn();updateCartBadge();
 }
 function chgQty(id,d){
   if(!cart[id])return;
-  cart[id]=Math.max(1,cart[id]+d);
+  cart[id]=Math.max(1,(cart[id]||1)+d);
   const dish=findDish(id);
   document.getElementById('qn-'+id).textContent=cart[id];
-  document.getElementById('qs-'+id).textContent='₹'+(dish.p*cart[id]);
+  document.getElementById('qs-'+id).textContent='₹'+dish.p*cart[id];
   updateCartBadge();
 }
 function findDish(id){return [...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d=>d.id===id);}
 function getItems(){return Object.keys(cart).map(id=>({...findDish(id),qty:cart[id]}));}
 function getTotal(){return getItems().reduce((s,i)=>s+i.p*i.qty,0);}
-function updateCheckoutBtn(){
-  const c=Object.keys(cart).length;
-  const btn=document.getElementById('sm-checkout-btn');
+function updateCheckBtn(){
+  const c=Object.keys(cart).length,btn=document.getElementById('sm-checkout-btn');
   btn.disabled=c<2;
   btn.textContent=c<2?`Select ${2-c} more…`:`Checkout (${c} items) →`;
   updateCartBadge();
@@ -915,126 +1092,143 @@ function updateCartBadge(){
   b.textContent=c;b.style.display=c?'flex':'none';
 }
 function goCheckout(){
-  if(Object.keys(cart).length<2){showToastTele('⚠️','Min 2 items','Select at least 2 dishes to proceed.');return;}
+  if(Object.keys(cart).length<2){toast('⚠️','Min 2 items','Select at least 2 dishes.');return;}
   showPage('checkout');
   const items=getItems(),tot=getTotal();
-  document.getElementById('co-items').innerHTML=items.map(i=>{
-    const ph=photos.find(p=>p.dishId===i.id);
-    return `<div class="cline"><div class="climg">${ph?`<img src="${ph.url}" alt=""/>`:`<span>${i.e}</span>`}</div><div class="clinfo"><div class="clname">${i.n}</div><div class="clqty">× ${i.qty}</div></div><div class="clprice">₹${i.p*i.qty}</div></div>`;
-  }).join('');
+  document.getElementById('co-items').innerHTML=items.map(i=>`
+    <div class="cline">
+      <div class="climg">${i.photo?`<img src="${i.photo}" onerror="this.outerHTML='<span>${i.e}</span>'" alt=""/>`:`<span>${i.e}</span>`}</div>
+      <div class="clinfo"><div class="clname">${i.n}</div><div class="clqty">× ${i.qty}</div></div>
+      <div class="clprice">₹${i.p*i.qty}</div>
+    </div>`).join('');
   document.getElementById('co-sub').textContent='₹'+tot;
   document.getElementById('co-tot').textContent='₹'+tot;
 }
 
-// ══ TELEGRAM LINK ════════════════════════════════════════════
-function linkTelegram(ctx){
-  const inp=document.getElementById(ctx==='co'?'co-tele-user':'tele-username');
-  const val=inp.value.trim();
-  if(!val||!val.startsWith('@')){showToastTele('⚠️','Invalid username','Enter your Telegram username starting with @');return;}
-  teleLinked=true; subs++;
+// ═══════════ TELEGRAM ══════════════════════════════════════
+// ═══════════ TELEGRAM LINK ═════════════════════════════════
+function linkTele(ctx){
+  const inp=document.getElementById(ctx==='co'?'co-tele-inp':'tele-main-inp');
+  const val=(inp.value||'').trim();
+  if(!val||!val.startsWith('@')){toast('⚠️','Invalid username','Enter your Telegram @username');return;}
+  teleLinked=true;teleUser=val;subs++;
   document.getElementById('st-subs').textContent=subs;
-  // update pills
-  document.getElementById('pill-tele').classList.add('active-tele');
+  document.getElementById('pill-tele').classList.add('at');
   document.getElementById('pill-tele-lbl').textContent='Linked '+val;
-  if(ctx==='main'){
-    const badge=document.getElementById('tele-linked-badge');
-    badge.style.display='flex';
-  } else {
-    const linked=document.getElementById('co-tele-linked');
-    linked.style.display='flex';
-  }
-  notifLog.unshift({ico:'✈️',title:'Telegram linked',body:`${val} is now connected to BYOD Soudhamini bot. You'll receive all alerts here.`,time:'Just now',via:'t',unread:true});
-  renderNotifFeed();
-  showToastTele('✈️','Telegram linked!',`All alerts will now be sent to ${val} on Telegram.`);
+  if(ctx==='co'){document.getElementById('co-tele-linked').style.display='flex';}
+  else{document.getElementById('tele-linked-main').style.display='flex';}
+  addAlert('✈️','t','Telegram linked',val+' connected to BYOD Soudhamini bot.');
+  toast('✈️','Telegram linked!','All alerts will go to '+val);
 }
-function openTelegramBot(){
-  window.open('https://t.me/BYODSoudhaminiBot','_blank');
-  showToastTele('✈️','Opening Telegram…','Search @BYODSoudhaminiBot and send /start');
-}
+function openTeleBot(){window.open('https://t.me/BYODSoudhaminiBot','_blank');toast('✈️','Opening Telegram…','Search @BYODSoudhaminiBot and send /start');}
 
-// ══ WEB PUSH ════════════════════════════════════════════════
+// ═══════════ WEB PUSH ══════════════════════════════════════
 function enableWebPush(){
   if('Notification' in window){
     Notification.requestPermission().then(p=>{
       if(p==='granted'){
-        webPushEnabled=true;
+        webPushOk=true;
         document.getElementById('webPushBtn').textContent='✅ Browser Notifications Enabled';
-        document.getElementById('webPushBtn').style.background='rgba(78,158,107,.2)';
-        document.getElementById('pill-web').classList.add('active-web');
+        document.getElementById('webPushBtn').style.background='rgba(78,158,107,.18)';
+        document.getElementById('pill-web').classList.add('aw');
         document.getElementById('pill-web-lbl').textContent='Enabled';
-        showToastTele('🌐','Web push enabled!','Browser notifications are now active as your backup channel.');
-      } else {
-        showToastTele('⚠️','Permission denied','Please allow notifications in your browser settings.');
-      }
+        toast('🌐','Web push enabled!','Browser notifications active as backup channel.');
+      } else toast('⚠️','Permission denied','Allow notifications in browser settings.');
     });
-  } else {
-    showToastTele('⚠️','Not supported','Use Telegram as your primary notification channel.');
+  } else toast('⚠️','Not supported','Use Telegram as your primary channel.');
+}
+
+// ═══════════ WEBAPP ALERT LOG ══════════════════════════════
+// Single source of truth — adds to in-app feed AND fires browser notif
+function addAlert(ico,via,title,body){
+  const now=new Date();
+  const time=now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})+' · Today';
+  notifLog.unshift({ico,via,title,body,time,unread:true});
+  renderNotifFeed();
+  if(webPushOk && 'Notification' in window && Notification.permission==='granted'){
+    new Notification(title,{body});
   }
 }
 
-// ══ PAYMENT ═════════════════════════════════════════════════
+// ═══════════ PAYMENT ═══════════════════════════════════════
 function handleSS(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
     document.getElementById('ss-img').src=ev.target.result;
     document.getElementById('ss-prev').style.display='block';
-    showToastTele('📎','Screenshot uploaded!','Payment proof attached to your order.');
+    toast('📎','Screenshot uploaded!','Payment proof attached.');
   };
   r.readAsDataURL(f);
 }
 function copyUPI(){
   navigator.clipboard?.writeText('soudhamini@upi').catch(()=>{});
-  showToastTele('📋','Copied!','UPI ID copied — paste in your payment app.');
+  toast('📋','UPI ID copied!','Paste in your payment app.');
 }
 
-// ══ PLACE ORDER ═════════════════════════════════════════════
+// ═══════════ FLOW 1: Customer places order → notify Admin ══
 async function placeOrder(){
   const name=document.getElementById('cf-name').value.trim();
-  const phone=document.getElementById('cf-phone').value.trim();
   const flat=document.getElementById('cf-flat').value.trim();
-  if(!name){showToastTele('⚠️','Name required','Please enter your name.');return;}
-  if(!flat){showToastTele('⚠️','Flat required','Please enter your flat number.');return;}
-  const ssOk=document.getElementById('ss-img').src&&document.getElementById('ss-img').src!==window.location.href;
-  if(!ssOk){showToastTele('⚠️','Payment screenshot needed','Upload payment screenshot before placing order.');return;}
-
+  if(!name){toast('⚠️','Name required','Enter your name.');return;}
+  if(!flat){toast('⚠️','Flat required','Enter your flat number.');return;}
+  const ssOk=document.getElementById('ss-img').src&&document.getElementById('ss-img').src!==location.href;
+  if(!ssOk){toast('⚠️','Payment screenshot needed','Upload payment screenshot first.');return;}
   const btn=document.getElementById('placeBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Placing order…';
-  await new Promise(r=>setTimeout(r,1400));
-
+  btn.disabled=true;btn.innerHTML='<span class="spin"></span>Placing…';
+  await new Promise(r=>setTimeout(r,900));
   const items=getItems(),total=getTotal();
   const oid='BYOD-'+(1040+orders.length+1);
   const portions=document.getElementById('cf-portions').value;
   const drop=document.getElementById('cf-drop').value;
-  const teleUser=document.getElementById('co-tele-user').value||'Not linked';
-  orders.push({oid,name,phone,flat,teleUser,items,total,portions,drop,status:'confirmed',time:new Date()});
+  const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
+  const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
+  const order={oid,name,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',time:new Date()};
+  orders.push(order);
 
+  // Telegram → Admin
+  const adminSent=await teleNotifyAdmin(order);
+
+  // Webapp alert (always)
+  addAlert('✅','t',
+    'New order — '+name,
+    oid+' · Rs.'+total+' · '+flat+(adminSent?' · Admin notified via Telegram':'')
+  );
+
+  btn.disabled=false;btn.innerHTML='🎉 Place Order & Notify Host';
   document.getElementById('placeBtn').style.display='none';
   document.getElementById('notifyDabbaBtn').style.display='flex';
   document.getElementById('success-sec').style.display='block';
   document.getElementById('success-sec').scrollIntoView({behavior:'smooth'});
-
-  const teleConnected=teleUser!=='Not linked';
-  document.getElementById('tele-confirm-box').style.display=teleConnected?'block':'none';
-
+  document.getElementById('tele-confirm-box').style.display='block';
+  document.getElementById('tele-confirm-box').querySelector('.tc-conf-t').textContent=
+    adminSent?'✈️ Soudhamini notified on Telegram!':'📋 Order saved in Admin panel';
+  document.getElementById('tele-confirm-box').querySelector('.tc-conf-b').textContent=
+    adminSent
+      ?'Order details sent. You will get a Telegram message when your dabba is ready.'
+      :'Add your Bot Token in Admin Settings to enable live Telegram alerts.';
   document.getElementById('track-steps').innerHTML=`
-    <div class="tstep"><div class="tsi done">✅</div><div><div class="tst">Order confirmed ${oid}</div><div class="tstime">Just now ${teleConnected?'· Telegram sent ✈️':''}</div></div></div>
+    <div class="tstep"><div class="tsi done">✅</div><div><div class="tst">Order confirmed ${oid}</div><div class="tstime">Just now${adminSent?' · Admin notified via Telegram':''}</div></div></div>
     <div class="tstep"><div class="tsi done">💳</div><div><div class="tst">Payment screenshot received</div><div class="tstime">Soudhamini will verify</div></div></div>
-    <div class="tstep"><div class="tsi pend">📦</div><div><div class="tst">Drop dabba by 11:30 AM</div><div class="tstime">${drop} ${teleConnected?'· Reminder via Telegram ✈️':''}</div></div></div>
-    <div class="tstep"><div class="tsi pend">🍲</div><div><div class="tst">Meal being cooked</div><div class="tstime">Ready ~12:30 PM</div></div></div>
-    <div class="tstep"><div class="tsi pend">🎉</div><div><div class="tst">Dabba packed — you'll be notified</div><div class="tstime">${teleConnected?'Via Telegram ✈️':'Via web notification'}</div></div></div>`;
-
-  btn.disabled=false;btn.innerHTML='🎉 Place Order & Notify Host';
-  notifLog.unshift({ico:'✅',title:`Order ${oid} confirmed`,body:`${name} · ₹${total} · ${flat} · ${portions} portion(s)`,time:'Just now',via:'t',unread:true});
-  renderNotifFeed();renderAdmin();
-  if(teleConnected) showToastTele('✈️',`Order sent, ${name}!`,`Telegram confirmation sent to ${teleUser} · ₹${total}`);
-  else showToastTele('🎉',`Order placed, ${name}!`,`₹${total} · Drop dabba by 11:30 AM`);
+    <div class="tstep"><div class="tsi pend">📦</div><div><div class="tst">Drop your dabba by 11:30 AM</div><div class="tstime">${drop}</div></div></div>
+    <div class="tstep"><div class="tsi pend">🍲</div><div><div class="tst">Meal being cooked</div><div class="tstime">Ready ~ 12:30 PM</div></div></div>
+    <div class="tstep"><div class="tsi pend">🎉</div><div><div class="tst">Dabba packed — you will be notified</div><div class="tstime">${tele!=='Not linked'?'Telegram + web alert':'Web alert'}</div></div></div>`;
+  renderAdmin();
+  toast(adminSent?'✈️':'✅','Order placed, '+name+'!',adminSent?'Soudhamini notified on Telegram':'Rs.'+total+' recorded');
 }
 
-function notifyDabbaDropped(){
-  showToastTele('📦','Host notified via Telegram!','Soudhamini has been sent a Telegram message that your dabba is dropped.');
-  notifLog.unshift({ico:'📦',title:'Dabba dropped!',body:'Customer confirmed dabba drop. Soudhamini notified via Telegram.',time:'Just now',via:'t',unread:true});
-  renderNotifFeed();
+// ═══════════ FLOW 2: Customer drops dabba → notify Admin ═══
+async function notifyDabbaDropped(){
+  const order=orders.slice().reverse().find(o=>o.status==='confirmed')||orders[orders.length-1];
+  const sent=order?await teleNotifyAdminDabbaDropped(order):false;
+  addAlert('📦','t','Dabba dropped!',
+    (order?order.name+' ('+order.flat+') ':'')+
+    'has dropped their dabba'+
+    (sent?' · Soudhamini notified via Telegram':'')
+  );
+  toast('📦',sent?'Soudhamini notified! ✈️':'Dabba drop recorded',
+    sent?'Telegram message sent to Soudhamini':'Logged in Admin panel.'
+  );
 }
 
 function resetAll(){
@@ -1042,175 +1236,270 @@ function resetAll(){
   document.getElementById('placeBtn').style.display='flex';
   document.getElementById('notifyDabbaBtn').style.display='none';
   document.getElementById('success-sec').style.display='none';
-  ['cf-name','cf-phone','cf-flat','cf-block','cf-apt','cf-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['cf-name','cf-phone','cf-flat','cf-block','cf-apt','cf-notes'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
   document.getElementById('ss-prev').style.display='none';
   document.getElementById('ss-img').src='';
   updateCartBadge();showPage('home');
 }
 
-// ══ PHOTOS ══════════════════════════════════════════════════
-function uploadPhoto(e,ctx){
+
+// ═══════════ KITCHEN ═══════════════════════════════════════
+function loadYT(){
+  const url=document.getElementById('yt-url-inp').value.trim();
+  if(!url){toast('⚠️','No URL','Paste a YouTube live URL first.');return;}
+  let embedId='';
+  try{
+    const u=new URL(url);
+    if(u.hostname.includes('youtube.com')){
+      embedId=u.searchParams.get('v')||u.pathname.replace('/live/','').replace('/','');
+    } else if(u.hostname.includes('youtu.be')){
+      embedId=u.pathname.replace('/','');
+    }
+  }catch(e){embedId=url.split('/').pop();}
+  if(!embedId){toast('⚠️','Invalid URL','Could not parse YouTube URL.');return;}
+  const wrap=document.getElementById('live-screen-wrap');
+  const ph=document.getElementById('live-placeholder');
+  if(ph)ph.remove();
+  const existing=wrap.querySelector('iframe');
+  if(existing)existing.remove();
+  const iframe=document.createElement('iframe');
+  iframe.src=`https://www.youtube.com/embed/${embedId}?autoplay=1&mute=1`;
+  iframe.allow='autoplay;encrypted-media';
+  iframe.style.cssText='width:100%;height:100%;border:none;position:absolute;top:0;left:0';
+  wrap.style.position='relative';
+  wrap.appendChild(iframe);
+  toast('▶️','Live stream loaded!','YouTube stream is now showing in Kitchen.');
+}
+function loadDriveAlbum(){
+  const url=document.getElementById('drive-album-inp').value.trim();
+  if(!url){toast('⚠️','No link','Paste a Google Drive or Photos album link.');return;}
+  window.open(url,'_blank');
+  toast('📁','Opening album…','Your Google Drive / Photos album will open. Download photos and use "Add Photo" to add them as Kitchen Moments.');
+}
+function addMoments(e){
   Array.from(e.target.files).forEach(f=>{
     const r=new FileReader();
-    r.onload=ev=>{
-      const ph={id:'ph'+Date.now()+Math.random(),url:ev.target.result,dishId:null,label:f.name.replace(/\.[^.]+$/,'')};
-      photos.push(ph);
-      renderPhotos('sm-photo-grid');renderPhotos('adm-photo-grid');
-      showToastTele('📷','Photo added!','Tap photo to assign it to a dish.');
-    };
+    r.onload=ev=>{kitchenMoments.push(ev.target.result);renderKitchenGrid();};
     r.readAsDataURL(f);
   });
 }
-function renderPhotos(gridId){
-  const g=document.getElementById(gridId);if(!g)return;
-  if(!photos.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--muted);font-size:.7rem">No photos yet. Upload to use as dish references.</div>';return;}
-  g.innerHTML=photos.map(p=>`<div class="phcard" onclick="assignPhoto('${p.id}')"><img src="${p.url}" alt=""/><div class="phlabel">${p.label}</div></div>`).join('');
+function renderKitchenGrid(){
+  const grid=document.getElementById('kg-grid');
+  grid.innerHTML=kitchenMoments.map((url,i)=>`
+    <div class="kgi">
+      <img src="${url}" alt="moment ${i}"/>
+      <button class="kgi-del" onclick="deleteMoment(${i})">✕</button>
+    </div>`).join('')+
+    `<div class="kgi kgi-add" onclick="document.getElementById('moment-inp').click()"><span>📷</span></div>`;
 }
-function assignPhoto(pid){
-  const ph=photos.find(p=>p.id===pid);if(!ph)return;
-  const unassigned=MENU[currentCat].find(d=>!photos.find(p=>p.dishId===d.id)&&d.avail);
-  if(unassigned){ph.dishId=unassigned.id;}
-  loadSubMenu(currentCat);
-  showToastTele('📷','Photo assigned!','Reference photo linked to dish card.');
+function deleteMoment(i){kitchenMoments.splice(i,1);renderKitchenGrid();toast('🗑️','Photo removed','Kitchen moment deleted.');}
+
+// ═══════════ KITCHEN SHEET ═════════════════════════════════
+function renderKitchenSheet(){
+  if(!orders.length){
+    document.getElementById('ks-summary').innerHTML='<div style="width:100%;text-align:center;padding:16px;color:var(--muted);font-size:.78rem">No orders yet today.</div>';
+    document.getElementById('ks-tally').innerHTML='';
+    document.getElementById('ks-orders').innerHTML='';
+    return;
+  }
+  // summary stats
+  const totalPortions=orders.reduce((s,o)=>s+parseInt(o.portions),0);
+  const totalRev=orders.reduce((s,o)=>s+o.total,0);
+  document.getElementById('ks-summary').innerHTML=`
+    <div class="ks-stat"><div class="ks-num">${orders.length}</div><div class="ks-lbl">Orders</div></div>
+    <div class="ks-stat"><div class="ks-num">${totalPortions}</div><div class="ks-lbl">Portions</div></div>
+    <div class="ks-stat"><div class="ks-num">₹${totalRev}</div><div class="ks-lbl">Revenue</div></div>`;
+
+  // dish tally — aggregate across all orders
+  const tally={};
+  orders.forEach(o=>o.items.forEach(i=>{
+    if(!tally[i.id]) tally[i.id]={...i,total:0};
+    tally[i.id].total+=i.qty;
+  }));
+  const catLabel={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  document.getElementById('ks-tally').innerHTML=Object.values(tally)
+    .sort((a,b)=>b.total-a.total)
+    .map(d=>`
+    <div class="ks-tally-row">
+      <div class="ktr-left">
+        <span class="ktr-em">${d.e}</span>
+        <div><div class="ktr-name">${d.n}</div><div class="ktr-cat">${catLabel[d.id.slice(0,2)]||''}</div></div>
+      </div>
+      <div><div class="ktr-count">${d.total}</div><div class="ktr-unit">portion${d.total>1?'s':''}</div></div>
+    </div>`).join('');
+
+  // per order list
+  document.getElementById('ks-orders').innerHTML=orders.map((o,i)=>`
+    <div class="ks-order-card">
+      <div class="koc-num">${i+1}</div>
+      <div class="koc-body">
+        <div class="koc-name">${o.name}</div>
+        <div class="koc-addr">🏠 ${o.flat} · ${o.drop}</div>
+        <div class="koc-items">${o.items.map(it=>`<span class="koc-item">${it.e} ${it.n} ×${it.qty}</span>`).join('')}</div>
+        <div class="koc-portions">📦 ${o.portions}</div>
+      </div>
+      <div class="koc-status" id="koc-chk-${o.oid}" onclick="toggleKocDone('${o.oid}')" title="Mark packed"></div>
+    </div>`).join('');
+}
+function toggleKocDone(oid){
+  const el=document.getElementById('koc-chk-'+oid);
+  if(el.classList.contains('done')){el.classList.remove('done');el.textContent='';}
+  else{el.classList.add('done');el.textContent='✓';}
+}
+function printKitchenSheet(){
+  // Reveal only kitchen sheet for printing
+  document.querySelectorAll('.asec').forEach(s=>s.style.display='none');
+  document.getElementById('atab-kitchen-sheet').style.display='block';
+  window.print();
+  // Restore after print
+  setTimeout(()=>{
+    document.querySelectorAll('.asec').forEach(s=>s.style.display='');
+    switchAdminTab('kitchen-sheet',document.querySelector('.atab.on'));
+  },500);
 }
 
-// ══ ADMIN ════════════════════════════════════════════════════
+// ═══════════ ADMIN ═════════════════════════════════════════
 function renderAdmin(){
   document.getElementById('st-orders').textContent=orders.length;
   document.getElementById('st-rev').textContent='₹'+orders.reduce((s,o)=>s+o.total,0);
   document.getElementById('st-subs').textContent=subs;
   const list=document.getElementById('admin-orders');
-  if(!orders.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:.75rem">No orders yet.</div>';return;}
+  if(!orders.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);font-size:.72rem">No orders yet.</div>';return;}
   list.innerHTML=orders.slice().reverse().map(o=>`
     <div class="ocard">
       <div class="oc-top"><span class="oc-id">#${o.oid}</span><span class="ocbadge confirmed" id="ob-${o.oid}">${o.status}</span></div>
-      <div class="oc-cust">👤 ${o.name} · 📱 ${o.phone||'—'}</div>
+      <div class="oc-cust">👤 ${o.name}</div>
       <div class="oc-addr">🏠 ${o.flat} · ${o.drop}</div>
-      ${o.teleUser&&o.teleUser!=='Not linked'?`<div class="oc-tele">✈️ ${o.teleUser}</div>`:''}
+      ${o.tele&&o.tele!=='Not linked'?`<div class="oc-tele">✈️ ${o.tele}</div>`:''}
       <div class="oc-items">${o.items.map(i=>`${i.e} ${i.n} ×${i.qty}`).join(' · ')}</div>
       <div class="oc-foot">
-        <span class="oc-total">₹${o.total} · ${o.portions} portion(s)</span>
+        <span class="oc-total">₹${o.total} · ${o.portions}</span>
         <div class="oc-acts">
           <button class="ocbtn g" id="rb-${o.oid}" onclick="markReady('${o.oid}')">Mark Ready</button>
-          <button class="ocbtn t" onclick="notifyCust('${o.oid}','${o.name}','${o.teleUser||''}')">✈️ Notify</button>
+          <button class="ocbtn t" onclick="notifyCust('${o.oid}','${o.name}','${o.tele}')">✈️ Notify</button>
         </div>
       </div>
     </div>`).join('');
 }
-function markReady(oid){
-  const ob=document.getElementById('ob-'+oid);if(ob){ob.textContent='ready';ob.className='ocbadge ready';}
-  const rb=document.getElementById('rb-'+oid);if(rb){rb.textContent='✓ Packed';rb.disabled=true;}
-  const o=orders.find(x=>x.oid===oid);
-  if(o) notifyCust(oid,o.name,o.teleUser||'');
-}
-function notifyCust(oid,name,tele){
-  const via=tele&&tele!=='Not linked'?`Telegram (${tele})`:'web notification';
-  showToastTele('✈️',`${name} notified!`,`Dabba packed — sent via ${via}`);
-  notifLog.unshift({ico:'📦',title:`Dabba packed for ${name}`,body:`Order ${oid} is ready. Notification sent via Telegram.`,time:'Just now',via:'t',unread:true});
-  renderNotifFeed();
-}
-function markAllReady(){orders.forEach(o=>markReady(o.oid));showToastTele('✈️','All customers notified!','Telegram alerts sent — dabbas are packed.');}
-function sendDabbaReminder(){
-  showToastTele('📦','Drop reminder sent!','Telegram reminder sent to all customers: drop dabba by 11:30 AM.');
-  notifLog.unshift({ico:'📦',title:'Drop dabba reminder sent',body:'All customers reminded via Telegram to drop their dabba by 11:30 AM.',time:'Just now',via:'t',unread:true});
-  renderNotifFeed();
+// ═══════════ FLOW 3: Admin marks ready → notify Customer ══
+async function notifyCust(oid, name, tele){
+  const order = orders.find(o=>o.oid===oid);
+  // Telegram to customer (requires their chat_id stored at order time)
+  const custSent = order ? await teleNotifyCustomerReady(order) : false;
+  // Webapp alert (always visible in Alerts page)
+  addAlert('✅','t',
+    'Dabba ready — '+name,
+    'Order '+oid+' packed and ready to collect'+
+    (custSent?' · Customer notified via Telegram':'')
+  );
+  const via = custSent?'Telegram + web alert':'web alert';
+  toast('✈️', name+' notified!', 'Dabba packed. Sent via '+via);
 }
 
-// ══ EDIT MENU ═══════════════════════════════════════════════
+function markReady(oid){
+  const ob=document.getElementById('ob-'+oid);
+  if(ob){ob.textContent='ready';ob.className='ocbadge ready';}
+  const rb=document.getElementById('rb-'+oid);
+  if(rb){rb.textContent='✓ Packed';rb.disabled=true;}
+  const o=orders.find(x=>x.oid===oid);
+  if(o){o.status='ready';notifyCust(oid,o.name,o.tele||'');}
+}
+
+async function markAllReady(){
+  for(const o of orders) markReady(o.oid);
+  toast('✈️','All customers notified!','Dabba packed alerts sent to everyone.');
+}
+
+async function sendDabbaReminder(){
+  // Broadcast to all customers who gave their teleUserId
+  const linked=orders.filter(o=>o.teleUserId);
+  let sent=0;
+  for(const o of linked){
+    const ok=await telegramSend(o.teleUserId,
+      '📦 <b>Drop Dabba Reminder</b>\n\nHi '+o.name+', please drop your dabba at <b>'+o.drop+'</b> by <b>11:30 AM</b>.\n\nYour meal is being freshly prepared! 🍲');
+    if(ok)sent++;
+  }
+  addAlert('📦','t','Drop reminder sent','Sent to '+linked.length+' customer(s)'+(sent?' · '+sent+' via Telegram':''));
+  toast('📦','Reminder sent!',linked.length+' customers notified.');
+}
+
+// Broadcast to all Telegram-linked customers
+async function sendBulk(){
+  var msg=document.getElementById('bulk-msg').value.trim();
+  if(!msg){toast('Warning','Empty','Write a message.');return;}
+  var useTele=document.getElementById('bch-tele').classList.contains('on');
+  var useWeb=document.getElementById('bch-web').classList.contains('on');
+  var teleSent=0;
+  if(useTele){ teleSent=await telegramBroadcast('<b>Soudhamini Kitchen:</b>\n\n'+msg); }
+  addAlert('Broadcast',useTele?'t':'w','Broadcast sent',msg.slice(0,80)+(msg.length>80?'...':''));
+  var via=(useTele&&useWeb?'Telegram ('+teleSent+' sent) + Web':useTele?'Telegram ('+teleSent+' sent)':'Web Push');
+  toast('Broadcast','Broadcast sent!','Delivered via '+via);
+  document.getElementById('bulk-msg').value='';
+}
+
+// Save Bot Token + Admin Chat ID in Admin > Settings
+function saveBotConfig(){
+  var tok=document.getElementById('cfg-token').value.trim();
+  var cid=document.getElementById('cfg-chatid').value.trim();
+  if(!tok||!cid){toast('Warning','Fill both fields','Enter Bot Token and Admin Chat ID.');return;}
+  TELE_CONFIG.BOT_TOKEN=tok;
+  TELE_CONFIG.ADMIN_CHAT_ID=cid;
+  document.getElementById('cfg-status').textContent='Saved for this session';
+  toast('OK','Telegram configured!','Bot token and admin chat ID saved.');
+}
+
+
+
+// ─── EDIT MENU ──────────────────────────────────────────────
 function renderAdminMenuEdit(){
   ['si','sv','pb','ck'].forEach(cat=>{
     const el=document.getElementById('ed-'+cat);if(!el)return;
     el.innerHTML=MENU[cat].map(d=>`
       <div class="edcard" id="edc-${d.id}">
-        <div class="ed-top"><div class="ed-em">${d.e}</div><input class="ed-name" id="edn-${d.id}" value="${d.n}" placeholder="Dish name"/></div>
+        <div class="ed-top">
+          <div class="ed-em">${d.e}</div>
+          <input class="ed-name" id="edn-${d.id}" value="${d.n}" placeholder="Dish name"/>
+        </div>
         <div class="ed-row">
-          <span style="font-size:.68rem;color:var(--muted)">₹</span>
+          <span style="font-size:.65rem;color:var(--muted)">₹</span>
           <input class="ed-price" type="number" id="edp-${d.id}" value="${d.p}" min="1"/>
           <div class="ed-avail"><button class="tog ${d.avail?'on':''}" id="edt-${d.id}" onclick="this.classList.toggle('on')"></button><span>Available</span></div>
+        </div>
+        <div class="ed-photo-row">
+          <input class="ed-photo-inp" id="edph-${d.id}" value="${d.photo||''}" placeholder="Paste Google Drive image URL for this dish…" oninput="previewDishPhoto('${d.id}')"/>
+          <div class="ed-photo-prev" id="edphp-${d.id}">${d.photo?`<img src="${d.photo}" onerror="this.outerHTML='📷'" alt=""/>`:'📷'}</div>
         </div>
       </div>`).join('');
   });
 }
+function previewDishPhoto(id){
+  const url=document.getElementById('edph-'+id).value.trim();
+  const prev=document.getElementById('edphp-'+id);
+  if(url) prev.innerHTML=`<img src="${url}" onerror="this.outerHTML='❌'" alt=""/>`;
+  else prev.innerHTML='📷';
+}
 function addDish(cat){
-  const emojis={si:'🍲',sv:'🥪',pb:'🫓',ck:'🍪'};
-  MENU[cat].push({id:cat+Date.now(),e:emojis[cat],n:'New Dish',d:'Description',p:60,avail:true});
-  renderAdminMenuEdit();showToastTele('➕','Dish added!','Edit name, price then save.');
+  const emos={si:'🍲',sv:'🥪',pb:'🫓',ck:'🍪'};
+  MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',d:'Description',p:60,avail:true,photo:''});
+  renderAdminMenuEdit();toast('➕','Dish added!','Edit name, price, photo URL then save.');
 }
 function saveMenu(){
   ['si','sv','pb','ck'].forEach(cat=>{
     MENU[cat].forEach(d=>{
-      const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),t=document.getElementById('edt-'+d.id);
-      if(n)d.n=n.value;if(p)d.p=parseInt(p.value)||d.p;if(t)d.avail=t.classList.contains('on');
+      const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id);
+      if(n)d.n=n.value;if(p)d.p=parseInt(p.value)||d.p;if(t)d.avail=t.classList.contains('on');if(ph)d.photo=ph.value.trim();
     });
   });
   renderBanner();
-  showToastTele('💾','Menu saved!','Today\'s menu updated. Telegram alert will go to subscribers.');
+  toast('💾','Menu saved & published!','Prices, photos and availability updated.');
 }
 function switchAdminTab(name,btn){
   document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
-  btn.classList.add('on');document.getElementById('atab-'+name).classList.add('on');
-  if(name==='orders')renderAdmin();if(name==='photos')renderPhotos('adm-photo-grid');
+  if(btn)btn.classList.add('on');
+  document.getElementById('atab-'+name).classList.add('on');
+  if(name==='orders')renderAdmin();
+  if(name==='kitchen-sheet')renderKitchenSheet();
 }
-async function sendBulk(){
-  const msg=document.getElementById('bulk-msg').value.trim();if(!msg){showToastTele('⚠️','Empty message','Write something first.');return;}
-  const tele=document.getElementById('bch-tele').classList.contains('on');
-  const web=document.getElementById('bch-web').classList.contains('on');
-  await new Promise(r=>setTimeout(r,700));
-  notifLog.unshift({ico:'📢',title:'Broadcast sent',body:msg.substring(0,80)+(msg.length>80?'…':''),time:'Just now',via:tele?'t':'w',unread:true});
-  renderNotifFeed();
-  const via=(tele&&web?'Telegram + Web Push':tele?'Telegram':'Web Push');
-  showToastTele('📢','Broadcast sent!',`Message delivered via ${via}`);
-  document.getElementById('bulk-msg').value='';
-}
-
-// ══ NOTIF FEED ══════════════════════════════════════════════
-function renderNotifFeed(){
-  document.getElementById('notif-feed').innerHTML=notifLog.map(n=>`
-    <div class="nitem${n.unread?' unread':''}">
-      <div class="ni-dot ${n.via}">${n.ico}</div>
-      <div style="flex:1">
-        <div class="ni-title">${n.title}</div>
-        <div class="ni-body">${n.body}</div>
-        <div class="ni-meta">
-          <span class="ni-time">${n.time}</span>
-          <span class="ni-via ${n.via}">${n.via==='t'?'✈️ Telegram':'🌐 Web'}</span>
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-// ══ COUNTDOWN ════════════════════════════════════════════════
-function countdown(){
-  const now=new Date(),dl=new Date();dl.setHours(9,30,0,0);
-  if(now>dl){document.getElementById('cd').textContent='Closed';return;}
-  const df=dl-now,h=Math.floor(df/3600000),m=Math.floor((df%3600000)/60000),s=Math.floor((df%60000)/1000);
-  document.getElementById('cd').textContent=`${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s left`;
-}
-
-// ══ TOAST ═══════════════════════════════════════════════════
-let tT;
-function showToastTele(ico,title,body){
-  clearTimeout(tT);
-  document.getElementById('tIco').textContent=ico;
-  document.getElementById('tTitle').textContent=title;
-  document.getElementById('tBody').textContent=body;
-  document.getElementById('tVia').innerHTML=teleLinked?'<span style="font-size:.65rem">✈️ Sent via Telegram</span>':'';
-  document.getElementById('toast').classList.add('show');
-  tT=setTimeout(hideToast,5000);
-}
-function hideToast(){document.getElementById('toast').classList.remove('show');}
-
-// ══ NAV ═════════════════════════════════════════════════════
-function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
-  document.getElementById('pg-'+name).classList.add('on');
-  const m={home:'nav-home',submenu:'nav-submenu',checkout:'nav-submenu',kitchen:'nav-kitchen',admin:'nav-admin',alerts:'nav-alerts'};
-  if(m[name])document.getElementById(m[name]).classList.add('on');
-}
-
-init();
-</script>
-</body>
-</html>
