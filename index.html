@@ -17,10 +17,10 @@ html,body{height:100%;background:var(--bg);color:var(--cream);font-family:'DM Sa
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.022;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-.app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;position:relative;overflow:hidden}
+.app{display:flex;flex-direction:column;height:100dvh;max-width:480px;margin:0 auto;position:relative;overflow:hidden}
 
 /* HEADER */
-.hdr{flex-shrink:0;padding:11px 15px 9px;background:rgba(14,12,10,.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:10}
+.hdr{position:sticky;top:0;flex-shrink:0;padding:11px 15px 9px;background:rgba(14,12,10,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;z-index:10}
 .brand{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900;line-height:1}
 .brand span{color:var(--saff)}
 .brand-sub{font-size:.54rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-top:1px}
@@ -33,13 +33,13 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 /* PAGES */
 .pages{flex:1;overflow:hidden;position:relative}
-.page{position:absolute;inset:0;overflow-y:auto;display:none;padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+.page{position:absolute;top:56px;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom,0px));overflow-y:auto;display:none;padding-bottom:12px}
 .page.on{display:block;animation:su .26s cubic-bezier(.22,.85,.45,1)}
 @keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{display:none}
 
 /* BOTTOM NAV */
-.bnav{position:absolute;bottom:0;left:0;right:0;background:rgba(11,9,7,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:5px 0 max(5px,env(safe-area-inset-bottom));z-index:10}
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:rgba(11,9,7,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding:5px 0 max(8px,env(safe-area-inset-bottom));z-index:10}
 .ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:none;background:none;cursor:pointer;padding:4px 2px;color:var(--muted);transition:.2s;position:relative}
 .ni.on{color:var(--saff)}
 .ni-ico{font-size:1.1rem;line-height:1}
@@ -616,7 +616,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
           <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
           <div class="fld"><label>Flat Number</label><input id="cf-flat" placeholder="e.g. H-302"/></div>
-          <div class="fld"><label>Portions</label><select id="cf-portions"><option>1 portion</option><option>2 portions</option><option>3 portions</option><option>4 portions</option></select></div>
+          <div class="fld"><label>Portions</label><select id="cf-portions"><option>10 portions</option><option>1 portion</option><option>2 portions</option><option>3 portions</option><option>4 portions</option></select></div>
           <div class="fld"><label>Drop-off Point</label><select id="cf-drop"><option>H-002 (Direct)</option><option>Exit Gate Security</option></select></div>
           
         </div>
@@ -874,7 +874,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         </div>
         <div class="fld"><label>Your Name</label><input id="rev-name" placeholder="e.g. Meera S."/></div>
         <div class="fld"><label>Flat / Block</label><input id="rev-flat" placeholder="e.g. H-302"/></div>
-        <div class="fld"><label>Your Review</label><textarea id="rev-text" placeholder="What did you enjoy about the meal?" rows="3"></textarea></div>
+        <div class="fld"><label>Your Review</label><textarea id="rev-text" placeholder="What did you enjoy about the BYOD dishes?" rows="3"></textarea></div>
         <button class="btn-submit-rev" onclick="submitReview()">Submit Review ⭐</button>
       </div>
       <div style="height:8px"></div>
@@ -974,20 +974,27 @@ function isOrderOpen(){
   const now=new Date(), cut=new Date(); cut.setHours(9,30,0,0);
   return now < cut;
 }
-function getOrderStatus(){
+function getOrderStatus(cat){
+  // cat='si' = South Indian Ala Carte, closes at 9:30 AM
+  // All other categories open all day once menu is published
   if(!menuPublishedToday) return {open:false,msg:"Today's menu not yet published. Check back soon!"};
-  const now=new Date(), cut=new Date(); cut.setHours(9,30,0,0);
-  if(now>=cut) return {open:false,msg:'Orders closed at 9:30 AM. See you tomorrow!'};
+  if(cat==='si'){
+    const now=new Date(),cut=new Date(); cut.setHours(9,30,0,0);
+    if(now>=cut) return {open:false,msg:'SI Ala Carte orders closed at 9:30 AM. Savoury, Breads & Cookies still open!'};
+  }
   return {open:true,msg:''};
 }
 function updateOrderState(){
-  const s=getOrderStatus();
+  // Check if cart has only SI items — if so apply cutoff
+  const siOnly = Object.keys(cart).length>0 && Object.keys(cart).every(id=>id.startsWith('si'));
+  const catToCheck = (currentCat==='si' || siOnly) ? 'si' : null;
+  const s=getOrderStatus(catToCheck);
   const pb=document.getElementById('placeBtn');
   const cb=document.getElementById('order-closed-banner');
   const sb=document.getElementById('sm-checkout-btn');
   if(pb){ pb.disabled=!s.open; pb.style.opacity=s.open?'1':'.45'; }
   if(cb){ cb.style.display=s.open?'none':'block'; if(!s.open) cb.textContent=s.msg; }
-  if(sb && !s.open){ sb.disabled=true; sb.textContent=s.msg; }
+  if(sb){ sb.disabled=!s.open && Object.keys(cart).length<1; }
 }
 
 // ── Telegram ─────────────────────────────────────
@@ -1117,8 +1124,10 @@ function renderBanner(){
   });
 }
 function orderAll(){
-  const s=getOrderStatus();
-  if(!s.open){toast('⏰','Orders closed',s.msg);return;}
+  // Check cutoff only for pure-SI orders
+  const allSI=getItems().every(i=>i.id.startsWith('si'));
+  const s=getOrderStatus(allSI?'si':null);
+  if(!s.open){toast('⏰',allSI?'SI orders closed':"Orders unavailable",s.msg);return;}
   cart={};
   MENU.si.filter(x=>x.avail).slice(0,4).forEach(x=>{cart[x.id]=1;});
   showPage('submenu'); loadSubMenu('si');
@@ -1223,10 +1232,17 @@ function findDish(id){return [...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(
 function getItems(){return Object.keys(cart).map(id=>({...findDish(id),qty:cart[id]}));}
 function getTotal(){return getItems().reduce((s,i)=>s+i.p*i.qty,0);}
 function updateCheckBtn(){
-  const s=getOrderStatus(),n=Object.keys(cart).length;
+  const s=getOrderStatus(currentCat),n=Object.keys(cart).length;
   const btn=document.getElementById('sm-checkout-btn');
-  if(!s.open){btn.disabled=true;btn.textContent=s.msg;}
-  else{btn.disabled=n<2;btn.textContent=n<2?`Select ${2-n} more…`:`Checkout (${n} items) →`;}
+  if(currentCat==='si' && !s.open){
+    btn.disabled=true;
+    btn.textContent='SI orders closed at 9:30 AM — try Savoury, Breads or Cookies';
+    btn.style.fontSize='.62rem';
+  } else {
+    btn.style.fontSize='';
+    btn.disabled=n<1;
+    btn.textContent=n<1?'Add items to order…':`Checkout (${n} items) →`;
+  }
   updateCartBadge();
 }
 function updateCartBadge(){
@@ -1234,9 +1250,10 @@ function updateCartBadge(){
   b.textContent=n; b.style.display=n?'flex':'none';
 }
 function goCheckout(){
-  const s=getOrderStatus();
-  if(!s.open){toast('⏰','Orders closed',s.msg);return;}
-  if(Object.keys(cart).length<2){toast('⚠️','Min 2 items','Select at least 2 dishes.');return;}
+  const allSI2=getItems().every(i=>i.id.startsWith('si'));
+  const s2=getOrderStatus(allSI2?'si':null);
+  if(!s2.open){toast('⏰','SI orders closed',s2.msg);return;}
+  if(Object.keys(cart).length<1){toast('⚠️','Add items','Select at least 1 dish.');return;}
   showPage('checkout');
   const items=getItems(),tot=getTotal();
   document.getElementById('co-items').innerHTML=items.map(i=>`
