@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v15</title>
+<title>BYOD — Bring Your Own Dabba v16</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -120,15 +120,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 /* ── Ingredient tooltip ─────────────────── */
 .dname-wrap{position:relative;display:inline-flex;align-items:center;gap:5px}
 .ing-btn{width:16px;height:16px;border-radius:50%;background:rgba(244,163,37,.15);border:1px solid rgba(244,163,37,.3);color:var(--saff);font-size:.55rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
-.sold-out{pointer-events:none!important;cursor:default!important}
-.unavail{pointer-events:none!important;cursor:default!important}
-.sold-badge{position:absolute;top:7px;left:7px;background:rgba(239,68,68,.88);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:20px;z-index:4;letter-spacing:.04em}
-.unavail-badge{position:absolute;top:7px;left:7px;background:rgba(120,120,120,.75);color:#fff;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:20px;z-index:4}
-.tog.sold{--tog-on:rgba(239,68,68,.8)}
-.ing-tip{position:absolute;left:0;top:calc(100% + 6px);background:#1a1610;border:1px solid rgba(244,163,37,.25);border-radius:10px;padding:10px 12px;width:220px;z-index:50;opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s,transform .18s;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.sold-badge{position:absolute;top:7px;left:7px;background:rgba(239,68,68,.88);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:20px;z-index:4}
+.unavail-badge{position:absolute;top:7px;left:7px;background:rgba(100,100,100,.75);color:#fff;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:20px;z-index:4}
+.ing-tip{position:absolute;left:0;top:calc(100% + 6px);background:#1a1610;border:1px solid rgba(244,163,37,.25);border-radius:10px;padding:10px 12px;width:260px;max-width:88vw;max-height:200px;overflow-y:auto;z-index:50;opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s,transform .18s;box-shadow:0 8px 24px rgba(0,0,0,.5)}
 .ing-tip.show{opacity:1;pointer-events:auto;transform:translateY(0)}
 .ing-tip-title{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--saff);margin-bottom:6px}
-.ing-tip-body{font-size:.68rem;color:var(--muted);line-height:1.55}
+.ing-tip-body{font-size:.68rem;color:var(--cream);line-height:1.6;white-space:normal;word-break:break-word}
 
 .dcard{margin:8px 11px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.2s;position:relative}
 .dcard:active{transform:scale(.985)}
@@ -277,6 +274,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .nch{font-size:.52rem;padding:2px 5px;border-radius:3px;font-weight:700}
 .nch.t{background:rgba(42,171,238,.1);color:var(--tele);border:1px solid rgba(42,171,238,.18)}
 .nch.w{background:rgba(78,158,107,.09);color:var(--green);border:1px solid rgba(78,158,107,.17)}
+.sotog{width:32px;height:18px;border-radius:20px;border:none;background:rgba(255,255,255,.1);cursor:pointer;transition:background .2s;flex-shrink:0}
+.sotog.son{background:rgba(239,68,68,.8)!important}
 .tog{width:36px;height:20px;border-radius:10px;background:rgba(110,100,88,.18);cursor:pointer;position:relative;transition:.25s;border:none;flex-shrink:0}
 .tog.on{background:var(--tele)}
 .tog::after{content:'';position:absolute;top:2.5px;left:2.5px;width:15px;height:15px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.25s}
@@ -501,7 +500,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v15.0</span>
+      <span class="ver-badge" id="ver-badge">v16.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -755,7 +754,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v15.0</span>
+          <span class="ver-badge">v16.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -942,7 +941,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v15.0 — Bring Your Own Dabba
+// BYOD v16.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -984,28 +983,28 @@ function teleReady(){
 // ── Default menu (used only if Sheet is empty / not connected) ─
 const DEFAULT_MENU = {
   si:[
-    {id:'si1',e:'🥘',n:'Sambar',p:60,avail:true,soldOut:false,photo:\'\'},
-    {id:'si2',e:'🌿',n:'Avial',p:80,avail:true,soldOut:false,photo:\'\'},
-    {id:'si3',e:'🍛',n:'Kootu',p:60,avail:true,soldOut:false,photo:\'\'},
-    {id:'si4',e:'🌶️',n:'Vatha Kuzhambu',p:60,avail:true,soldOut:false,photo:\'\'},
-    {id:'si5',e:'🍋',n:'Rasam',p:40,avail:true,soldOut:false,photo:\'\'},
-    {id:'si6',e:'🥦',n:'Poriyal',p:50,avail:true,soldOut:false,photo:\'\'},
+    {id:'si1',e:'🥘',n:'Sambar',p:60,avail:true,soldOut:false,photo:''},
+    {id:'si2',e:'🌿',n:'Avial',p:80,avail:true,soldOut:false,photo:''},
+    {id:'si3',e:'🍛',n:'Kootu',p:60,avail:true,soldOut:false,photo:''},
+    {id:'si4',e:'🌶️',n:'Vatha Kuzhambu',p:60,avail:true,soldOut:false,photo:''},
+    {id:'si5',e:'🍋',n:'Rasam',p:40,avail:true,soldOut:false,photo:''},
+    {id:'si6',e:'🥦',n:'Poriyal',p:50,avail:true,soldOut:false,photo:''},
   ],
   sv:[
-    {id:'sv1',e:'🥪',n:'Masala Oats Upma',p:70,avail:true,soldOut:false,photo:\'\'},
-    {id:'sv2',e:'🫔',n:'Ragi Idli',p:60,avail:true,soldOut:false,photo:\'\'},
-    {id:'sv3',e:'🥞',n:'Mixed Veg Dosa',p:80,avail:true,soldOut:false,photo:\'\'},
+    {id:'sv1',e:'🥪',n:'Masala Oats Upma',p:70,avail:true,soldOut:false,photo:''},
+    {id:'sv2',e:'🫔',n:'Ragi Idli',p:60,avail:true,soldOut:false,photo:''},
+    {id:'sv3',e:'🥞',n:'Mixed Veg Dosa',p:80,avail:true,soldOut:false,photo:''},
   ],
   pb:[
-    {id:'pb1',e:'🫓',n:'Methi Parantha',p:70,avail:true,soldOut:false,photo:\'\'},
-    {id:'pb2',e:'🥕',n:'Aloo Parantha',p:75,avail:true,soldOut:false,photo:\'\'},
-    {id:'pb3',e:'🍝',n:'Jain Pasta',p:90,avail:true,soldOut:false,photo:\'\'},
+    {id:'pb1',e:'🫓',n:'Methi Parantha',p:70,avail:true,soldOut:false,photo:''},
+    {id:'pb2',e:'🥕',n:'Aloo Parantha',p:75,avail:true,soldOut:false,photo:''},
+    {id:'pb3',e:'🍝',n:'Jain Pasta',p:90,avail:true,soldOut:false,photo:''},
   ],
   ck:[
-    {id:'ck1',e:'🍪',n:'Ragi Jaggery Cookies',p:80,avail:true,soldOut:false,photo:\'\'},
-    {id:'ck2',e:'🍞',n:'Whole Wheat Sourdough',p:120,avail:true,soldOut:false,photo:\'\'},
-    {id:'ck3',e:'🥐',n:'Multigrain Bread',p:110,avail:true,soldOut:false,photo:\'\'},
-    {id:'ck4',e:'🧁',n:'Coconut Ladoo',p:60,avail:true,soldOut:false,photo:\'\'},
+    {id:'ck1',e:'🍪',n:'Ragi Jaggery Cookies',p:80,avail:true,soldOut:false,photo:''},
+    {id:'ck2',e:'🍞',n:'Whole Wheat Sourdough',p:120,avail:true,soldOut:false,photo:''},
+    {id:'ck3',e:'🥐',n:'Multigrain Bread',p:110,avail:true,soldOut:false,photo:''},
+    {id:'ck4',e:'🧁',n:'Coconut Ladoo',p:60,avail:true,soldOut:false,photo:''},
   ]
 };
 const DEFAULT_INGREDIENTS = {
@@ -1348,7 +1347,14 @@ async function init(){
   syncPublishBtn();
   renderBanner();updateOrderState();renderNotifFeed();
   renderAdminMenuEdit();renderReviews();renderKitchenGrid();
-  countdown();setInterval(countdown,1000);setInterval(updateOrderState,30000);
+  countdown();setInterval(countdown,1000);setInterval(()=>{
+    updateOrderState();
+    const _n=new Date();
+    if(currentCat==='si'&&_n.getHours()===9&&_n.getMinutes()===30&&_n.getSeconds()<16){
+      toast('⏰','South Indian orders closed','9:30 AM cutoff. Savoury & Breads still open!');
+      addAlert('⏰','t','SI orders auto-closed','9:30 AM cutoff triggered.');
+    }
+  },15000);
   if(location.hash==='#reviews')showPage('reviews');
 }
 
@@ -1482,28 +1488,26 @@ function loadSubMenu(cat){
   const names={si:'South Indian Àla Carte',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   document.getElementById('sm-title').textContent=names[cat];
   document.getElementById('sm-sub').textContent=MENU[cat].filter(x=>x.avail).length+' items available today';
-  document.getElementById('dish-list').innerHTML=MENU[cat].map(d=>{
+  const _sorted=[...MENU[cat].filter(d=>d.avail&&!d.soldOut),...MENU[cat].filter(d=>d.soldOut),...MENU[cat].filter(d=>!d.avail&&!d.soldOut)];
+  document.getElementById('dish-list').innerHTML=_sorted.map(d=>{
     const sel=!!cart[d.id];
     const photoUrl=d.photo?convertGoogleUrl(d.photo)||d.photo:'';
     const imgHtml=photoUrl?`<img src="${photoUrl}" alt="${d.n}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover"/>`:`<span style="position:relative;z-index:1">${d.e}</span>`;
     const ing=INGREDIENTS[d.id]||'';
-    const isSoldOut=!!d.soldOut;
-    const isUnavail=!d.avail;
-    const cardClass='dcard'+(sel?' sel':'')+(isSoldOut?' sold-out':'')+(isUnavail?' unavail':'');
-    const clickable=!isSoldOut&&!isUnavail;
-    return `<div class="${cardClass}" id="dc-${d.id}" onclick="${clickable}?toggleDish('${d.id}'):void(0)" style="${isUnavail?'opacity:.42;filter:grayscale(.6)':''}">
-      <div class="dimg" id="dimg-${d.id}">${imgHtml}</div>
-      ${isSoldOut?'<div class="sold-badge">🔥 Sold Out</div>':''}
-      ${isUnavail?'<div class="unavail-badge">Not Available</div>':'<div class="dsel-badge">✓</div>'}
+    const _sold=!!d.soldOut, _unavail=!d.avail;
+    const _clickable=!_sold&&!_unavail;
+    return `<div class="dcard${sel&&_clickable?' sel':''}${_sold?' sold-out-card':''}" id="dc-${d.id}" onclick="${_clickable?'toggleDish(\''+d.id+'\')':'void(0)'}" style="${_unavail?'opacity:.4;filter:grayscale(.5);pointer-events:none':''};">
+      <div class="dimg" id="dimg-${d.id}">${imgHtml}</div><div class="dsel-badge">✓</div>
       <div class="dinfo">
         <div class="dname-wrap"><span class="dname">${d.n}</span>
           ${ing?`<button class="ing-btn" onclick="event.stopPropagation();showIngTip('${d.id}')" title="What's in it?">i</button>
-          <div class="ing-tip" id="ing-${d.id}"><div class="ing-tip-title">🌿 What's in it?</div><div class="ing-tip-body">${ing}</div></div>`:''}
+          <div class="ing-tip" id="ing-${d.id}"><div class="ing-tip-title">What's in it?</div><div class="ing-tip-body">${ing}</div></div>`:''}
         </div>
         <div class="dfoot">
           <div class="dtags"><span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span></div>
           <div style="display:flex;align-items:center;gap:6px">
             <div class="dprice">Rs.${d.p}</div>
+            <label style="cursor:pointer;background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.2);border-radius:5px;padding:2px 7px;font-size:.58rem;color:var(--saff);font-weight:600" onclick="event.stopPropagation()">📷<input type="file" accept="image/*" style="display:none" data-dish="${d.id}" onchange="uploadDishPhoto(this)"></label>
           </div>
         </div>
       </div>
@@ -1533,8 +1537,6 @@ function uploadDishPhoto(input){
   r.readAsDataURL(f);
 }
 function toggleDish(id){
-  const dish=findDish(id);
-  if(dish&&(dish.soldOut||!dish.avail))return;
   if(cart[id]){delete cart[id];document.getElementById('dc-'+id).classList.remove('sel');}
   else{cart[id]=1;document.getElementById('dc-'+id).classList.add('sel');}
   updateCheckBtn();updateCartBadge();
@@ -1744,13 +1746,13 @@ async function saveMenu(){
   ['si','sv','pb','ck'].forEach(cat=>{
     MENU[cat].forEach(d=>{
       const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),
-            q=document.getElementById('edq-'+d.id),
-            t=document.getElementById('edt-'+d.id),so=document.getElementById('edso-'+d.id),
-            ph=document.getElementById('edph-'+d.id),ing=document.getElementById('eding-'+d.id);
-      if(n)d.n=n.value;if(p)d.p=parseInt(p.value)||d.p;
+            t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id),
+            ing=document.getElementById('eding-'+d.id);
+      const q=document.getElementById('edq-'+d.id),so=document.getElementById('edso-'+d.id);
+      if(n)d.n=n.value;if(p)d.p=parseFloat(p.value)||d.p;
       if(q)d.maxQty=parseInt(q.value)||10;
       if(t)d.avail=t.classList.contains('on');
-      if(so)d.soldOut=so.classList.contains('on');
+      if(so)d.soldOut=so.classList.contains('son');
       if(ph)d.photo=ph.value.trim();if(ing)INGREDIENTS[d.id]=ing.value.trim();
     });
   });
@@ -1762,66 +1764,58 @@ async function saveMenu(){
 function renderAdminMenuEdit(){
   ['si','sv','pb','ck'].forEach(cat=>{
     const el=document.getElementById('ed-'+cat);if(!el)return;
-    el.innerHTML=MENU[cat].map(d=>`
-      <div class="edcard" id="edc-${d.id}">
+    el.innerHTML=MENU[cat].map(d=>{
+      const _p=d.photo?convertGoogleUrl(d.photo)||d.photo:'';
+      const _prevH=_p?'110px':'44px';
+      const _prevInner=_p?'<img src="'+_p+'" onerror="this.style.display:none" alt="" style="width:100%;height:100%;object-fit:cover"/>':'📷';
+      return '<div class="edcard" id="edc-'+d.id+'">'
 
-        <!-- Dish name + emoji -->
-        <div class="ed-top">
-          <div class="ed-em">${d.e}</div>
-          <input class="ed-name" id="edn-${d.id}" value="${d.n}" placeholder="Dish name"/>
-        </div>
+        // Name row
+        +'<div class="ed-top"><div class="ed-em">'+d.e+'</div>'
+        +'<input class="ed-name" id="edn-'+d.id+'" value="'+d.n+'" placeholder="Dish name"/></div>'
 
-        <!-- Price + Quantity -->
-        <div class="ed-row" style="gap:8px;flex-wrap:wrap">
-          <div style="display:flex;align-items:center;gap:4px">
-            <span style="font-size:.62rem;color:var(--muted)">Rs.</span>
-            <input class="ed-price" type="number" id="edp-${d.id}" value="${d.p}" min="1" placeholder="Price"/>
-          </div>
-          <div style="display:flex;align-items:center;gap:4px">
-            <span style="font-size:.62rem;color:var(--muted)">Max qty</span>
-            <input class="ed-price" type="number" id="edq-${d.id}" value="${d.maxQty||10}" min="1" max="99" style="width:52px" placeholder="10"/>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;margin-left:auto">
-            <div class="ed-avail">
-              <button class="tog ${d.avail?'on':''}" id="edt-${d.id}" onclick="this.classList.toggle('on')"></button>
-              <span style="font-size:.62rem">Available</span>
-            </div>
-            <div class="ed-avail">
-              <button class="tog sold ${d.soldOut?'on':''}" id="edso-${d.id}" onclick="this.classList.toggle('on')" style="--tog-on:rgba(239,68,68,.8)"></button>
-              <span style="font-size:.62rem">Sold Out 🔥</span>
-            </div>
-          </div>
-        </div>
+        // Price + Max qty + toggles
+        +'<div class="ed-row" style="gap:8px;flex-wrap:wrap">'
+        +'<div style="display:flex;align-items:center;gap:4px">'
+        +'<span style="font-size:.62rem;color:var(--muted)">Rs.</span>'
+        +'<input class="ed-price" type="text" inputmode="decimal" id="edp-'+d.id+'" value="'+d.p+'" placeholder="60" style="width:64px"/>'
+        +'</div>'
+        +'<div style="display:flex;align-items:center;gap:4px">'
+        +'<span style="font-size:.62rem;color:var(--muted)">Max qty</span>'
+        +'<input class="ed-price" type="text" inputmode="numeric" id="edq-'+d.id+'" value="'+(d.maxQty||10)+'" placeholder="10" style="width:48px"/>'
+        +'</div>'
+        +'<div style="display:flex;gap:8px;align-items:center;margin-left:auto">'
+        +'<label style="display:flex;align-items:center;gap:4px;cursor:pointer">'
+        +'<button class="tog '+(d.avail?'on':'')+'" id="edt-'+d.id+'" onclick="event.preventDefault();this.classList.toggle(\'on\')"></button>'
+        +'<span style="font-size:.62rem">Available</span></label>'
+        +'<label style="display:flex;align-items:center;gap:4px;cursor:pointer">'
+        +'<button class="sotog '+(d.soldOut?'son':'')+'" id="edso-'+d.id+'" onclick="event.preventDefault();this.classList.toggle(\'son\')"></button>'
+        +'<span style="font-size:.62rem;color:#f87171">🔥 Sold Out</span></label>'
+        +'</div></div>'
 
-        <!-- Photo — URL input + upload button -->
-        <div style="margin-top:7px">
-          <label class="ed-ing-lbl">📸 Dish Photo</label>
-          <div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:4px">
-            <input class="ed-photo-inp" id="edph-${d.id}" value="${d.photo||''}"
-              placeholder="Paste Google Photos lh3 link…"
-              oninput="previewDishPhoto('${d.id}')"
-              style="flex:1"/>
-            <label style="flex-shrink:0;background:rgba(244,163,37,.12);border:1.5px solid rgba(244,163,37,.25);border-radius:8px;padding:7px 10px;font-size:.68rem;color:var(--saff);font-weight:700;cursor:pointer;white-space:nowrap">
-              📷 Upload
-              <input type="file" accept="image/*" style="display:none"
-                data-dish="${d.id}" onchange="adminUploadPhoto(this)">
-            </label>
-          </div>
-          <div class="ed-photo-hint" id="edph-hint-${d.id}" style="display:none;font-size:.62rem;color:#f59e0b;line-height:1.5;padding:6px 8px;background:rgba(245,158,11,.07);border-radius:6px"></div>
-          <div class="ed-photo-prev" id="edphp-${d.id}" style="margin-top:5px;border-radius:10px;overflow:hidden;height:${d.photo?'110px':'40px'};background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:1.6rem;transition:height .3s">
-            ${d.photo?`<img src="${convertGoogleUrl(d.photo)||d.photo}" onerror="this.style.display='none'" alt="" style="width:100%;height:100%;object-fit:cover"/>`:'📷'}
-          </div>
-        </div>
+        // Photo
+        +'<div style="margin-top:7px">'
+        +'<label class="ed-ing-lbl">📸 Dish Photo</label>'
+        +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">'
+        +'<input class="ed-photo-inp" id="edph-'+d.id+'" value="'+(d.photo||'')+'"'
+        +' placeholder="Paste Google Photos lh3 link…" oninput="previewDishPhoto(\''+d.id+'\')" style="flex:1"/>'
+        +'<label style="flex-shrink:0;background:rgba(244,163,37,.12);border:1.5px solid rgba(244,163,37,.25);border-radius:8px;padding:7px 10px;font-size:.68rem;color:var(--saff);font-weight:700;cursor:pointer;white-space:nowrap">'
+        +'📷 Upload<input type="file" accept="image/*" style="display:none" data-dish="'+d.id+'" onchange="adminUploadPhoto(this)"></label>'
+        +'</div>'
+        +'<div class="ed-photo-hint" id="edph-hint-'+d.id+'" style="display:none;font-size:.62rem;color:#f59e0b;line-height:1.5;padding:6px 8px;background:rgba(245,158,11,.07);border-radius:6px"></div>'
+        +'<div id="edphp-'+d.id+'" style="margin-top:5px;border-radius:10px;overflow:hidden;height:'+_prevH+';background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:1.6rem">'+_prevInner+'</div>'
+        +'</div>'
 
-        <!-- Ingredients / Description -->
-        <div class="ed-ing-row">
-          <label class="ed-ing-lbl">🌿 Ingredients / Description</label>
-          <textarea class="ed-ing-inp" id="eding-${d.id}" rows="3"
-            placeholder="e.g. Toor dal, tomatoes, tamarind, drumstick… Shown to customers when they tap ⓘ on the menu."
-          >${INGREDIENTS[d.id]||''}</textarea>
-        </div>
+        // Ingredients
+        +'<div class="ed-ing-row">'
+        +'<label class="ed-ing-lbl">🌿 Ingredients / Description</label>'
+        +'<textarea class="ed-ing-inp" id="eding-'+d.id+'" rows="3"'
+        +' placeholder="e.g. Toor dal, tomatoes, tamarind… Shown to customers when they tap ⓘ"'
+        +'>'+(INGREDIENTS[d.id]||'')+'</textarea>'
+        +'</div>'
 
-      </div>`).join('');
+        +'</div>';
+    }).join('');
   });
 }
 
@@ -1835,35 +1829,30 @@ function previewDishPhoto(id){
   document.getElementById('edph-'+id).value=converted;
   prev.innerHTML='<img src="'+converted+'" onerror="this.outerHTML=\'❌ Cannot load\'" alt=""/>';
 }
+
 function adminUploadPhoto(input){
   const id=input.dataset.dish,f=input.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
     const url=ev.target.result;
-    // Store in MENU
     for(const cat of ['si','sv','pb','ck']){const dish=MENU[cat].find(d=>d.id===id);if(dish){dish.photo=url;break;}}
-    // Update input + preview
     const inp=document.getElementById('edph-'+id);if(inp)inp.value=url;
     const prev=document.getElementById('edphp-'+id);
-    if(prev){prev.style.height='110px';prev.innerHTML=`<img src="${url}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:10px"/>`;}
-    const hint=document.getElementById('edph-hint-'+id);if(hint)hint.style.display='none';
+    if(prev){prev.style.height='110px';prev.innerHTML='<img src="'+url+'" alt="" style="width:100%;height:100%;object-fit:cover"/>';}
     toast('📷','Photo uploaded!','Tap Save Menu to sync to Google Sheets.');
   };
   r.readAsDataURL(f);
 }
-
 function addDish(cat){
   const emos={si:'🍲',sv:'🥪',pb:'🫓',ck:'🍪'};
-  MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',p:60,avail:true,soldOut:false,photo:\'\'});
+  MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',p:60,avail:true,soldOut:false,photo:''});
   renderAdminMenuEdit();toast('➕','Dish added!','Fill details then tap Save Menu to sync to Sheet.');
 }
 function switchAdminTab(name,btn){
   document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
   if(btn)btn.classList.add('on');const sec=document.getElementById('atab-'+name);if(sec)sec.classList.add('on');
-  if(name==='orders')renderAdmin();
-  if(name==='kitchen-sheet')renderKitchenSheet();
-  if(name==='menu')renderAdminMenuEdit();
+  if(name==='orders')renderAdmin();if(name==='kitchen-sheet')renderKitchenSheet();if(name==='menu')renderAdminMenuEdit();
 }
 
 // ══════════════════════════════════════════════════════════════
