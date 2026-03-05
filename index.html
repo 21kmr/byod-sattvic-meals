@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v22</title>
+<title>BYOD — Bring Your Own Dabba v23</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -485,8 +485,21 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .t-body{font-size:.67rem;color:var(--muted);line-height:1.4}
 .t-via{font-size:.57rem;margin-top:3px;display:flex;align-items:center;gap:3px;color:var(--tele)}
 .spin{display:inline-block;width:11px;height:11px;border:2px solid rgba(0,0,0,.12);border-top-color:#000;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:4px}
-@keyframes sp{to{transform:rotate(360deg)}}
-</style>
+/* ════ SHEETS TAB ════ */
+.sh-ptab{padding:5px 11px;border-radius:17px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:.62rem;font-weight:600;white-space:nowrap;transition:.15s;font-family:'DM Sans',sans-serif;flex-shrink:0}
+.sh-ptab.on{background:var(--saff);border-color:var(--saff);color:#000}
+.sh-pane{display:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.sh-pane.on{display:block}
+.sh-table{width:100%;border-collapse:collapse;font-size:.6rem;font-family:'DM Sans',sans-serif}
+.sh-table th{background:rgba(244,163,37,.12);color:var(--saff);font-weight:700;padding:6px 8px;text-align:left;white-space:nowrap;border-bottom:1px solid rgba(244,163,37,.18);position:sticky;top:0}
+.sh-table td{padding:6px 8px;border-bottom:1px solid var(--border);color:var(--cream);vertical-align:top;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sh-table tr:last-child td{border-bottom:none}
+.sh-table tr:hover td{background:rgba(255,255,255,.03)}
+.sh-empty{text-align:center;padding:22px;color:var(--muted);font-size:.72rem}
+.sh-badge-ok{display:inline-block;background:rgba(78,158,107,.15);color:#4e9e6b;border:1px solid rgba(78,158,107,.25);border-radius:5px;padding:1px 6px;font-size:.56rem;font-weight:700}
+.sh-badge-err{display:inline-block;background:rgba(212,95,95,.15);color:#d45f5f;border:1px solid rgba(212,95,95,.25);border-radius:5px;padding:1px 6px;font-size:.56rem;font-weight:700}
+.diag-ok{color:#4e9e6b}.diag-err{color:#d45f5f}.diag-warn{color:#f4a325}.diag-info{color:#aaa}
+
 </head>
 <body>
 <div class="app">
@@ -501,7 +514,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v22.0</span>
+      <span class="ver-badge" id="ver-badge">v23.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -755,7 +768,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v22.0</span>
+          <span class="ver-badge">v23.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -764,7 +777,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="atab" onclick="switchAdminTab('kitchen-sheet',this)">🍳 Kitchen Sheet</button>
         <button class="atab" onclick="switchAdminTab('menu',this)">✏️ Menu</button>
         <button class="atab" onclick="switchAdminTab('broadcast',this)">📢 Broadcast</button>
-        <button class="atab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
+        <button class="atab" onclick="switchAdminTab('sheets',this)">📊 Sheets</button>
         <button class="atab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
       </div>
       <div class="asec on" id="atab-orders">
@@ -830,6 +843,49 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <div style="font-size:.68rem;color:var(--muted);margin-bottom:8px">Remind all who ordered to drop dabba by 11:30 AM.</div>
             <button class="bulk-btn" onclick="sendDabbaReminder()">📦 Send Reminder Now</button>
           </div>
+        </div>
+      </div>
+
+      <!-- ══ SHEETS TAB ══ -->
+      <div class="asec" id="atab-sheets">
+        <div style="margin-top:9px">
+
+          <!-- Status bar -->
+          <div id="sh-status-bar" style="display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:11px 13px;margin-bottom:8px;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+              <div id="sh-dot" style="width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0"></div>
+              <div style="min-width:0">
+                <div id="sh-status-title" style="font-size:.75rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Not connected</div>
+                <div id="sh-status-sub" style="font-size:.58rem;color:var(--muted);margin-top:1px">Set up in ⚙️ Settings tab</div>
+              </div>
+            </div>
+            <a id="sh-open-link" href="#" target="_blank" style="display:none;flex-shrink:0;background:rgba(52,168,83,.15);border:1px solid rgba(52,168,83,.3);border-radius:8px;padding:6px 11px;font-size:.68rem;font-weight:700;color:#34a853;text-decoration:none;white-space:nowrap">↗ Open Sheet</a>
+          </div>
+
+          <!-- Action buttons -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+            <button onclick="runDiagnostic()" style="background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.22);border-radius:9px;padding:10px 8px;font-size:.72rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">🔍 Run Diagnostic</button>
+            <button onclick="refreshSheetPreview()" style="background:rgba(52,168,83,.1);border:1px solid rgba(52,168,83,.22);border-radius:9px;padding:10px 8px;font-size:.72rem;font-weight:700;color:#34a853;cursor:pointer;font-family:'DM Sans',sans-serif">🔄 Refresh Preview</button>
+          </div>
+
+          <!-- Diagnostic output -->
+          <div id="sh-diag" style="display:none;background:#0d1117;border:1px solid rgba(244,163,37,.18);border-radius:10px;padding:11px 13px;margin-bottom:8px;font-family:monospace;font-size:.62rem;line-height:1.8;color:#e6edf3"></div>
+
+          <!-- Sheet preview tabs -->
+          <div style="display:flex;gap:5px;margin-bottom:6px;overflow-x:auto">
+            <button class="sh-ptab on" id="shpt-menu"    onclick="showSheetTab('menu',this)"   >📋 Menu</button>
+            <button class="sh-ptab"    id="shpt-orders"  onclick="showSheetTab('orders',this)" >🛒 Orders</button>
+            <button class="sh-ptab"    id="shpt-settings"onclick="showSheetTab('settings',this)">⚙️ Settings</button>
+          </div>
+
+          <!-- Preview container -->
+          <div id="sh-preview-wrap" style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px">
+            <div id="sh-preview-menu"     class="sh-pane on"></div>
+            <div id="sh-preview-orders"   class="sh-pane"></div>
+            <div id="sh-preview-settings" class="sh-pane"></div>
+          </div>
+
+          <div style="height:8px"></div>
         </div>
       </div>
 
@@ -1227,7 +1283,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v22', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v23', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1327,6 +1383,11 @@ function handleRequest(data) {
         if(!found) sheet.appendRow([key,updates[key]]);
       });
       return respond({ok:true});
+    }
+
+    // ── GET SHEET URL ─────────────────────────────────────────
+    if (action === 'getSheetUrl') {
+      return respond({ok:true, url:ss.getUrl(), id:ss.getId(), name:ss.getName()});
     }
 
     return respond({ok:true, note:'Unknown action ignored: '+action});
@@ -1895,12 +1956,194 @@ function switchAdminTab(name,btn){
   document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
   if(btn)btn.classList.add('on');const sec=document.getElementById('atab-'+name);if(sec)sec.classList.add('on');
-  if(name==='orders')renderAdmin();if(name==='kitchen-sheet')renderKitchenSheet();if(name==='menu')renderAdminMenuEdit();
+  if(name==='orders')renderAdmin();
+  if(name==='kitchen-sheet')renderKitchenSheet();
+  if(name==='menu')renderAdminMenuEdit();
+  if(name==='sheets')refreshSheetPreview();
 }
 
 // ══════════════════════════════════════════════════════════════
-// KITCHEN SHEET
+// SHEETS TAB — diagnostic, preview, open link
 // ══════════════════════════════════════════════════════════════
+let _sheetPreviewData = null; // cached load response
+let _sheetDirectUrl   = '';   // direct spreadsheet URL (from getSheetUrl)
+
+function showSheetTab(name, btn){
+  document.querySelectorAll('.sh-ptab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.sh-pane').forEach(p=>p.classList.remove('on'));
+  if(btn) btn.classList.add('on');
+  const pane = document.getElementById('sh-preview-'+name);
+  if(pane) pane.classList.add('on');
+}
+
+function _diagLine(txt, cls='diag-info'){
+  const d=document.getElementById('sh-diag');
+  if(!d) return;
+  d.style.display='block';
+  d.innerHTML += '<span class="'+cls+'">'+txt+'</span>\n';
+  d.scrollTop = d.scrollHeight;
+}
+function _diagClear(){
+  const d=document.getElementById('sh-diag');
+  if(d){d.innerHTML='';d.style.display='block';}
+}
+
+async function runDiagnostic(){
+  _diagClear();
+  _diagLine('━━━ BYOD Sheets Diagnostic v23 ━━━');
+  const url = SHEETS_URL || document.getElementById('cfg-sheets-url')?.value?.trim() || '';
+  _diagLine('URL: '+(url ? url.slice(0,55)+'…' : '❌ not set'), url?'diag-info':'diag-err');
+  if(!url){ _diagLine('→ Paste your Apps Script URL in ⚙️ Settings first.','diag-err'); return; }
+
+  // ── Step 1: GET ping ──
+  _diagLine('\n[1/3] GET ping…');
+  const t0=Date.now();
+  try{
+    const r=await fetch(url+'?payload='+encodeURIComponent(JSON.stringify({action:'ping'})),{redirect:'follow'});
+    const ms=Date.now()-t0;
+    const text=await r.text();
+    _diagLine('  HTTP '+r.status+' · '+ms+'ms');
+    let parsed; try{parsed=JSON.parse(text);}catch(e){parsed=null;}
+    if(parsed){
+      _diagLine('  ✅ Valid JSON — script reachable','diag-ok');
+      _diagLine('  Response: '+JSON.stringify(parsed).slice(0,80),'diag-info');
+    } else {
+      _diagLine('  ❌ Non-JSON response — likely a login redirect','diag-err');
+      _diagLine('  → Re-deploy with "Who has access: Anyone" (not Google Account)','diag-warn');
+      _diagLine('  Raw: '+text.slice(0,100),'diag-info');
+      return;
+    }
+  }catch(e){
+    _diagLine('  ❌ Fetch failed: '+e.message,'diag-err');
+    _diagLine('  → Check URL is correct and script is deployed','diag-warn');
+    return;
+  }
+
+  // ── Step 2: load action ──
+  _diagLine('\n[2/3] Loading Sheet data…');
+  try{
+    const res = await sheetsCall({action:'load'});
+    if(res.ok){
+      const menuRows  = (res.menu   ||[]).length - 1;
+      const orderRows = (res.orders ||[]).length - 1;
+      _diagLine('  ✅ Load succeeded','diag-ok');
+      _diagLine('  Menu rows: '+Math.max(0,menuRows),'diag-info');
+      _diagLine('  Order rows: '+Math.max(0,orderRows),'diag-info');
+      _diagLine('  Settings: '+JSON.stringify(res.settings||{}),'diag-info');
+      _sheetPreviewData = res;
+      _renderSheetPreview();
+    } else {
+      _diagLine('  ❌ Load failed: '+(res.error||'unknown'),'diag-err');
+    }
+  }catch(e){ _diagLine('  ❌ Error: '+e.message,'diag-err'); }
+
+  // ── Step 3: getSheetUrl ──
+  _diagLine('\n[3/3] Fetching direct Sheet URL…');
+  try{
+    const res2 = await sheetsCall({action:'getSheetUrl'});
+    if(res2.ok && res2.url){
+      _diagLine('  ✅ Sheet: '+res2.name,'diag-ok');
+      _diagLine('  URL: '+res2.url.slice(0,60)+'…','diag-info');
+      _sheetDirectUrl = res2.url;
+      _updateOpenLink();
+    } else {
+      _diagLine('  ⚠️ Could not fetch direct URL (not critical)','diag-warn');
+    }
+  }catch(e){ _diagLine('  ⚠️ '+e.message,'diag-warn'); }
+
+  _diagLine('\n━━━ Done ━━━');
+}
+
+async function refreshSheetPreview(){
+  const dot   = document.getElementById('sh-dot');
+  const title = document.getElementById('sh-status-title');
+  const sub   = document.getElementById('sh-status-sub');
+  if(dot) dot.style.background = '#f4a325';
+  if(title) title.textContent = 'Loading…';
+  if(!SHEETS_URL){ if(title) title.textContent='Not connected'; return; }
+  try{
+    const res = await sheetsCall({action:'load'});
+    if(res.ok){
+      _sheetPreviewData = res;
+      _renderSheetPreview();
+      if(dot) dot.style.background='#4e9e6b';
+      if(title) title.textContent='Connected';
+      const now=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+      if(sub) sub.textContent='Last synced '+now;
+    } else {
+      if(dot) dot.style.background='#d45f5f';
+      if(title) title.textContent='Connection error';
+      if(sub) sub.textContent=(res.error||'').slice(0,50);
+    }
+  }catch(e){
+    if(dot) dot.style.background='#d45f5f';
+    if(title) title.textContent='Failed to reach Sheet';
+    if(sub) sub.textContent=e.message.slice(0,50);
+  }
+  // Also try to get direct URL if we don't have it
+  if(!_sheetDirectUrl && SHEETS_URL){
+    try{
+      const r2=await sheetsCall({action:'getSheetUrl'});
+      if(r2.ok&&r2.url){ _sheetDirectUrl=r2.url; _updateOpenLink(); }
+    }catch(e){}
+  }
+}
+
+function _updateOpenLink(){
+  const link=document.getElementById('sh-open-link');
+  if(link&&_sheetDirectUrl){ link.href=_sheetDirectUrl; link.style.display='block'; }
+}
+
+function _renderSheetPreview(){
+  if(!_sheetPreviewData) return;
+  const d=_sheetPreviewData;
+  _renderSheetTable('sh-preview-menu',    d.menu    ||[], 'No menu data in Sheet yet.');
+  _renderSheetTable('sh-preview-orders',  d.orders  ||[], 'No orders yet.');
+  _renderSheetSettings('sh-preview-settings', d.settings||{});
+}
+
+function _renderSheetTable(elId, rows, emptyMsg){
+  const el=document.getElementById(elId); if(!el) return;
+  if(!rows||rows.length<2){ el.innerHTML='<div class="sh-empty">'+emptyMsg+'</div>'; return; }
+  const header=rows[0], body=rows.slice(1).filter(r=>r.some(c=>String(c).trim()));
+  if(!body.length){ el.innerHTML='<div class="sh-empty">'+emptyMsg+'</div>'; return; }
+  let html='<div style="overflow-x:auto"><table class="sh-table"><thead><tr>';
+  header.forEach(h=>{ html+='<th>'+_esc(String(h))+'</th>'; });
+  html+='</tr></thead><tbody>';
+  body.forEach(row=>{
+    html+='<tr>';
+    row.forEach((cell,i)=>{
+      let val=String(cell===null||cell===undefined?'':cell);
+      // Truncate base64 photos
+      if(val.startsWith('data:')) val='[photo]';
+      // Colour available/sold out
+      if(val==='Yes') val='<span class="sh-badge-ok">Yes</span>';
+      else if(val==='No'&&i===5) val='<span class="sh-badge-err">No</span>';
+      else if(val==='Sold Out') val='<span class="sh-badge-err">Sold Out</span>';
+      else val=_esc(val);
+      html+='<td title="'+_esc(String(cell))+'">'+val+'</td>';
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table></div>';
+  html+='<div style="text-align:right;padding:5px 10px;font-size:.56rem;color:var(--muted)">'+body.length+' row'+(body.length!==1?'s':'')+'</div>';
+  el.innerHTML=html;
+}
+
+function _renderSheetSettings(elId, settings){
+  const el=document.getElementById(elId); if(!el) return;
+  const keys=Object.keys(settings);
+  if(!keys.length){ el.innerHTML='<div class="sh-empty">No settings saved yet.</div>'; return; }
+  let html='<table class="sh-table"><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>';
+  keys.forEach(k=>{ html+='<tr><td>'+_esc(k)+'</td><td>'+_esc(String(settings[k]))+'</td></tr>'; });
+  html+='</tbody></table>';
+  el.innerHTML=html;
+}
+
+function _esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Hook into switchAdminTab to auto-refresh preview when opening Sheets tab
+
 function renderKitchenSheet(){
   const sum=document.getElementById('ks-summary'),tal=document.getElementById('ks-tally'),ord=document.getElementById('ks-orders');
   if(!sum||!tal||!ord)return;
