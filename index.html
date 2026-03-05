@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v17</title>
+<title>BYOD — Bring Your Own Dabba v20</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -118,16 +118,16 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 /* dish card */
 
 /* ── Ingredient tooltip ─────────────────── */
-.dname-wrap{position:relative;display:inline-flex;align-items:center;gap:5px}
+.dname-wrap{position:relative;display:inline-flex;align-items:center;gap:5px;overflow:visible;z-index:10}
 .ing-btn{width:16px;height:16px;border-radius:50%;background:rgba(244,163,37,.15);border:1px solid rgba(244,163,37,.3);color:var(--saff);font-size:.55rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
 .sold-badge{position:absolute;top:7px;left:7px;background:rgba(239,68,68,.88);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:20px;z-index:4}
 .unavail-badge{position:absolute;top:7px;left:7px;background:rgba(100,100,100,.75);color:#fff;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:20px;z-index:4}
-.ing-tip{position:absolute;left:0;top:calc(100% + 6px);background:#1a1610;border:1px solid rgba(244,163,37,.25);border-radius:10px;padding:10px 12px;width:260px;max-width:88vw;max-height:200px;overflow-y:auto;z-index:50;opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s,transform .18s;box-shadow:0 8px 24px rgba(0,0,0,.5)}
-.ing-tip.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.ing-tip{position:fixed;left:50%;transform:translateX(-50%) translateY(8px);bottom:auto;top:auto;background:#1e1a12;border:1.5px solid rgba(244,163,37,.35);border-radius:12px;padding:12px 14px;width:min(300px,88vw);max-height:220px;overflow-y:auto;z-index:9999;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 12px 32px rgba(0,0,0,.7);white-space:normal}
+.ing-tip.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
 .ing-tip-title{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--saff);margin-bottom:6px}
-.ing-tip-body{font-size:.68rem;color:var(--cream);line-height:1.6;white-space:normal;word-break:break-word}
+.ing-tip-body{font-size:.72rem;color:var(--cream);line-height:1.7;white-space:normal;word-break:break-word;display:block}
 
-.dcard{margin:8px 11px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:.2s;position:relative}
+.dcard{margin:8px 11px 0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:visible;cursor:pointer;transition:.2s;position:relative}
 .dcard:active{transform:scale(.985)}
 .dcard.sel{border-color:var(--green)}
 .dimg{width:100%;height:128px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden}
@@ -135,7 +135,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .dimg::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(14,12,10,.75) 0%,transparent 55%);pointer-events:none}
 .dsel-badge{position:absolute;top:8px;right:8px;background:var(--green);color:#fff;border-radius:50%;width:21px;height:21px;display:none;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;z-index:2}
 .dcard.sel .dsel-badge{display:flex}
-.dinfo{padding:10px 12px 9px}
+.dinfo{padding:10px 12px 9px;overflow:visible;position:relative}
+.ding{font-size:.63rem;color:var(--muted);line-height:1.6;margin:3px 0 5px;white-space:normal;word-break:break-word;display:block}
 .dname{font-family:'Playfair Display',serif;font-size:.92rem;font-weight:700;margin-bottom:2px}
 .ddesc{font-size:.66rem;color:var(--muted);line-height:1.44;margin-bottom:6px}
 .dfoot{display:flex;align-items:center;justify-content:space-between}
@@ -500,7 +501,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v17.0</span>
+      <span class="ver-badge" id="ver-badge">v20.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -754,7 +755,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v17.0</span>
+          <span class="ver-badge">v20.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -853,8 +854,19 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <input id="cfg-sheets-url" style="width:100%;background:var(--surf);border:1.5px solid rgba(52,168,83,.2);border-radius:7px;padding:8px 10px;color:#34a853;font-family:monospace;font-size:.66rem;outline:none;margin-bottom:8px" placeholder="https://script.google.com/macros/s/AKfy…/exec"/>
             <button onclick="saveSheetsConfig()" style="width:100%;background:rgba(52,168,83,.15);border:1px solid rgba(52,168,83,.3);border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;color:#34a853;cursor:pointer;margin-bottom:6px">💾 Save & Test Connection</button>
             <div id="cfg-sheets-status" style="font-size:.65rem;color:var(--green);margin-top:4px;text-align:center"></div>
-            <div id="cfg-sheets-link" style="display:none;margin-top:6px;text-align:center">
-              <a id="cfg-sheets-open" href="#" target="_blank" style="font-size:.65rem;color:#34a853;text-decoration:underline">📊 Open your Google Sheet →</a>
+            <div id="cfg-sheets-link" style="display:none;margin-top:8px">
+              <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+                <a id="cfg-sheets-open" href="#" target="_blank" style="font-size:.68rem;color:#34a853;font-weight:700;text-decoration:none;background:rgba(52,168,83,.12);border:1px solid rgba(52,168,83,.25);border-radius:7px;padding:5px 10px">📊 Open Sheet in new tab →</a>
+                <button onclick="refreshSheetPreview()" style="font-size:.65rem;background:rgba(52,168,83,.08);border:1px solid rgba(52,168,83,.2);border-radius:7px;padding:5px 9px;color:#34a853;cursor:pointer;font-family:'DM Sans',sans-serif">↻ Refresh</button>
+              </div>
+              <div style="border:1.5px solid rgba(52,168,83,.2);border-radius:10px;overflow:hidden;background:#0a0a0a">
+                <iframe id="sheets-preview-iframe"
+                  src=""
+                  style="width:100%;height:320px;border:none;display:block"
+                  title="BYOD Google Sheet Preview">
+                </iframe>
+              </div>
+              <div style="font-size:.58rem;color:var(--muted);margin-top:4px;text-align:center">Live preview — edits in Admin sync here in real time</div>
             </div>
             <div style="font-size:.62rem;color:var(--muted);margin-top:6px;line-height:1.6">
               <b style="color:var(--saff)">One-time setup:</b><br>
@@ -944,7 +956,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v17.0 — Bring Your Own Dabba
+// BYOD v20.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -1178,6 +1190,14 @@ function getOrCreateSheet(ss, name, headers) {
   return sheet;
 }
 
+function ensureNamed(ss) {
+  try {
+    if (ss.getName() === 'Untitled spreadsheet' || ss.getName() === '') {
+      ss.rename('BYOD Kitchen');
+    }
+  } catch(e) {}
+}
+
 // GET handler — main entry point (no CORS preflight needed)
 function doGet(e) {
   if (e.parameter && e.parameter.payload) {
@@ -1187,7 +1207,7 @@ function doGet(e) {
       return respond({ ok:false, error: err.toString() });
     }
   }
-  return respond({ ok:true, service:'BYOD Sheets API v17', ready:true });
+  return respond({ ok:true, service:'BYOD Sheets API v17 — Sheet: BYOD Kitchen', ready:true });
 }
 
 // POST handler — fallback
@@ -1203,6 +1223,7 @@ function doPost(e) {
 function handleRequest(data) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
+    ensureNamed(ss);
     const action = data.action;
 
     // ── LOAD ALL DATA ──────────────────────────────────────────
@@ -1270,6 +1291,13 @@ function handleRequest(data) {
         if (!found) sheet.appendRow([key, updates[key]]);
       });
       return respond({ ok:true });
+    }
+
+    // ── GET SHEET URL ──────────────────────────────────────────
+    if (action === 'getSheetUrl') {
+      const url = ss.getUrl();
+      const id = ss.getId();
+      return respond({ ok:true, url:url, id:id, name:ss.getName() });
     }
 
     return respond({ ok:false, error: 'Unknown action: ' + action });
@@ -1354,7 +1382,21 @@ async function init(){
   if(cidEl&&TELE_CONFIG.ADMIN_CHAT_ID)cidEl.value=TELE_CONFIG.ADMIN_CHAT_ID;
   if(shEl&&SHEETS_URL)shEl.value=SHEETS_URL;
   if(TELE_CONFIG.BOT_TOKEN){const s=document.getElementById('cfg-status');if(s)s.textContent='✅ Telegram configured';}
-  if(SHEETS_URL){const s=document.getElementById('cfg-sheets-status');if(s)s.textContent='✅ Google Sheets connected';}
+  if(SHEETS_URL){
+    const s=document.getElementById('cfg-sheets-status');if(s)s.textContent='✅ Google Sheets connected';
+    // Restore sheet preview if we have the sheet URL cached
+    const savedSheetUrl=lsLoad('byod_sheet_url','');
+    if(savedSheetUrl){
+      const linkDiv=document.getElementById('cfg-sheets-link');
+      const linkA=document.getElementById('cfg-sheets-open');
+      const iframe=document.getElementById('sheets-preview-iframe');
+      if(linkDiv)linkDiv.style.display='block';
+      if(linkA)linkA.href=savedSheetUrl;
+      // Extract sheet ID for embed
+      const idMatch=savedSheetUrl.match(/spreadsheets\/d\/([^/]+)/);
+      if(idMatch&&iframe)iframe.src='https://docs.google.com/spreadsheets/d/'+idMatch[1]+'/edit?rm=minimal&embedded=true';
+    }
+  }
 
   // Try loading from Sheets — fall back to defaults if not connected
   const sheetsOk = await loadFromSheets();
@@ -1498,7 +1540,18 @@ function convertGoogleUrl(url){
 // ══════════════════════════════════════════════════════════════
 // INGREDIENT TOOLTIP
 // ══════════════════════════════════════════════════════════════
-function showIngTip(id){document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show'));const t=document.getElementById('ing-'+id);if(t)t.classList.add('show');}
+function showIngTip(id,btn){
+  document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show'));
+  const tip=document.getElementById('ing-'+id);
+  if(!tip)return;
+  // Position tip near the button vertically
+  if(btn){
+    const rect=btn.getBoundingClientRect();
+    const tipTop=Math.min(rect.bottom+8, window.innerHeight-240);
+    tip.style.top=tipTop+'px';
+  }
+  tip.classList.add('show');
+}
 function hideAllIngTips(){document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show'));}
 
 // ══════════════════════════════════════════════════════════════
@@ -1520,10 +1573,8 @@ function loadSubMenu(cat){
     return `<div class="dcard${sel&&_clickable?' sel':''}${_sold?' sold-out-card':''}" id="dc-${d.id}" onclick="${_clickable?'toggleDish(\''+d.id+'\')':'void(0)'}" style="${_unavail?'opacity:.4;filter:grayscale(.5);pointer-events:none':''};">
       <div class="dimg" id="dimg-${d.id}">${imgHtml}</div><div class="dsel-badge">✓</div>
       <div class="dinfo">
-        <div class="dname-wrap"><span class="dname">${d.n}</span>
-          ${ing?`<button class="ing-btn" onclick="event.stopPropagation();showIngTip('${d.id}')" title="What's in it?">i</button>
-          <div class="ing-tip" id="ing-${d.id}"><div class="ing-tip-title">What's in it?</div><div class="ing-tip-body">${ing}</div></div>`:''}
-        </div>
+        <div class="dname">${d.n}</div>
+        ${ing?`<div class="ding">${ing}</div>`:""}
         <div class="dfoot">
           <div class="dtags"><span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span></div>
           <div style="display:flex;align-items:center;gap:6px">
@@ -1755,12 +1806,20 @@ async function saveSheetsConfig(){
   try{
     const r=await fetch(url);const d=await r.json();
     if(d.ok){
-      if(st)st.textContent='✅ Connected — menu loads from Sheet on every build';
+      if(st)st.textContent='✅ Connected!';
       toast('📊','Google Sheets connected!','Data lives in your Sheet. Auto-loaded on every build.');
-      // Show link to open the Sheet — derive from script URL
+      // Fetch the actual Sheet URL to show preview
+      const sheetInfo = await sheetsCall({action:'getSheetUrl'});
       const linkDiv=document.getElementById('cfg-sheets-link');
       const linkA=document.getElementById('cfg-sheets-open');
-      if(linkDiv&&linkA){linkDiv.style.display='block';linkA.href='https://docs.google.com/spreadsheets';}
+      const iframe=document.getElementById('sheets-preview-iframe');
+      if(linkDiv) linkDiv.style.display='block';
+      if(sheetInfo.ok && sheetInfo.url){
+        lsSave('byod_sheet_url', sheetInfo.url);
+        if(linkA) linkA.href=sheetInfo.url;
+        if(iframe) iframe.src='https://docs.google.com/spreadsheets/d/'+sheetInfo.id+'/edit?rm=minimal&embedded=true';
+        if(st) st.textContent='✅ Connected — '+sheetInfo.name;
+      }
     }
     else{if(st)st.textContent='⚠️ URL saved but test failed';toast('⚠️','Test failed','Re-deploy as Web App with Anyone access.');}
   }catch(e){if(st)st.textContent='⚠️ Saved — check CORS/deploy settings';toast('⚠️','Could not reach Sheet','Ensure Web App is Anyone can access.');}
@@ -1870,6 +1929,15 @@ function adminUploadPhoto(input){
     toast('📷','Photo uploaded!','Tap Save Menu to sync to Google Sheets.');
   };
   r.readAsDataURL(f);
+}
+function refreshSheetPreview(){
+  const iframe=document.getElementById('sheets-preview-iframe');
+  if(iframe&&iframe.src){
+    const src=iframe.src;iframe.src='';setTimeout(()=>{iframe.src=src;},100);
+    toast('↻','Sheet refreshed!','');
+  }else{
+    toast('⚠️','No Sheet connected','Save your Sheets URL in Settings first.');
+  }
 }
 function addDish(cat){
   const emos={si:'🍲',sv:'🥪',pb:'🫓',ck:'🍪'};
