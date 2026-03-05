@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v16</title>
+<title>BYOD — Bring Your Own Dabba v17</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -500,7 +500,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v16.0</span>
+      <span class="ver-badge" id="ver-badge">v17.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -754,7 +754,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v16.0</span>
+          <span class="ver-badge">v17.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -853,6 +853,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <input id="cfg-sheets-url" style="width:100%;background:var(--surf);border:1.5px solid rgba(52,168,83,.2);border-radius:7px;padding:8px 10px;color:#34a853;font-family:monospace;font-size:.66rem;outline:none;margin-bottom:8px" placeholder="https://script.google.com/macros/s/AKfy…/exec"/>
             <button onclick="saveSheetsConfig()" style="width:100%;background:rgba(52,168,83,.15);border:1px solid rgba(52,168,83,.3);border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;color:#34a853;cursor:pointer;margin-bottom:6px">💾 Save & Test Connection</button>
             <div id="cfg-sheets-status" style="font-size:.65rem;color:var(--green);margin-top:4px;text-align:center"></div>
+            <div id="cfg-sheets-link" style="display:none;margin-top:6px;text-align:center">
+              <a id="cfg-sheets-open" href="#" target="_blank" style="font-size:.65rem;color:#34a853;text-decoration:underline">📊 Open your Google Sheet →</a>
+            </div>
             <div style="font-size:.62rem;color:var(--muted);margin-top:6px;line-height:1.6">
               <b style="color:var(--saff)">One-time setup:</b><br>
               1. Open <a href="https://script.google.com" target="_blank" style="color:#34a853">script.google.com</a> → New project<br>
@@ -941,7 +944,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v16.0 — Bring Your Own Dabba
+// BYOD v17.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -1041,12 +1044,12 @@ let REVIEWS = [
 async function sheetsCall(payload){
   if(!SHEETS_URL) return {ok:false,error:'No Sheets URL configured'};
   try{
-    const r = await fetch(SHEETS_URL, {
-      method:'POST',
-      headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify(payload)
-    });
-    return await r.json();
+    // Use GET + URL param — avoids CORS preflight issues with Apps Script
+    const url=SHEETS_URL+'?payload='+encodeURIComponent(JSON.stringify(payload));
+    const r=await fetch(url);
+    const text=await r.text();
+    try{ return JSON.parse(text); }
+    catch(e){ console.warn('Sheets non-JSON response:',text.slice(0,200)); return {ok:false,error:'Non-JSON response'}; }
   }catch(e){ return {ok:false,error:e.message}; }
 }
 
@@ -1068,7 +1071,7 @@ async function loadFromSheets(){
   if(res.menu && res.menu.length > 1){
     res.menu.slice(1).forEach(row => { // skip header row
       // Columns: id, category, emoji, name, price, available, photo, ingredients
-      const [id, cat, emoji, name, price, avail, photo, ing] = row;
+      const [id, cat, emoji, name, price, avail, soldOut, maxQty, photo, ing] = row;
       if(!id) return;
       const catKey = catMap[cat] || id.slice(0,2);
       if(!freshMenu[catKey]) freshMenu[catKey]=[];
@@ -1078,6 +1081,8 @@ async function loadFromSheets(){
         n: name||'',
         p: parseFloat(price)||0,
         avail: String(avail).toLowerCase() !== 'false' && String(avail).toLowerCase() !== 'no',
+        soldOut: String(avail).toLowerCase() === 'sold out',
+        maxQty: parseInt(maxQty)||10,
         photo: photo||''
       });
       if(ing) freshIngr[String(id)] = String(ing);
@@ -1131,7 +1136,7 @@ async function syncMenuToSheets(){
   const rows=[];
   const catLabels={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   ['si','sv','pb','ck'].forEach(cat=>{
-    MENU[cat].forEach(d=>rows.push([d.id,catLabels[cat],d.e,d.n,d.p,d.avail?'Yes':'No',d.photo||'',INGREDIENTS[d.id]||'']));
+    MENU[cat].forEach(d=>rows.push([d.id,catLabels[cat],d.e,d.n,d.p,d.avail?'Yes':'No',d.soldOut?'Sold Out':'No',d.maxQty||10,d.photo||'',INGREDIENTS[d.id]||'']));
   });
   return sheetsCall({action:'saveMenu',rows});
 }
@@ -1158,8 +1163,9 @@ async function syncSettingsToSheets(){
 // APPS SCRIPT CODE (complete, embedded for one-tap copy)
 // ══════════════════════════════════════════════════════════════
 const APPS_SCRIPT_CODE = `// ═══════════════════════════════════════════════════════════
-// BYOD Kitchen — Google Apps Script v13
+// BYOD Kitchen — Google Apps Script v17
 // Deploy as Web App: Execute as Me, Anyone can access
+// Handles GET requests with ?payload=JSON (no CORS issues)
 // Sheet tabs auto-created: Menu, Orders, Settings
 // ═══════════════════════════════════════════════════════════
 
@@ -1172,15 +1178,37 @@ function getOrCreateSheet(ss, name, headers) {
   return sheet;
 }
 
+// GET handler — main entry point (no CORS preflight needed)
+function doGet(e) {
+  if (e.parameter && e.parameter.payload) {
+    try {
+      return handleRequest(JSON.parse(e.parameter.payload));
+    } catch(err) {
+      return respond({ ok:false, error: err.toString() });
+    }
+  }
+  return respond({ ok:true, service:'BYOD Sheets API v17', ready:true });
+}
+
+// POST handler — fallback
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    const data = e.postData ? JSON.parse(e.postData.contents) : JSON.parse(e.parameter.payload);
+    return handleRequest(data);
+  } catch(err) {
+    return respond({ ok:false, error: err.toString() });
+  }
+}
+
+function handleRequest(data) {
+  try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const action = data.action;
 
     // ── LOAD ALL DATA ──────────────────────────────────────────
-    if (data.action === 'load') {
+    if (action === 'load') {
       const menuSheet = getOrCreateSheet(ss, 'Menu',
-        ['ID','Category','Emoji','Name','Price','Available','Photo URL','Ingredients']);
+        ['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients']);
       const orderSheet = getOrCreateSheet(ss, 'Orders',
         ['Order ID','Name','Phone','Flat','Drop','Items','Total','Portions','Time','Status','Telegram','Telegram UID']);
       const settingsSheet = getOrCreateSheet(ss, 'Settings', ['Key','Value']);
@@ -1189,29 +1217,26 @@ function doPost(e) {
       const orderData = orderSheet.getDataRange().getValues();
       const settingsData = settingsSheet.getDataRange().getValues();
 
-      // Parse settings into object
       const settings = {};
-      settingsData.forEach(row => { if(row[0]) settings[row[0]] = row[1]; });
+      settingsData.forEach(function(row) { if(row[0]) settings[row[0]] = row[1]; });
 
-      return respond({ ok:true, menu:menuData, orders:orderData, settings });
+      return respond({ ok:true, menu:menuData, orders:orderData, settings:settings });
     }
 
     // ── SAVE FULL MENU ─────────────────────────────────────────
-    if (data.action === 'saveMenu') {
+    if (action === 'saveMenu') {
       const sheet = getOrCreateSheet(ss, 'Menu',
-        ['ID','Category','Emoji','Name','Price','Available','Photo URL','Ingredients']);
-      // Clear everything except header
+        ['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients']);
       const lastRow = sheet.getLastRow();
-      if (lastRow > 1) sheet.getRange(2, 1, lastRow - 1, 8).clearContent();
-      // Write all rows
+      if (lastRow > 1) sheet.getRange(2, 1, lastRow - 1, 10).clearContent();
       if (data.rows && data.rows.length > 0) {
-        sheet.getRange(2, 1, data.rows.length, 8).setValues(data.rows);
+        sheet.getRange(2, 1, data.rows.length, 10).setValues(data.rows);
       }
       return respond({ ok:true });
     }
 
     // ── APPEND ORDER ───────────────────────────────────────────
-    if (data.action === 'order') {
+    if (action === 'order') {
       const sheet = getOrCreateSheet(ss, 'Orders',
         ['Order ID','Name','Phone','Flat','Drop','Items','Total','Portions','Time','Status','Telegram','Telegram UID']);
       sheet.appendRow(data.row);
@@ -1219,11 +1244,11 @@ function doPost(e) {
     }
 
     // ── UPDATE ORDER STATUS ────────────────────────────────────
-    if (data.action === 'status') {
+    if (action === 'status') {
       const sheet = ss.getSheetByName('Orders');
       if (!sheet) return respond({ ok:true });
       const rows = sheet.getDataRange().getValues();
-      for (let i = 1; i < rows.length; i++) {
+      for (var i = 1; i < rows.length; i++) {
         if (String(rows[i][0]) === String(data.oid)) {
           sheet.getRange(i + 1, 10).setValue(data.status);
           break;
@@ -1233,29 +1258,25 @@ function doPost(e) {
     }
 
     // ── SAVE SETTINGS ──────────────────────────────────────────
-    if (data.action === 'settings') {
+    if (action === 'settings') {
       const sheet = getOrCreateSheet(ss, 'Settings', ['Key','Value']);
       const rows = sheet.getDataRange().getValues();
       const updates = { published: String(data.published) };
-      Object.entries(updates).forEach(([key, value]) => {
-        let found = false;
-        for (let i = 1; i < rows.length; i++) {
-          if (rows[i][0] === key) { sheet.getRange(i+1, 2).setValue(value); found=true; break; }
+      Object.keys(updates).forEach(function(key) {
+        var found = false;
+        for (var i = 1; i < rows.length; i++) {
+          if (rows[i][0] === key) { sheet.getRange(i+1, 2).setValue(updates[key]); found=true; break; }
         }
-        if (!found) sheet.appendRow([key, value]);
+        if (!found) sheet.appendRow([key, updates[key]]);
       });
       return respond({ ok:true });
     }
 
-    return respond({ ok:false, error: 'Unknown action: ' + data.action });
+    return respond({ ok:false, error: 'Unknown action: ' + action });
 
   } catch(err) {
     return respond({ ok:false, error: err.toString() });
   }
-}
-
-function doGet(e) {
-  return respond({ ok:true, service:'BYOD Sheets API v13', ready:true });
 }
 
 function respond(obj) {
@@ -1733,7 +1754,14 @@ async function saveSheetsConfig(){
   toast('🔄','Testing Sheets connection…','');
   try{
     const r=await fetch(url);const d=await r.json();
-    if(d.ok){if(st)st.textContent='✅ Connected — menu will load from Sheet on every build';toast('📊','Google Sheets connected!','All data now lives in your Sheet. Any new build will load it automatically.');}
+    if(d.ok){
+      if(st)st.textContent='✅ Connected — menu loads from Sheet on every build';
+      toast('📊','Google Sheets connected!','Data lives in your Sheet. Auto-loaded on every build.');
+      // Show link to open the Sheet — derive from script URL
+      const linkDiv=document.getElementById('cfg-sheets-link');
+      const linkA=document.getElementById('cfg-sheets-open');
+      if(linkDiv&&linkA){linkDiv.style.display='block';linkA.href='https://docs.google.com/spreadsheets';}
+    }
     else{if(st)st.textContent='⚠️ URL saved but test failed';toast('⚠️','Test failed','Re-deploy as Web App with Anyone access.');}
   }catch(e){if(st)st.textContent='⚠️ Saved — check CORS/deploy settings';toast('⚠️','Could not reach Sheet','Ensure Web App is Anyone can access.');}
 }
