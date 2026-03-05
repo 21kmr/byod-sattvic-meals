@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v21</title>
+<title>BYOD — Bring Your Own Dabba v22</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -501,7 +501,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v21.0</span>
+      <span class="ver-badge" id="ver-badge">v22.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -755,7 +755,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v21.0</span>
+          <span class="ver-badge">v22.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -850,29 +850,20 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <!-- GOOGLE SHEETS CONFIG -->
           <div style="background:linear-gradient(135deg,rgba(52,168,83,.1),rgba(52,168,83,.04));border:1px solid rgba(52,168,83,.2);border-radius:var(--r);padding:14px;margin-bottom:8px">
             <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#34a853;margin-bottom:4px">📊 Google Sheets Sync</div>
-            <div style="font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Menu, orders and settings sync to your Google Sheet and reload on every future build. Paste your Apps Script Web App URL below.</div>
+            <div style="font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Orders, menu and ingredients sync live to your Google Sheet. Paste your Apps Script Web App URL below — see setup steps at the bottom of this page.</div>
             <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Apps Script Web App URL</div>
             <input id="cfg-sheets-url" style="width:100%;background:var(--surf);border:1.5px solid rgba(52,168,83,.2);border-radius:7px;padding:8px 10px;color:#34a853;font-family:monospace;font-size:.66rem;outline:none;margin-bottom:8px" placeholder="https://script.google.com/macros/s/AKfy…/exec"/>
-            <button onclick="saveSheetsConfig()" style="width:100%;background:rgba(52,168,83,.15);border:1px solid rgba(52,168,83,.3);border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;color:#34a853;cursor:pointer;margin-bottom:4px">💾 Save & Test Connection</button>
-            <div id="cfg-sheets-status" style="font-size:.65rem;color:var(--green);margin-top:4px;text-align:center;min-height:16px"></div>
-
-            <div style="background:rgba(255,200,0,.07);border:1px solid rgba(255,200,0,.18);border-radius:8px;padding:9px 10px;margin-top:10px;font-size:.63rem;color:#f0c040;line-height:1.65">
-              <b>⚠️ Most common reason it doesn't work:</b><br>
-              When deploying, <b>Who has access</b> must be set to <b style="color:#fff">Anyone</b> — <u>not</u> "Anyone with a Google account". If you've already deployed, click <b>Deploy → Manage deployments → edit the pencil → change access → re-deploy a new version</b>.
+            <button onclick="saveSheetsConfig()" style="width:100%;background:rgba(52,168,83,.15);border:1px solid rgba(52,168,83,.3);border-radius:8px;padding:9px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;color:#34a853;cursor:pointer;margin-bottom:6px">💾 Save & Test Connection</button>
+            <div id="cfg-sheets-status" style="font-size:.65rem;color:var(--green);margin-top:4px;text-align:center"></div>
+            <div style="font-size:.62rem;color:var(--muted);margin-top:6px;line-height:1.6">
+              <b style="color:var(--saff)">One-time setup:</b><br>
+              1. Open <a href="https://script.google.com" target="_blank" style="color:#34a853">script.google.com</a> → New project<br>
+              2. Paste the Apps Script code from Admin → tap <b>Copy Script Code</b> below<br>
+              3. Click <b>Deploy → New deployment → Web app</b><br>
+              4. Set <b>Execute as: Me</b> · <b>Who has access: Anyone</b><br>
+              5. Copy the Web App URL → paste above → Save
             </div>
-
-            <div style="font-size:.62rem;color:var(--muted);margin-top:10px;line-height:1.7">
-              <b style="color:var(--saff)">One-time setup (5 min):</b><br>
-              1. Open <a href="https://script.google.com" target="_blank" style="color:#34a853">script.google.com</a> → New project → delete all default code<br>
-              2. Tap <b>📋 Copy Script Code</b> below → paste into the editor → Save (Ctrl+S)<br>
-              3. Click <b>Deploy → New deployment</b><br>
-              4. Type: <b>Web app</b> · Execute as: <b>Me</b> · Who has access: <b style="color:#fff">Anyone</b> (not "with Google Account")<br>
-              5. Click <b>Deploy</b> → copy the Web App URL → paste above → Save &amp; Test<br>
-              6. If you change the script later, choose <b>Deploy → Manage deployments → New version</b>
-            </div>
-            <button onclick="copyAppsScript()" style="width:100%;margin-top:10px;background:rgba(52,168,83,.08);border:1px solid rgba(52,168,83,.18);border-radius:7px;padding:9px;font-size:.73rem;font-weight:700;color:#34a853;cursor:pointer;font-family:'DM Sans',sans-serif">📋 Copy Apps Script Code (v21-fixed)</button>
-            <button onclick="diagSheets()" style="width:100%;margin-top:6px;background:rgba(244,163,37,.07);border:1px solid rgba(244,163,37,.18);border-radius:7px;padding:8px;font-size:.7rem;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">🔍 Run Connection Diagnostic</button>
-            <div id="diag-out" style="margin-top:6px;font-size:.6rem;color:var(--muted);line-height:1.7;display:none"></div>
+            <button onclick="copyAppsScript()" style="width:100%;margin-top:10px;background:rgba(52,168,83,.08);border:1px solid rgba(52,168,83,.18);border-radius:7px;padding:8px;font-size:.72rem;color:#34a853;cursor:pointer;font-family:'DM Sans',sans-serif">📋 Copy Apps Script Code</button>
           </div>
 
           <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:8px">
@@ -1053,27 +1044,46 @@ let REVIEWS = [
 // GOOGLE SHEETS API
 // ══════════════════════════════════════════════════════════════
 
+// ── Chunked GET transport ─────────────────────────────────────
+// Apps Script blocks cross-origin POST (CORS preflight fails).
+// We stay on GET but split large payloads into ≤1500-char chunks.
+// The script reassembles them server-side before acting.
+const CHUNK_SIZE = 1500; // safe encoded chars per GET request
+
 async function sheetsCall(payload){
   if(!SHEETS_URL) return {ok:false,error:'No Sheets URL configured'};
   try{
-    // Read-only actions use GET (Apps Script doGet); writes use POST (doPost)
-    // This avoids the ~2048-char URL length limit that silently kills menu saves
-    const readOnly = (payload.action === 'load');
-    let r;
-    if(readOnly){
-      const url = SHEETS_URL + '?payload=' + encodeURIComponent(JSON.stringify(payload));
-      r = await fetch(url, {redirect:'follow'});
-    } else {
-      r = await fetch(SHEETS_URL, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload),
-        redirect: 'follow',
-      });
+    const json = JSON.stringify(payload);
+    const encoded = encodeURIComponent(json);
+
+    // Small payload — single request (original behaviour)
+    if(encoded.length <= CHUNK_SIZE){
+      return await _sheetsFetch(SHEETS_URL+'?payload='+encoded);
     }
-    const text = await r.text();
+
+    // Large payload — chunk it
+    const id = 'byod_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    const totalChunks = Math.ceil(json.length / CHUNK_SIZE);
+    for(let i=0;i<totalChunks;i++){
+      const chunk = json.slice(i*CHUNK_SIZE,(i+1)*CHUNK_SIZE);
+      const cp = encodeURIComponent(JSON.stringify({
+        action:'chunk', id, i, total:totalChunks, data:chunk
+      }));
+      const r = await _sheetsFetch(SHEETS_URL+'?payload='+cp);
+      if(!r.ok) return {ok:false,error:'Chunk '+(i+1)+' failed: '+(r.error||'')};
+    }
+    // Trigger assembly + execution
+    const ep = encodeURIComponent(JSON.stringify({action:'assemble',id}));
+    return await _sheetsFetch(SHEETS_URL+'?payload='+ep);
+  }catch(e){ return {ok:false,error:e.message}; }
+}
+
+async function _sheetsFetch(url){
+  try{
+    const r=await fetch(url,{redirect:'follow'});
+    const text=await r.text();
     try{ return JSON.parse(text); }
-    catch(e){ return {ok:false,error:'Non-JSON response: '+text.slice(0,120)}; }
+    catch(e){ return {ok:false,error:'Non-JSON: '+text.slice(0,120)}; }
   }catch(e){ return {ok:false,error:e.message}; }
 }
 
@@ -1160,89 +1170,71 @@ async function syncMenuToSheets(){
   const rows=[];
   const catLabels={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   ['si','sv','pb','ck'].forEach(cat=>{
-    MENU[cat].forEach(d=>rows.push([d.id,catLabels[cat],d.e,d.n,d.p,d.avail?'Yes':'No',d.soldOut?'Sold Out':'No',d.maxQty||10,d.photo||'',INGREDIENTS[d.id]||'']));
+    // Strip base64 photos from Sheet rows — they're enormous and stored locally only.
+    // Photo URLs (lh3 / drive links) are kept; base64 data-URIs are cleared.
+    const photo=(d)=>{const p=d.photo||'';return p.startsWith('data:')?'':p;};
+    MENU[cat].forEach(d=>rows.push([d.id,catLabels[cat],d.e,d.n,d.p,d.avail?'Yes':'No',d.soldOut?'Sold Out':'No',d.maxQty||10,photo(d),INGREDIENTS[d.id]||'']));
   });
-  const res = await sheetsCall({action:'saveMenu',rows});
-  return !!(res && res.ok);
+  const res=await sheetsCall({action:'saveMenu',rows});
+  return !!(res&&res.ok);
 }
 
 // Append one order row
 async function syncOrderToSheets(o){
   const itemsStr=o.items.map(i=>i.n+' x'+i.qty).join(', ');
-  const res = await sheetsCall({action:'order',
+  const res=await sheetsCall({action:'order',
     row:[o.oid,o.name,o.phone||'',o.flat,o.drop,itemsStr,o.total,o.portions,
          new Date().toLocaleString('en-IN'),o.status,o.tele||'',o.teleUserId||'']});
-  return !!(res && res.ok);
+  return !!(res&&res.ok);
 }
 
 // Update order status
 async function syncStatusToSheets(oid,status){
-  const res = await sheetsCall({action:'status',oid,status});
-  return !!(res && res.ok);
+  const res=await sheetsCall({action:'status',oid,status});
+  return !!(res&&res.ok);
 }
 
 // Save settings (published state)
 async function syncSettingsToSheets(){
-  const res = await sheetsCall({action:'settings',published:menuPublishedToday});
-  return !!(res && res.ok);
+  const res=await sheetsCall({action:'settings',published:menuPublishedToday});
+  return !!(res&&res.ok);
 }
 
 // ══════════════════════════════════════════════════════════════
 // APPS SCRIPT CODE (complete, embedded for one-tap copy)
 // ══════════════════════════════════════════════════════════════
-const APPS_SCRIPT_CODE = `// BYOD Kitchen — Google Apps Script v21-fixed
-// Deploy: Web App · Execute as Me · Who has access: Anyone (NOT "Anyone with Google Account")
-//
-// KEY FIX: Reads use doGet (?payload=JSON), writes use doPost (JSON body).
-// This avoids the ~2048-char GET URL limit that silently breaks menu saves with photos.
+const APPS_SCRIPT_CODE = `// BYOD Kitchen — Google Apps Script v22
+// Deploy: Web App · Execute as Me · Who has access: Anyone
+// GET-only (no POST needed — avoids CORS preflight entirely).
+// Large payloads are split into chunks by the client and reassembled here.
+
+var CHUNK_SHEET = 'ChunkBuffer'; // temp sheet for reassembly
 
 function getOrCreateSheet(ss, name, headers) {
   var sheet = ss.getSheetByName(name);
-  if (!sheet) {
-    sheet = ss.insertSheet(name);
-    if (headers && headers.length) sheet.appendRow(headers);
-  }
+  if (!sheet) { sheet = ss.insertSheet(name); if (headers && headers.length) sheet.appendRow(headers); }
   return sheet;
 }
-
 function ensureNamed(ss) {
-  try { if (!ss.getName() || ss.getName() === 'Untitled spreadsheet') ss.rename('BYOD Kitchen'); } catch(e) {}
+  try { if (!ss.getName() || ss.getName()==='Untitled spreadsheet') ss.rename('BYOD Kitchen'); } catch(e) {}
 }
-
-// Adds CORS headers so browser fetch() works without errors
-function corsResponse(output) {
-  return output
-    .setMimeType(ContentService.MimeType.JSON);
-    // Note: Apps Script automatically handles CORS for "Anyone" access — no extra headers needed
-}
-
 function respond(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
 
-// GET: used for read-only 'load' action (and ping/test)
 function doGet(e) {
   try {
     if (e.parameter && e.parameter.payload) {
-      var data = JSON.parse(decodeURIComponent(e.parameter.payload));
-      return handleRequest(data);
+      return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    // No payload = health check / ping
-    return respond({ok:true, service:'BYOD Kitchen v21-fixed', ready:true});
-  } catch(err) {
-    return respond({ok:false, error:err.toString()});
-  }
+    return respond({ok:true, service:'BYOD Kitchen v22', ready:true});
+  } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
-// POST: used for all write actions (saveMenu, order, status, settings)
+// doPost kept as fallback (won't be called from browser due to CORS, but works from server tools)
 function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    return handleRequest(data);
-  } catch(err) {
-    return respond({ok:false, error:err.toString()});
-  }
+  try { return handleRequest(JSON.parse(e.postData.contents)); }
+  catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
 function handleRequest(data) {
@@ -1251,74 +1243,94 @@ function handleRequest(data) {
     ensureNamed(ss);
     var action = data.action;
 
-    // ── LOAD (read) ──────────────────────────────────────────
-    if (action === 'load' || !action) {
-      var ms  = getOrCreateSheet(ss, 'Menu',     ['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients']);
-      var os  = getOrCreateSheet(ss, 'Orders',   ['Order ID','Name','Phone','Flat','Drop','Items','Total','Portions','Time','Status','Telegram','Telegram UID']);
-      var stS = getOrCreateSheet(ss, 'Settings', ['Key','Value']);
-      var settings = {};
-      stS.getDataRange().getValues().forEach(function(r){ if (r[0]) settings[String(r[0])] = String(r[1]); });
-      return respond({
-        ok: true,
-        menu:     ms.getDataRange().getValues(),
-        orders:   os.getDataRange().getValues(),
-        settings: settings
-      });
-    }
-
-    // ── SAVE MENU (write) ─────────────────────────────────────
-    if (action === 'saveMenu') {
-      var sheet = getOrCreateSheet(ss, 'Menu', ['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients']);
-      var lastRow = sheet.getLastRow();
-      if (lastRow > 1) sheet.getRange(2, 1, lastRow - 1, 10).clearContent();
-      if (data.rows && data.rows.length > 0) {
-        sheet.getRange(2, 1, data.rows.length, 10).setValues(data.rows);
-      }
+    // ── CHUNK: store a piece of a large payload ───────────────
+    if (action === 'chunk') {
+      var buf = getOrCreateSheet(ss, CHUNK_SHEET, ['ID','Index','Total','Data','Time']);
+      buf.appendRow([data.id, data.i, data.total, data.data, new Date().toISOString()]);
       return respond({ok:true});
     }
 
-    // ── NEW ORDER (write) ─────────────────────────────────────
+    // ── ASSEMBLE: reassemble chunks and execute ───────────────
+    if (action === 'assemble') {
+      var buf = getOrCreateSheet(ss, CHUNK_SHEET, ['ID','Index','Total','Data','Time']);
+      var rows = buf.getDataRange().getValues();
+      var parts = [];
+      var total = 0;
+      for (var i = 1; i < rows.length; i++) {
+        if (String(rows[i][0]) === String(data.id)) {
+          parts[parseInt(rows[i][1])] = String(rows[i][3]);
+          total = parseInt(rows[i][2]);
+        }
+      }
+      if (parts.filter(Boolean).length < total) {
+        return respond({ok:false, error:'Missing chunks: got '+parts.filter(Boolean).length+' of '+total});
+      }
+      // Clean up used chunks
+      var keep = [];
+      keep.push(rows[0]); // header
+      for (var i = 1; i < rows.length; i++) {
+        if (String(rows[i][0]) !== String(data.id)) keep.push(rows[i]);
+      }
+      buf.clearContents();
+      if (keep.length > 0) buf.getRange(1,1,keep.length,keep[0].length).setValues(keep);
+      // Execute the reassembled payload
+      var payload = JSON.parse(parts.join(''));
+      return handleRequest(payload);
+    }
+
+    // ── LOAD ─────────────────────────────────────────────────
+    if (action === 'load') {
+      var ms  = getOrCreateSheet(ss,'Menu',    ['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients']);
+      var os  = getOrCreateSheet(ss,'Orders',  ['Order ID','Name','Phone','Flat','Drop','Items','Total','Portions','Time','Status','Telegram','Telegram UID']);
+      var stS = getOrCreateSheet(ss,'Settings',['Key','Value']);
+      var settings = {};
+      stS.getDataRange().getValues().forEach(function(r){ if(r[0]) settings[String(r[0])]=String(r[1]); });
+      return respond({ok:true, menu:ms.getDataRange().getValues(), orders:os.getDataRange().getValues(), settings:settings});
+    }
+
+    // ── SAVE MENU ─────────────────────────────────────────────
+    if (action === 'saveMenu') {
+      var sheet = getOrCreateSheet(ss,'Menu',['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients']);
+      var last = sheet.getLastRow();
+      if (last > 1) sheet.getRange(2,1,last-1,10).clearContent();
+      if (data.rows && data.rows.length) sheet.getRange(2,1,data.rows.length,10).setValues(data.rows);
+      return respond({ok:true});
+    }
+
+    // ── ORDER ─────────────────────────────────────────────────
     if (action === 'order') {
-      var sheet = getOrCreateSheet(ss, 'Orders', ['Order ID','Name','Phone','Flat','Drop','Items','Total','Portions','Time','Status','Telegram','Telegram UID']);
+      var sheet = getOrCreateSheet(ss,'Orders',['Order ID','Name','Phone','Flat','Drop','Items','Total','Portions','Time','Status','Telegram','Telegram UID']);
       sheet.appendRow(data.row);
       return respond({ok:true});
     }
 
-    // ── UPDATE ORDER STATUS (write) ───────────────────────────
+    // ── STATUS ────────────────────────────────────────────────
     if (action === 'status') {
-      var sheet = ss.getSheetByName('Orders');
-      if (!sheet) return respond({ok:true});
+      var sheet = ss.getSheetByName('Orders'); if (!sheet) return respond({ok:true});
       var rows = sheet.getDataRange().getValues();
-      for (var i = 1; i < rows.length; i++) {
-        if (String(rows[i][0]) === String(data.oid)) {
-          sheet.getRange(i + 1, 10).setValue(data.status);
-          break;
-        }
+      for (var i=1;i<rows.length;i++){
+        if (String(rows[i][0])===String(data.oid)){ sheet.getRange(i+1,10).setValue(data.status); break; }
       }
       return respond({ok:true});
     }
 
-    // ── SAVE SETTINGS (write) ─────────────────────────────────
+    // ── SETTINGS ──────────────────────────────────────────────
     if (action === 'settings') {
-      var sheet = getOrCreateSheet(ss, 'Settings', ['Key','Value']);
+      var sheet = getOrCreateSheet(ss,'Settings',['Key','Value']);
       var rows = sheet.getDataRange().getValues();
-      var updates = { published: String(data.published) };
-      Object.keys(updates).forEach(function(key) {
-        var found = false;
-        for (var i = 1; i < rows.length; i++) {
-          if (rows[i][0] === key) { sheet.getRange(i + 1, 2).setValue(updates[key]); found = true; break; }
+      var updates = {published:String(data.published)};
+      Object.keys(updates).forEach(function(key){
+        var found=false;
+        for(var i=1;i<rows.length;i++){
+          if(rows[i][0]===key){sheet.getRange(i+1,2).setValue(updates[key]);found=true;break;}
         }
-        if (!found) sheet.appendRow([key, updates[key]]);
+        if(!found) sheet.appendRow([key,updates[key]]);
       });
       return respond({ok:true});
     }
 
-    // ── PING / UNKNOWN ────────────────────────────────────────
-    return respond({ok:true, note:'Unknown action: ' + action});
-
-  } catch(err) {
-    return respond({ok:false, error:err.toString()});
-  }
+    return respond({ok:true, note:'Unknown action ignored: '+action});
+  } catch(err) { return respond({ok:false, error:err.toString()}); }
 }`;
 
 // ══════════════════════════════════════════════════════════════
@@ -1780,70 +1792,18 @@ function saveBotConfig(){
 }
 async function saveSheetsConfig(){
   const url=document.getElementById('cfg-sheets-url').value.trim();
-  if(!url){toast('⚠️','Paste your Web App URL','Get it from Apps Script → Deploy → Web App URL.');return;}
+  if(!url){toast('⚠️','Paste your Web App URL','Get it from Apps Script → Deploy.');return;}
   SHEETS_URL=url;lsSave(LS.SHEETS,url);
-  const st=document.getElementById('cfg-sheets-status');
-  if(st)st.textContent='🔄 Testing…';
+  const st=document.getElementById('cfg-sheets-status');if(st)st.textContent='Testing…';
   toast('🔄','Testing Sheets connection…','');
   try{
-    const r=await fetch(url+'?payload='+encodeURIComponent(JSON.stringify({action:'ping'})),{redirect:'follow'});
-    const text=await r.text();
-    let d;try{d=JSON.parse(text);}catch(e){d=null;}
-    // Apps Script returns ok:true on ping/unknown action too — any valid JSON is a good sign
-    if(d!==null){
-      if(st)st.textContent='✅ Connected — menu loads from Sheet on every build';
-      toast('📊','Google Sheets connected!','Menu, orders & settings now persist across every rebuild.');
-      // Trigger a load to populate from Sheet immediately
-      const loaded=await loadFromSheets();
-      if(loaded){renderBanner();renderAdminMenuEdit();renderAdmin();renderReviews();}
-    } else {
-      if(st)st.textContent='⚠️ URL saved — got non-JSON, check deploy settings';
-      toast('⚠️','Unexpected response','Re-deploy as Web App · Execute as Me · Anyone can access.');
-    }
-  }catch(e){
-    if(st)st.textContent='⚠️ URL saved — could not reach (CORS or deploy issue)';
-    toast('⚠️','Connection failed','Make sure Web App is deployed with "Anyone" access, not "Anyone with Google Account".');
-  }
+    const r=await fetch(url);const d=await r.json();
+    if(d.ok){if(st)st.textContent='✅ Connected — menu will load from Sheet on every build';toast('📊','Google Sheets connected!','All data now lives in your Sheet. Any new build will load it automatically.');}
+    else{if(st)st.textContent='⚠️ URL saved but test failed';toast('⚠️','Test failed','Re-deploy as Web App with Anyone access.');}
+  }catch(e){if(st)st.textContent='⚠️ Saved — check CORS/deploy settings';toast('⚠️','Could not reach Sheet','Ensure Web App is Anyone can access.');}
 }
 function copyAppsScript(){
   navigator.clipboard?.writeText(APPS_SCRIPT_CODE).then(()=>toast('📋','Apps Script code copied!','Paste into script.google.com → New project → Deploy.')).catch(()=>toast('⚠️','Copy failed','Try a different browser.'));
-}
-
-async function diagSheets(){
-  const out=document.getElementById('diag-out');
-  if(!out)return;
-  out.style.display='block';
-  const lines=[];
-  const url=SHEETS_URL||document.getElementById('cfg-sheets-url')?.value?.trim()||'';
-  lines.push('URL: '+(url?url.slice(0,60)+'…':'❌ not set'));
-  if(!url){out.innerHTML=lines.join('<br>');return;}
-  lines.push('🔄 Sending GET ping…');out.innerHTML=lines.join('<br>');
-  try{
-    const t0=Date.now();
-    const r=await fetch(url+'?payload='+encodeURIComponent(JSON.stringify({action:'ping'})),{redirect:'follow'});
-    const ms=Date.now()-t0;
-    const text=await r.text();
-    lines.push('HTTP status: '+r.status+' ('+ms+'ms)');
-    lines.push('Response: '+text.slice(0,120));
-    let parsed;try{parsed=JSON.parse(text);}catch(e){parsed=null;}
-    if(parsed){lines.push('✅ Valid JSON — script is reachable');}
-    else{lines.push('⚠️ Not valid JSON — likely a redirect/auth page (check "Anyone" access setting)');}
-  }catch(e){
-    lines.push('❌ Fetch error: '+e.message);
-    lines.push('→ This usually means the URL is wrong, or the Web App was not deployed with "Anyone" access.');
-  }
-  lines.push('');
-  lines.push('🔄 Sending POST (saveMenu test)…');out.innerHTML=lines.join('<br>');
-  try{
-    const r2=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'ping'}),redirect:'follow'});
-    const text2=await r2.text();
-    lines.push('POST HTTP status: '+r2.status);
-    lines.push('POST Response: '+text2.slice(0,120));
-    let p2;try{p2=JSON.parse(text2);}catch(e){p2=null;}
-    if(p2){lines.push('✅ POST works — writes (saveMenu, orders) will succeed');}
-    else{lines.push('⚠️ POST returned non-JSON — re-deploy Apps Script with new version');}
-  }catch(e){lines.push('❌ POST error: '+e.message);}
-  out.innerHTML=lines.join('<br>');
 }
 
 // Save menu → Sheet (single source of truth)
