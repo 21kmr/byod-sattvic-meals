@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v25</title>
+<title>BYOD — Bring Your Own Dabba v26</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -275,7 +275,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .sotog{width:32px;height:18px;border-radius:20px;border:none;background:rgba(255,255,255,.12);cursor:pointer;transition:background .2s;flex-shrink:0}
 .sotog.son{background:rgba(239,68,68,.8)!important}
 .sold-badge{position:absolute;top:7px;left:7px;background:rgba(239,68,68,.88);color:#fff;font-size:.6rem;font-weight:800;padding:3px 8px;border-radius:20px;z-index:4}
-.unavail-badge{position:absolute;top:7px;left:7px;background:rgba(100,100,100,.75);color:#fff;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:20px;z-index:4}
+.unavail-badge{position:absolute;top:7px;left:7px;background:rgba(244,163,37,.18);color:var(--saff);font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:20px;z-index:4;border:1px solid rgba(244,163,37,.28)}
 .ding{font-size:.63rem;color:var(--muted);line-height:1.6;margin:2px 0 5px;white-space:normal;word-break:break-word;display:block}
 .tog{width:36px;height:20px;border-radius:10px;background:rgba(110,100,88,.18);cursor:pointer;position:relative;transition:.25s;border:none;flex-shrink:0}
 .tog.on{background:var(--tele)}
@@ -515,7 +515,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v25.0</span>
+      <span class="ver-badge" id="ver-badge">v26.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -769,7 +769,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v25.0</span>
+          <span class="ver-badge">v26.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1089,13 +1089,15 @@ MENU = JSON.parse(JSON.stringify(DEFAULT_MENU));
 INGREDIENTS = {...DEFAULT_INGREDIENTS};
 
 
-let REVIEWS = [
-  {name:'Priya M.',flat:'H-204',stars:5,text:'The Avial was absolutely divine — 14 fresh vegetables, you could taste the love!',dishes:['Avial','Sambar'],date:'2 days ago'},
-  {name:'Ramesh K.',flat:'G-101',stars:5,text:'Authentic South Indian flavours, exactly like home. Rasam is outstanding.',dishes:['Rasam','Kootu'],date:'4 days ago'},
-  {name:'Sunita & Arun',flat:'H-310',stars:5,text:'No onion or garlic — perfect for strict Jains. The only home-cooked option in our complex.',dishes:['Vatha Kuzhambu'],date:'1 week ago'},
-  {name:'Deepa V.',flat:'F-205',stars:4,text:'Ragi cookies are our family favourite.',dishes:['Ragi Cookies'],date:'1 week ago'},
-  {name:'Anand S.',flat:'H-108',stars:5,text:'Pure gold. Low-flame cooking makes all the difference.',dishes:['Avial','Kootu'],date:'2 weeks ago'},
+// Sample reviews shown only when no real reviews exist yet
+const SAMPLE_REVIEWS = [
+  {name:'Priya M.',flat:'H-204',stars:5,text:'The Avial was absolutely divine — 14 fresh vegetables, you could taste the love!',dishes:['Avial','Sambar'],date:'2 days ago',_sample:true},
+  {name:'Ramesh K.',flat:'G-101',stars:5,text:'Authentic South Indian flavours, exactly like home. Rasam is outstanding.',dishes:['Rasam','Kootu'],date:'4 days ago',_sample:true},
+  {name:'Sunita & Arun',flat:'H-310',stars:5,text:'No onion or garlic — perfect for strict Jains. The only home-cooked option in our complex.',dishes:['Vatha Kuzhambu'],date:'1 week ago',_sample:true},
+  {name:'Deepa V.',flat:'F-205',stars:4,text:'Ragi cookies are our family favourite.',dishes:['Ragi Cookies'],date:'1 week ago',_sample:true},
+  {name:'Anand S.',flat:'H-108',stars:5,text:'Pure gold. Low-flame cooking makes all the difference.',dishes:['Avial','Kootu'],date:'2 weeks ago',_sample:true},
 ];
+let REVIEWS = []; // real reviews only — samples shown automatically when empty
 
 // ══════════════════════════════════════════════════════════════
 // GOOGLE SHEETS API
@@ -1203,6 +1205,17 @@ async function loadFromSheets(){
               tele:String(tele||''),teleUserId:String(teleUserId||'')};
     }).filter(Boolean);
   }
+  // Parse reviews
+  if(res.reviews && res.reviews.length > 1){
+    const realRevs = res.reviews.slice(1).map(row=>{
+      const [name,flat,stars,text,dishes,date]=row;
+      if(!name&&!text) return null;
+      return {name:String(name||''),flat:String(flat||'—'),stars:parseInt(stars)||5,
+              text:String(text||''),dishes:String(dishes||'').split(',').map(s=>s.trim()).filter(Boolean),
+              date:String(date||''),_sample:false};
+    }).filter(Boolean);
+    if(realRevs.length) REVIEWS = realRevs;
+  }
   hideLoadingBanner();
   return true;
 }
@@ -1257,6 +1270,13 @@ async function syncSettingsToSheets(){
   return !!(res&&res.ok);
 }
 
+// Append a review row
+async function syncReviewToSheets(r){
+  const res=await sheetsCall({action:'review',
+    row:[r.name,r.flat,r.stars,r.text,r.dishes.join(', '),r.date]});
+  return !!(res&&res.ok);
+}
+
 // ══════════════════════════════════════════════════════════════
 // APPS SCRIPT CODE (complete, embedded for one-tap copy)
 // ══════════════════════════════════════════════════════════════
@@ -1284,7 +1304,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v25', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v26', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1342,7 +1362,8 @@ function handleRequest(data) {
       var stS = getOrCreateSheet(ss,'Settings',['Key','Value']);
       var settings = {};
       stS.getDataRange().getValues().forEach(function(r){ if(r[0]) settings[String(r[0])]=String(r[1]); });
-      return respond({ok:true, menu:ms.getDataRange().getValues(), orders:os.getDataRange().getValues(), settings:settings});
+      var rs = getOrCreateSheet(ss,'Reviews',['Name','Flat','Stars','Review','Dishes','Date']);
+      return respond({ok:true, menu:ms.getDataRange().getValues(), orders:os.getDataRange().getValues(), settings:settings, reviews:rs.getDataRange().getValues()});
     }
 
     // ── SAVE MENU ─────────────────────────────────────────────
@@ -1383,6 +1404,13 @@ function handleRequest(data) {
         }
         if(!found) sheet.appendRow([key,updates[key]]);
       });
+      return respond({ok:true});
+    }
+
+    // ── REVIEW ───────────────────────────────────────────────
+    if (action === 'review') {
+      var sheet = getOrCreateSheet(ss,'Reviews',['Name','Flat','Stars','Review','Dishes','Date']);
+      sheet.appendRow(data.row);
       return respond({ok:true});
     }
 
@@ -1618,7 +1646,8 @@ function loadSubMenu(cat){
   currentCat=cat;
   const names={si:'South Indian Àla Carte',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   document.getElementById('sm-title').textContent=names[cat];
-  document.getElementById('sm-sub').textContent=MENU[cat].filter(x=>x.avail).length+' items available today';
+  const _avail=MENU[cat].filter(x=>x.avail).length,_total=MENU[cat].length;
+  document.getElementById('sm-sub').textContent=_avail+' available today'+(_total>_avail?' · '+(_total-_avail)+' on prior order':'');
   const _sorted=[...MENU[cat].filter(d=>d.avail&&!d.soldOut),...MENU[cat].filter(d=>d.soldOut),...MENU[cat].filter(d=>!d.avail&&!d.soldOut)];
   document.getElementById('dish-list').innerHTML=_sorted.map(d=>{
     const sel=!!cart[d.id];
@@ -1626,9 +1655,9 @@ function loadSubMenu(cat){
     const imgHtml=photoUrl?`<img src="${photoUrl}" alt="${d.n}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover"/>`:`<span style="position:relative;z-index:1">${d.e}</span>`;
     const ing=INGREDIENTS[d.id]||'';
     const _sold=!!d.soldOut,_unavail=!d.avail,_clickable=!d.soldOut&&d.avail;
-    return `<div class="dcard${(sel&&_clickable)?' sel':''}${_sold?' sold-out-card':''}" id="dc-${d.id}" onclick="${_clickable?('toggleDish(\''+d.id+'\')') :'void(0)'}" style="${_unavail?'opacity:.4;filter:grayscale(.5);pointer-events:none':''}">
+    return `<div class="dcard${(sel&&_clickable)?' sel':''}${_sold?' sold-out-card':''}" id="dc-${d.id}" onclick="${_clickable?('toggleDish(\''+d.id+'\')') :'void(0)'}" style="${_unavail?'opacity:.6;pointer-events:none':''}" title="${_unavail?'Available on prior order — contact us to pre-order':''}">
       <div class="dimg" id="dimg-${d.id}">${imgHtml}</div>
-      ${_sold?'<div class="sold-badge">🔥 Sold Out</div>':(_unavail?'<div class="unavail-badge">Not Available</div>':'<div class="dsel-badge">✓</div>')}
+      ${_sold?'<div class="sold-badge">🔥 Sold Out</div>':(_unavail?'<div class="unavail-badge">📅 Prior Order</div>':'<div class="dsel-badge">✓</div>')}
       <div class="dinfo">
         <div class="dname">${d.n}</div>
         ${ing?`<div class="ding">${ing}</div>`:''}
@@ -2050,7 +2079,7 @@ function _diagClear(){
 
 async function runDiagnostic(){
   _diagClear();
-  _diagLine('━━━ BYOD Sheets Diagnostic v25 ━━━');
+  _diagLine('━━━ BYOD Sheets Diagnostic v26 ━━━');
   const url = SHEETS_URL || document.getElementById('cfg-sheets-url')?.value?.trim() || '';
   _diagLine('URL: '+(url ? url.slice(0,55)+'…' : '❌ not set'), url?'diag-info':'diag-err');
   if(!url){ _diagLine('→ Paste your Apps Script URL in ⚙️ Settings first.','diag-err'); return; }
@@ -2222,23 +2251,48 @@ function printKitchenSheet(){document.querySelectorAll('.asec').forEach(s=>s.sty
 // REVIEWS
 // ══════════════════════════════════════════════════════════════
 function renderReviews(){
+  // Real reviews only; fall back to greyed-out samples if none yet
+  const realRevs = REVIEWS.filter(r=>!r._sample);
+  const displayRevs = realRevs.length > 0 ? realRevs : SAMPLE_REVIEWS;
+  const isSample = realRevs.length === 0;
+
+  // Home strip — only real reviews, hide if none
   const strip=document.getElementById('reviews-strip');
-  if(strip)strip.innerHTML=REVIEWS.map(r=>`<div class="rev-card-mini" onclick="showPage('reviews')"><div class="rcm-row"><span class="rcm-stars">${'⭐'.repeat(r.stars)}</span><span class="rcm-name">${r.name}</span></div><div class="rcm-text">${r.text}</div><div class="rcm-date">${r.flat} · ${r.date}</div></div>`).join('');
-  const avg=REVIEWS.reduce((s,r)=>s+r.stars,0)/REVIEWS.length;
+  if(strip){
+    strip.innerHTML=displayRevs.map(r=>`<div class="rev-card-mini${r._sample?' rev-sample':''}" onclick="showPage('reviews')"><div class="rcm-row"><span class="rcm-stars">${'⭐'.repeat(r.stars)}</span><span class="rcm-name">${r.name}${r._sample?' <span style=\'font-size:.55rem;opacity:.5;font-weight:400\'>sample</span>':''}</span></div><div class="rcm-text">${r.text}</div><div class="rcm-date">${r.flat} · ${r.date}</div></div>`).join('');
+  }
+  // Hero stats — based on real reviews only (or hidden if samples)
+  const avg = realRevs.length > 0 ? realRevs.reduce((s,r)=>s+r.stars,0)/realRevs.length : 5;
   const rhs=document.getElementById('rh-stars');if(rhs)rhs.textContent='⭐'.repeat(Math.round(avg));
-  const rht=document.getElementById('rh-title');if(rht)rht.textContent=avg>=4.5?'Excellent':avg>=4?'Very Good':'Good';
-  const rhu=document.getElementById('rh-sub');if(rhu)rhu.textContent=avg.toFixed(1)+' average · '+REVIEWS.length+' reviews';
+  const rht=document.getElementById('rh-title');if(rht)rht.textContent=isSample?'Be the first to review!':avg>=4.5?'Excellent':avg>=4?'Very Good':'Good';
+  const rhu=document.getElementById('rh-sub');if(rhu)rhu.textContent=isSample?'Sample reviews shown below':''+avg.toFixed(1)+' average · '+realRevs.length+' review'+(realRevs.length!==1?'s':'');
+
+  // Full list
   const fl=document.getElementById('rev-full-list');
-  if(fl)fl.innerHTML=REVIEWS.map(r=>`<div class="rev-full-card"><div class="rfc-top"><div class="rfc-name">${r.name}</div><div class="rfc-date">${r.date}</div></div><div class="rfc-stars">${'⭐'.repeat(r.stars)}</div><div class="rfc-flat">🏠 ${r.flat}</div><div class="rfc-text">${r.text}</div><div class="rfc-dishes">${r.dishes.map(d=>`<span class="rfc-dish">${d}</span>`).join('')}</div></div>`).join('');
+  if(fl){
+    if(isSample){
+      fl.innerHTML='<div style="font-size:.65rem;color:var(--muted);text-align:center;padding:8px 0 12px;font-style:italic">Sample reviews — submit yours below to see it here</div>'
+        +displayRevs.map(r=>`<div class="rev-full-card" style="opacity:.42;filter:grayscale(.3);pointer-events:none;position:relative"><div style="position:absolute;top:8px;right:10px;font-size:.52rem;background:rgba(150,150,150,.18);color:var(--muted);padding:2px 7px;border-radius:10px;letter-spacing:.04em;text-transform:uppercase;font-weight:600">Sample</div><div class="rfc-top"><div class="rfc-name">${r.name}</div><div class="rfc-date">${r.date}</div></div><div class="rfc-stars">${'⭐'.repeat(r.stars)}</div><div class="rfc-flat">🏠 ${r.flat}</div><div class="rfc-text">${r.text}</div><div class="rfc-dishes">${r.dishes.map(d=>`<span class="rfc-dish">${d}</span>`).join('')}</div></div>`).join('');
+    } else {
+      fl.innerHTML=realRevs.map(r=>`<div class="rev-full-card"><div class="rfc-top"><div class="rfc-name">${r.name}</div><div class="rfc-date">${r.date}</div></div><div class="rfc-stars">${'⭐'.repeat(r.stars)}</div><div class="rfc-flat">🏠 ${r.flat}</div><div class="rfc-text">${r.text}</div><div class="rfc-dishes">${r.dishes.map(d=>`<span class="rfc-dish">${d}</span>`).join('')}</div></div>`).join('');
+    }
+  }
 }
 function setStars(n){selectedStars=n;document.querySelectorAll('.star-btn').forEach(b=>b.classList.toggle('on',parseInt(b.dataset.v)<=n));}
-function submitReview(){
+async function submitReview(){
   const name=document.getElementById('rev-name').value.trim(),flat=document.getElementById('rev-flat').value.trim(),text=document.getElementById('rev-text').value.trim();
   if(!name||!text){toast('⚠️','Fill in details','Name and review are required.');return;}
+  const btn=document.querySelector('.btn-submit-rev');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Submitting…';}
   const ordered=orders.find(o=>o.flat===flat);
-  REVIEWS.unshift({name,flat:flat||'—',stars:selectedStars,text,dishes:ordered?ordered.items.map(i=>i.n):['BYOD dishes'],date:'Just now'});
-  renderReviews();['rev-name','rev-flat','rev-text'].forEach(id=>document.getElementById(id).value='');
-  toast('⭐','Review submitted!','Thank you!');
+  const dateStr=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const rev={name,flat:flat||'—',stars:selectedStars,text,dishes:ordered?ordered.items.map(i=>i.n):['BYOD dishes'],date:dateStr,_sample:false};
+  REVIEWS.unshift(rev);
+  renderReviews();
+  ['rev-name','rev-flat','rev-text'].forEach(id=>document.getElementById(id).value='');
+  await syncReviewToSheets(rev);
+  if(btn){btn.disabled=false;btn.innerHTML='Submit Review ⭐';}
+  toast('⭐','Review submitted!','Thank you! Saved to Google Sheets.');
 }
 function copyReviewLink(){const url=location.href.split('#')[0]+'#reviews';navigator.clipboard?.writeText(url).catch(()=>{});toast('🔗','Review link copied!','');}
 
