@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v23</title>
+<title>BYOD — Bring Your Own Dabba v24</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -515,7 +515,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v23.0</span>
+      <span class="ver-badge" id="ver-badge">v24.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -769,7 +769,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v23.0</span>
+          <span class="ver-badge">v24.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1284,7 +1284,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v23', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v24', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1877,7 +1877,7 @@ async function saveMenu(){
             ing=document.getElementById('eding-'+d.id);
       const q=document.getElementById('edq-'+d.id),so=document.getElementById('edso-'+d.id);
       if(n)d.n=n.value;if(p)d.p=parseFloat(p.value)||d.p;
-      if(q)d.maxQty=parseInt(q.value)||10;
+      if(q)d.portionLabel=q.value.trim();
       if(t)d.avail=t.classList.contains('on');
       if(so)d.soldOut=so.classList.contains('son');
       if(ph)d.photo=ph.value.trim();if(ing)INGREDIENTS[d.id]=ing.value.trim();
@@ -1888,6 +1888,13 @@ async function saveMenu(){
   toast('💾','Menu saved!',sheetsSynced?'✅ Synced to Google Sheets — safe across all future builds!':'Saved locally. Connect Sheets in Admin → Settings to persist across builds.');
 }
 
+function deleteDish(cat,id){
+  if(!confirm('Delete this dish from the menu?')) return;
+  MENU[cat]=MENU[cat].filter(d=>d.id!==id);
+  renderAdminMenuEdit();
+  toast('🗑️','Dish removed','Tap Save Menu to sync.');
+}
+
 function renderAdminMenuEdit(){
   ['si','sv','pb','ck'].forEach(cat=>{
     const el=document.getElementById('ed-'+cat);if(!el)return;
@@ -1895,13 +1902,16 @@ function renderAdminMenuEdit(){
       const _p=d.photo?convertGoogleUrl(d.photo)||d.photo:'';
       const _prev=_p?'<img src="'+_p+'" onerror="this.style.display=\'none\'" alt="" style="width:100%;height:100%;object-fit:cover"/>':'📷';
       return '<div class="edcard" id="edc-'+d.id+'">'
-        +'<div class="ed-top"><div class="ed-em">'+d.e+'</div>'
-        +'<input class="ed-name" id="edn-'+d.id+'" value="'+d.n+'" placeholder="Dish name"/></div>'
+        +'<div class="ed-top" style="gap:6px">'
+        +'<div class="ed-em">'+d.e+'</div>'
+        +'<input class="ed-name" id="edn-'+d.id+'" value="'+d.n+'" placeholder="Dish name" style="flex:1;min-width:0"/>'
+        +'<button onclick="deleteDish(\''+cat+'\',\''+d.id+'\')" title="Delete" style="flex-shrink:0;width:28px;height:28px;border-radius:7px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22);color:#ef4444;cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center">🗑</button>'
+        +'</div>'
         +'<div class="ed-row" style="gap:8px;flex-wrap:wrap">'
         +'<div style="display:flex;align-items:center;gap:4px"><span style="font-size:.62rem;color:var(--muted)">Rs.</span>'
-        +'<input class="ed-price" type="text" inputmode="decimal" id="edp-'+d.id+'" value="'+d.p+'" placeholder="60" style="width:64px"/></div>'
-        +'<div style="display:flex;align-items:center;gap:4px"><span style="font-size:.62rem;color:var(--muted)">Max qty</span>'
-        +'<input class="ed-price" type="text" inputmode="numeric" id="edq-'+d.id+'" value="'+(d.maxQty||10)+'" placeholder="10" style="width:48px"/></div>'
+        +'<input class="ed-price" type="text" inputmode="decimal" id="edp-'+d.id+'" value="'+d.p+'" placeholder="60" style="width:60px"/></div>'
+        +'<div style="display:flex;align-items:center;gap:4px"><span style="font-size:.62rem;color:var(--muted)">Portion</span>'
+        +'<input class="ed-price" type="text" id="edq-'+d.id+'" value="'+(d.portionLabel||'')+'" placeholder="500g / 2 pcs" style="width:82px"/></div>'
         +'<div style="display:flex;gap:8px;align-items:center;margin-left:auto">'
         +'<label style="display:flex;align-items:center;gap:4px;cursor:pointer">'
         +'<button class="tog '+(d.avail?'on':'')+'" id="edt-'+d.id+'" onclick="event.preventDefault();this.classList.toggle(\'on\')"></button>'
@@ -1924,35 +1934,63 @@ function renderAdminMenuEdit(){
   });
 }
 
-function previewDishPhoto(id){
-  const raw=document.getElementById('edph-'+id).value.trim();
-  const prev=document.getElementById('edphp-'+id),hint=document.getElementById('edph-hint-'+id);
-  if(!raw){prev.innerHTML='📷';if(hint)hint.style.display='none';return;}
-  const converted=convertGoogleUrl(raw);
-  if(converted===null){prev.innerHTML='📷';if(hint){hint.innerHTML='⚠️ Open in Google Photos → tap ⋮ → <b>Share</b> → copy the <b>lh3.googleusercontent.com</b> URL.';hint.style.display='block';}return;}
-  if(hint)hint.style.display='none';
-  document.getElementById('edph-'+id).value=converted;
-  prev.innerHTML='<img src="'+converted+'" onerror="this.outerHTML=\'❌ Cannot load\'" alt=""/>';
+// ── Add dish: picker modal (reuse existing or start blank) ────
+function addDish(cat){
+  const catNames={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const allDishes=[];
+  ['si','sv','pb','ck'].forEach(c=>MENU[c].forEach(d=>allDishes.push({...d,_catLabel:catNames[c]})));
+
+  const listHTML=allDishes.length ? allDishes.map(d=>`
+    <div onclick="reuseDish('${cat}','${d.id}')" style="display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:9px 11px;cursor:pointer;transition:.15s" onmouseenter="this.style.borderColor='var(--saff)'" onmouseleave="this.style.borderColor='var(--border)'" ontouchstart="this.style.borderColor='var(--saff)'" ontouchend="this.style.borderColor='var(--border)'">
+      <span style="font-size:1.25rem;flex-shrink:0">${d.e}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.n}</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:1px">${d._catLabel} · Rs.${d.p}${d.portionLabel?' · '+d.portionLabel:''}</div>
+      </div>
+      <span style="font-size:.65rem;color:var(--saff);font-weight:700;flex-shrink:0">Copy →</span>
+    </div>`).join('') : '<div style="font-size:.72rem;color:var(--muted);padding:10px 0">No existing dishes yet.</div>';
+
+  const modal=document.createElement('div');
+  modal.id='dish-picker-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:flex-end;justify-content:center';
+  modal.innerHTML=`
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:78vh;display:flex;flex-direction:column">
+      <div style="padding:14px 14px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+        <div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700">➕ Add to ${catNames[cat]}</div>
+        <button onclick="document.getElementById('dish-picker-modal').remove()" style="width:28px;height:28px;border-radius:7px;background:var(--surf);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:.9rem">✕</button>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding:11px 12px">
+        <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px">Reuse an existing dish</div>
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px">${listHTML}</div>
+        <div style="border-top:1px solid var(--border);padding-top:11px">
+          <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px">Or start from scratch</div>
+          <button onclick="addBlankDish('${cat}')" style="width:100%;background:none;border:1.5px dashed rgba(244,163,37,.28);border-radius:9px;padding:11px;color:var(--saff);font-size:.76rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✦ New Blank Dish</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
 }
 
-function adminUploadPhoto(input){
-  const id=input.dataset.dish,f=input.files[0];if(!f)return;
-  const r=new FileReader();
-  r.onload=ev=>{
-    const url=ev.target.result;
-    for(const cat of ['si','sv','pb','ck']){const dish=MENU[cat].find(d=>d.id===id);if(dish){dish.photo=url;break;}}
-    const inp=document.getElementById('edph-'+id);if(inp)inp.value=url;
-    const prev=document.getElementById('edphp-'+id);
-    if(prev){prev.style.height='110px';prev.innerHTML='<img src="'+url+'" alt="" style="width:100%;height:100%;object-fit:cover"/>';}
-    toast('📷','Photo uploaded!','Tap Save Menu to sync to Sheets.');
-  };
-  r.readAsDataURL(f);
+function reuseDish(targetCat,sourceId){
+  const source=[...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d=>d.id===sourceId);
+  if(!source)return;
+  const newId=targetCat+Date.now();
+  MENU[targetCat].push({...source,id:newId,avail:true,soldOut:false});
+  if(INGREDIENTS[sourceId])INGREDIENTS[newId]=INGREDIENTS[sourceId];
+  document.getElementById('dish-picker-modal')?.remove();
+  renderAdminMenuEdit();
+  toast('✅','Dish copied!','Edit details then tap Save Menu.');
 }
-function addDish(cat){
+
+function addBlankDish(cat){
   const emos={si:'🍲',sv:'🥪',pb:'🫓',ck:'🍪'};
-  MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',p:60,avail:true,soldOut:false,photo:''});
-  renderAdminMenuEdit();toast('➕','Dish added!','Fill details then tap Save Menu to sync to Sheet.');
+  MENU[cat].push({id:cat+Date.now(),e:emos[cat],n:'New Dish',p:60,avail:true,soldOut:false,photo:'',portionLabel:''});
+  document.getElementById('dish-picker-modal')?.remove();
+  renderAdminMenuEdit();
+  toast('➕','Dish added!','Fill in the details then Save Menu.');
 }
+
 function switchAdminTab(name,btn){
   document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.asec').forEach(s=>s.classList.remove('on'));
@@ -1991,7 +2029,7 @@ function _diagClear(){
 
 async function runDiagnostic(){
   _diagClear();
-  _diagLine('━━━ BYOD Sheets Diagnostic v23 ━━━');
+  _diagLine('━━━ BYOD Sheets Diagnostic v24 ━━━');
   const url = SHEETS_URL || document.getElementById('cfg-sheets-url')?.value?.trim() || '';
   _diagLine('URL: '+(url ? url.slice(0,55)+'…' : '❌ not set'), url?'diag-info':'diag-err');
   if(!url){ _diagLine('→ Paste your Apps Script URL in ⚙️ Settings first.','diag-err'); return; }
