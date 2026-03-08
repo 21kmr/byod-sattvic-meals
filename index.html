@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v24</title>
+<title>BYOD — Bring Your Own Dabba v25</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -515,7 +515,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v24.0</span>
+      <span class="ver-badge" id="ver-badge">v25.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -769,7 +769,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v24.0</span>
+          <span class="ver-badge">v25.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1284,7 +1284,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v24', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v25', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1870,22 +1870,43 @@ function copyAppsScript(){
 
 // Save menu → Sheet (single source of truth)
 async function saveMenu(){
-  ['si','sv','pb','ck'].forEach(cat=>{
-    MENU[cat].forEach(d=>{
-      const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),
-            t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id),
-            ing=document.getElementById('eding-'+d.id);
-      const q=document.getElementById('edq-'+d.id),so=document.getElementById('edso-'+d.id);
-      if(n)d.n=n.value;if(p)d.p=parseFloat(p.value)||d.p;
-      if(q)d.portionLabel=q.value.trim();
-      if(t)d.avail=t.classList.contains('on');
-      if(so)d.soldOut=so.classList.contains('son');
-      if(ph)d.photo=ph.value.trim();if(ing)INGREDIENTS[d.id]=ing.value.trim();
+  // ── Lock the save button while uploading ─────────────────
+  const saveBtn=document.querySelector('.save-btn');
+  const origLabel=saveBtn?saveBtn.innerHTML:'';
+  if(saveBtn){
+    saveBtn.disabled=true;
+    saveBtn.style.opacity='.55';
+    saveBtn.style.cursor='not-allowed';
+    saveBtn.innerHTML='<span class="spin"></span> Saving to Google Sheets…';
+  }
+  try{
+    ['si','sv','pb','ck'].forEach(cat=>{
+      MENU[cat].forEach(d=>{
+        const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),
+              t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id),
+              ing=document.getElementById('eding-'+d.id);
+        const q=document.getElementById('edq-'+d.id),so=document.getElementById('edso-'+d.id);
+        if(n)d.n=n.value;if(p)d.p=parseFloat(p.value)||d.p;
+        if(q)d.portionLabel=q.value.trim();
+        if(t)d.avail=t.classList.contains('on');
+        if(so)d.soldOut=so.classList.contains('son');
+        if(ph)d.photo=ph.value.trim();if(ing)INGREDIENTS[d.id]=ing.value.trim();
+      });
     });
-  });
-  renderBanner();
-  const sheetsSynced=await syncMenuToSheets();
-  toast('💾','Menu saved!',sheetsSynced?'✅ Synced to Google Sheets — safe across all future builds!':'Saved locally. Connect Sheets in Admin → Settings to persist across builds.');
+    renderBanner();
+    const sheetsSynced=await syncMenuToSheets();
+    if(saveBtn){
+      saveBtn.innerHTML='✅ Saved!';
+      saveBtn.style.background='rgba(78,158,107,.9)';
+      setTimeout(()=>{
+        if(saveBtn){saveBtn.innerHTML=origLabel;saveBtn.style.opacity='';saveBtn.style.cursor='';saveBtn.style.background='';saveBtn.disabled=false;}
+      },2200);
+    }
+    toast('💾','Menu saved!',sheetsSynced?'✅ Synced to Google Sheets — safe across all future builds!':'Saved locally. Connect Sheets in Admin → Settings to persist across builds.');
+  }catch(e){
+    if(saveBtn){saveBtn.innerHTML='⚠️ Error — tap to retry';saveBtn.style.opacity='';saveBtn.style.cursor='';saveBtn.disabled=false;}
+    toast('⚠️','Save failed',e.message||'Unknown error');
+  }
 }
 
 function deleteDish(cat,id){
@@ -1938,7 +1959,7 @@ function renderAdminMenuEdit(){
 function addDish(cat){
   const catNames={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   const allDishes=[];
-  ['si','sv','pb','ck'].forEach(c=>MENU[c].forEach(d=>allDishes.push({...d,_catLabel:catNames[c]})));
+  MENU[cat].forEach(d=>allDishes.push({...d,_catLabel:catNames[cat]})); // only same-category dishes
 
   const listHTML=allDishes.length ? allDishes.map(d=>`
     <div onclick="reuseDish('${cat}','${d.id}')" style="display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:9px 11px;cursor:pointer;transition:.15s" onmouseenter="this.style.borderColor='var(--saff)'" onmouseleave="this.style.borderColor='var(--border)'" ontouchstart="this.style.borderColor='var(--saff)'" ontouchend="this.style.borderColor='var(--border)'">
@@ -1960,7 +1981,7 @@ function addDish(cat){
         <button onclick="document.getElementById('dish-picker-modal').remove()" style="width:28px;height:28px;border-radius:7px;background:var(--surf);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:.9rem">✕</button>
       </div>
       <div style="overflow-y:auto;flex:1;padding:11px 12px">
-        <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px">Reuse an existing dish</div>
+        <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px">Reuse a dish from this category</div>
         <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px">${listHTML}</div>
         <div style="border-top:1px solid var(--border);padding-top:11px">
           <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px">Or start from scratch</div>
@@ -2029,7 +2050,7 @@ function _diagClear(){
 
 async function runDiagnostic(){
   _diagClear();
-  _diagLine('━━━ BYOD Sheets Diagnostic v24 ━━━');
+  _diagLine('━━━ BYOD Sheets Diagnostic v25 ━━━');
   const url = SHEETS_URL || document.getElementById('cfg-sheets-url')?.value?.trim() || '';
   _diagLine('URL: '+(url ? url.slice(0,55)+'…' : '❌ not set'), url?'diag-info':'diag-err');
   if(!url){ _diagLine('→ Paste your Apps Script URL in ⚙️ Settings first.','diag-err'); return; }
