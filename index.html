@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v26</title>
+<title>BYOD — Bring Your Own Dabba v27</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -515,7 +515,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v26.0</span>
+      <span class="ver-badge" id="ver-badge">v27.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -577,6 +577,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
       <div class="min-note">ℹ️ Minimum 2 items to order</div>
       <div id="dish-list"></div>
+  <div id="sm-price-note" style="display:none;margin:6px 11px 0;font-size:.62rem;color:var(--muted);font-style:italic;line-height:1.5;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">💡 Prices are indicative and may vary based on ingredient availability and portion size.</div>
+  <div id="prior-order-section"></div>
       <div style="padding:11px">
         <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0">Go to Checkout →</button>
       </div>
@@ -769,7 +771,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v26.0</span>
+          <span class="ver-badge">v27.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1304,7 +1306,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v26', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v27', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1648,6 +1650,7 @@ function loadSubMenu(cat){
   document.getElementById('sm-title').textContent=names[cat];
   const _avail=MENU[cat].filter(x=>x.avail).length,_total=MENU[cat].length;
   document.getElementById('sm-sub').textContent=_avail+' available today'+(_total>_avail?' · '+(_total-_avail)+' on prior order':'');
+  const _pnote=document.getElementById('sm-price-note');if(_pnote)_pnote.style.display='block';
   const _sorted=[...MENU[cat].filter(d=>d.avail&&!d.soldOut),...MENU[cat].filter(d=>d.soldOut),...MENU[cat].filter(d=>!d.avail&&!d.soldOut)];
   document.getElementById('dish-list').innerHTML=_sorted.map(d=>{
     const sel=!!cart[d.id];
@@ -1663,7 +1666,7 @@ function loadSubMenu(cat){
         ${ing?`<div class="ding">${ing}</div>`:''}
         <div class="dfoot">
           <div class="dtags"><span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span></div>
-          <div class="dprice">Rs.${d.p}</div>
+          <div class="dprice">Rs.${d.p}${d.portionLabel?`<span style="font-size:.58rem;font-weight:400;color:var(--muted);margin-left:3px">${d.portionLabel}</span>`:''}</div>
         </div>
       </div>
             <div class="dqbar" id="dqb-${d.id}">
@@ -1677,6 +1680,35 @@ function loadSubMenu(cat){
     </div>`;
   }).join('');
   document.getElementById('dish-list').addEventListener('click',e=>{if(!e.target.closest('.ing-btn')&&!e.target.closest('.ing-tip'))hideAllIngTips();},{capture:true});
+
+  // ── Prior Order section — all dishes in this category ─────
+  const _priorEl=document.getElementById('prior-order-section');
+  const _allDishes=MENU[cat]; // every dish, avail or not
+  if(_priorEl&&_allDishes.length){
+    _priorEl.innerHTML=`
+      <div style="margin:14px 11px 6px;display:flex;align-items:center;gap:8px">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <div style="font-size:.6rem;color:var(--muted);font-weight:700;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap">📅 Available on Prior Order</div>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+      </div>
+      <div style="margin:0 11px 6px;font-size:.62rem;color:var(--muted);line-height:1.5">All items below can be prepared with <b>1–2 days notice</b>. DM or call to pre-order.</div>
+      <div style="display:flex;flex-direction:column;gap:6px;margin:0 11px">
+        ${_allDishes.map(d=>`
+          <div style="display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px">
+            <span style="font-size:1.3rem;flex-shrink:0">${d.e}</span>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:.8rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}</div>
+              ${INGREDIENTS[d.id]?`<div style="font-size:.6rem;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${INGREDIENTS[d.id].slice(0,60)}${INGREDIENTS[d.id].length>60?'…':''}</div>`:''}
+            </div>
+            <div style="text-align:right;flex-shrink:0">
+              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
+              ${d.portionLabel?`<div style="font-size:.55rem;color:var(--muted)">${d.portionLabel}</div>`:''}
+            </div>
+          </div>`).join('')}
+      </div>
+      <div style="height:8px"></div>`;
+  }
+
   updateCheckBtn();updateOrderState();
 }
 
@@ -2079,7 +2111,7 @@ function _diagClear(){
 
 async function runDiagnostic(){
   _diagClear();
-  _diagLine('━━━ BYOD Sheets Diagnostic v26 ━━━');
+  _diagLine('━━━ BYOD Sheets Diagnostic v27 ━━━');
   const url = SHEETS_URL || document.getElementById('cfg-sheets-url')?.value?.trim() || '';
   _diagLine('URL: '+(url ? url.slice(0,55)+'…' : '❌ not set'), url?'diag-info':'diag-err');
   if(!url){ _diagLine('→ Paste your Apps Script URL in ⚙️ Settings first.','diag-err'); return; }
@@ -2314,15 +2346,34 @@ function enableWebPush(){
 let _tT;
 function toast(ico,title,body){clearTimeout(_tT);document.getElementById('tIco').textContent=ico;document.getElementById('tTitle').textContent=title;document.getElementById('tBody').textContent=body;document.getElementById('tVia').innerHTML=teleLinked?'<span>✈️ via Telegram</span>':'';document.getElementById('toast').classList.add('show');_tT=setTimeout(hideToast,5000);}
 function hideToast(){document.getElementById('toast').classList.remove('show');}
-function showPage(name){
+let _pageHistory=[];
+function showPage(name,_fromPop){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
   const pg=document.getElementById('pg-'+name);if(pg)pg.classList.add('on');
   const navMap={home:'nav-home',submenu:'nav-submenu',checkout:'nav-submenu',admin:'nav-admin',alerts:'nav-alerts',reviews:'nav-byod'};
   const nav=document.getElementById(navMap[name]);if(nav)nav.classList.add('on');
   if(name==='admin')renderAdmin();
+  // Push to browser history so phone back button works
+  if(!_fromPop){
+    const state={page:name,cat:name==='submenu'?currentCat:null};
+    history.pushState(state,'',location.pathname+(name!=='home'?'#'+name:''));
+    _pageHistory.push(name);
+  }
 }
+window.addEventListener('popstate',e=>{
+  // Phone/browser back button pressed
+  const prev=_pageHistory.length>1?_pageHistory[_pageHistory.length-2]:null;
+  if(_pageHistory.length>0)_pageHistory.pop();
+  const target=prev||'home';
+  // If going back to submenu, restore last category
+  if(target==='submenu'&&e.state&&e.state.cat){currentCat=e.state.cat;loadSubMenu(e.state.cat);}
+  showPage(target,true);
+});
 document.addEventListener('DOMContentLoaded',()=>{
   const nb=document.getElementById('nav-byod');if(nb){nb.removeAttribute('onclick');nb.addEventListener('click',handleReviewFooterTap);}
+  // Seed initial history state so first back press goes home not closes app
+  history.replaceState({page:'home',cat:null},'',location.pathname);
+  _pageHistory=['home'];
 });
 
 init();
