@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v31</title>
+<title>BYOD — Bring Your Own Dabba v32</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v31.0</span>
+      <span class="ver-badge" id="ver-badge">v32.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -835,7 +835,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v31.0</span>
+          <span class="ver-badge">v32.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -902,7 +902,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
               </div>
             </div>
             <div id="adm-sec-si" style="padding:10px">
-              <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('si')">+ Add Dish</button>
+              <!-- Filter bar -->
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+                <button id="af-si-all" onclick="setAdminFilter('si\',\'all\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
+                <button id="af-si-avail" onclick="setAdminFilter('si\',\'avail\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
+                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('si\')">+ Add</button>
+              </div>
               <div id="ed-si"></div>
 
             </div>
@@ -925,7 +930,11 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             </div>
             <div id="adm-sec-pb" style="padding:10px">
               <div style="font-size:.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5">Add special items here — Halwa, Murukku, etc. Publish when relevant for an occasion.</div>
-              <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('pb')">+ Add Special Item</button>
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+                <button id="af-pb-all" onclick="setAdminFilter('pb','all')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer">All</button>
+                <button id="af-pb-avail" onclick="setAdminFilter('pb','avail')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer">✅ Available only</button>
+                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('pb')">+ Add</button>
+              </div>
               <div id="ed-pb"></div>
 
             </div>
@@ -947,7 +956,12 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
               </div>
             </div>
             <div id="adm-sec-sv" style="padding:10px">
-              <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('sv')">+ Add Dish</button>
+              <!-- Filter bar -->
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+                <button id="af-sv-all" onclick="setAdminFilter('sv\',\'all\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
+                <button id="af-sv-avail" onclick="setAdminFilter('sv\',\'avail\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
+                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('sv\')">+ Add</button>
+              </div>
               <div id="ed-sv"></div>
 
             </div>
@@ -1466,7 +1480,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v31', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v32', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -2368,44 +2382,99 @@ function deleteDish(cat,id){
   toast('🗑️','Dish removed','Tap Save Menu to sync.');
 }
 
+// ── Admin menu filter state ──────────────────────────────────
+let _adminMenuFilter = {si:'all', sv:'all', pb:'all', ck:'all'};
+
+function setAdminFilter(cat, val){
+  _adminMenuFilter[cat] = val;
+  renderAdminMenuEdit();
+}
+
 function renderAdminMenuEdit(){
   ['si','sv','pb','ck'].forEach(cat=>{
     const el=document.getElementById('ed-'+cat);if(!el)return;
-    el.innerHTML=MENU[cat].map(d=>{
-      const _p=d.photo?convertGoogleUrl(d.photo)||d.photo:'';
-      const _prev=_p?'<img src="'+_p+'" onerror="this.style.display=\'none\'" alt="" style="width:100%;height:100%;object-fit:cover"/>':'📷';
-      return '<div class="edcard" id="edc-'+d.id+'">'
-        +'<div class="ed-top" style="gap:6px">'
-        +'<div class="ed-em">'+d.e+'</div>'
-        +'<input class="ed-name" id="edn-'+d.id+'" value="'+d.n+'" placeholder="Dish name" style="flex:1;min-width:0"/>'
-        +'<button onclick="deleteDish(\''+cat+'\',\''+d.id+'\')" title="Delete" style="flex-shrink:0;width:28px;height:28px;border-radius:7px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22);color:#ef4444;cursor:pointer;font-size:.82rem;display:flex;align-items:center;justify-content:center">🗑</button>'
-        +'</div>'
-        +'<div class="ed-row" style="gap:8px;flex-wrap:wrap">'
-        +'<div style="display:flex;align-items:center;gap:4px"><span style="font-size:.62rem;color:var(--muted)">Rs.</span>'
-        +'<input class="ed-price" type="text" inputmode="decimal" id="edp-'+d.id+'" value="'+d.p+'" placeholder="60" style="width:60px"/></div>'
-        +'<div style="display:flex;align-items:center;gap:4px"><span style="font-size:.62rem;color:var(--muted)">Portion</span>'
-        +'<input class="ed-price" type="text" id="edq-'+d.id+'" value="'+(d.portionLabel||'')+'" placeholder="500g / 2 pcs" style="width:82px"/></div>'
-        +'<div style="display:flex;gap:8px;align-items:center;margin-left:auto">'
-        +'<label style="display:flex;align-items:center;gap:4px;cursor:pointer">'
-        +'<button class="tog '+(d.avail?'on':'')+'" id="edt-'+d.id+'" onclick="event.preventDefault();this.classList.toggle(\'on\')"></button>'
-        +'<span style="font-size:.62rem">Available</span></label>'
-        +'<label style="display:flex;align-items:center;gap:4px;cursor:pointer">'
-        +'<button class="sotog '+(d.soldOut?'son':'')+'" id="edso-'+d.id+'" onclick="event.preventDefault();this.classList.toggle(\'son\')"></button>'
-        +'<span style="font-size:.62rem;color:#f87171">🔥 Sold Out</span></label>'
-        +'</div></div>'
-        +'<div style="margin-top:7px"><label class="ed-ing-lbl">📸 Dish Photo</label>'
-        +'<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">'
-        +'<input class="ed-photo-inp" id="edph-'+d.id+'" value="'+(d.photo||'')+'" placeholder="Paste Google Photos lh3 link…" oninput="previewDishPhoto(\''+d.id+'\')" style="flex:1"/>'
-        +'<label style="flex-shrink:0;background:rgba(244,163,37,.12);border:1.5px solid rgba(244,163,37,.25);border-radius:8px;padding:7px 10px;font-size:.68rem;color:var(--saff);font-weight:700;cursor:pointer;white-space:nowrap">'
-        +'📷 Upload<input type="file" accept="image/*" style="display:none" data-dish="'+d.id+'" onchange="adminUploadPhoto(this)"></label></div>'
-        +'<div class="ed-photo-hint" id="edph-hint-'+d.id+'" style="display:none;font-size:.62rem;color:#f59e0b;line-height:1.5;padding:6px 8px;background:rgba(245,158,11,.07);border-radius:6px"></div>'
-        +'<div id="edphp-'+d.id+'" style="margin-top:5px;border-radius:10px;overflow:hidden;height:'+(_p?'110px':'44px')+';background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;font-size:1.6rem">'+_prev+'</div></div>'
-        +'<div class="ed-ing-row"><label class="ed-ing-lbl">🌿 Ingredients / Description</label>'
-        +'<textarea class="ed-ing-inp" id="eding-'+d.id+'" rows="3" placeholder="e.g. Toor dal, tomatoes… Shown on menu card.">'+(INGREDIENTS[d.id]||'')+'</textarea></div>'
-        +'</div>';
+    const filter=_adminMenuFilter[cat]||'all';
+
+    // Sort: available (not sold out) first, then sold out, then unavailable
+    const sorted=[
+      ...MENU[cat].filter(d=>d.avail&&!d.soldOut),
+      ...MENU[cat].filter(d=>d.avail&&d.soldOut),
+      ...MENU[cat].filter(d=>!d.avail),
+    ];
+    const dishes = filter==='avail' ? sorted.filter(d=>d.avail) : sorted;
+
+    el.innerHTML=dishes.map(d=>{
+      const isAvail=d.avail, isSold=d.soldOut;
+      const sc = isAvail&&!isSold ? '#4e9e6b' : isSold ? '#f87171' : '#888';
+      const sl = isAvail&&!isSold ? '✅ Available' : isSold ? '🔥 Sold Out' : '✗ Unavail';
+      return ''+
+        '<div class="edcard" id="edc-'+d.id+'" style="padding:8px 10px;margin-bottom:5px">'+
+        // Row 1: emoji + name + status badge + delete
+        '<div style="display:flex;align-items:center;gap:7px">'+
+          '<span style="font-size:1.05rem;flex-shrink:0">'+d.e+'</span>'+
+          '<input class="ed-name" id="edn-'+d.id+'" value="'+d.n+'" placeholder="Dish name" style="flex:1;min-width:0;font-size:.76rem;font-weight:600;padding:2px 0;background:none;border:none;border-bottom:1px solid var(--border);color:var(--cream);outline:none"/>'+
+          '<span class="edcard-badge" id="edb-'+d.id+'" style="font-size:.56rem;font-weight:700;padding:2px 7px;border-radius:10px;background:'+sc+'22;color:'+sc+';border:1px solid '+sc+'44;flex-shrink:0;white-space:nowrap">'+sl+'</span>'+
+          '<button onclick="deleteDish(\''+cat+'\',\''+d.id+'\'" style="flex-shrink:0;width:24px;height:24px;border-radius:6px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:#ef4444;cursor:pointer;font-size:.7rem;display:flex;align-items:center;justify-content:center">🗑</button>'+
+        '</div>'+
+        // Row 2: price + portion + toggles
+        '<div style="display:flex;align-items:center;gap:7px;margin-top:6px;flex-wrap:wrap">'+
+          '<div style="display:flex;align-items:center;gap:3px">'+
+            '<span style="font-size:.58rem;color:var(--muted)">Rs.</span>'+
+            '<input class="ed-price" type="text" inputmode="decimal" id="edp-'+d.id+'" value="'+d.p+'" placeholder="60" style="width:50px;font-size:.76rem"/>'+
+          '</div>'+
+          '<div style="display:flex;align-items:center;gap:3px">'+
+            '<span style="font-size:.58rem;color:var(--muted)">Portion</span>'+
+            '<input class="ed-price" type="text" id="edq-'+d.id+'" value="'+(d.portionLabel||'')+'" placeholder="500g" style="width:68px;font-size:.7rem"/>'+
+          '</div>'+
+          '<div style="display:flex;gap:7px;align-items:center;margin-left:auto">'+
+            '<label style="display:flex;align-items:center;gap:3px;cursor:pointer">'+
+              '<button class="tog '+(d.avail?'on':'')+'" id="edt-'+d.id+'" onclick="event.preventDefault();this.classList.toggle(\'on\');_refreshBadge(\''+d.id+'\')"></button>'+
+              '<span style="font-size:.6rem">Avail</span>'+
+            '</label>'+
+            '<label style="display:flex;align-items:center;gap:3px;cursor:pointer">'+
+              '<button class="sotog '+(d.soldOut?'son':'')+'" id="edso-'+d.id+'" onclick="event.preventDefault();this.classList.toggle(\'son\');_refreshBadge(\''+d.id+'\')"></button>'+
+              '<span style="font-size:.6rem;color:#f87171">Sold</span>'+
+            '</label>'+
+          '</div>'+
+        '</div>'+
+        // Collapsible photo + ingredients
+        '<details style="margin-top:6px">'+
+          '<summary style="font-size:.58rem;color:var(--muted);cursor:pointer;list-style:none;padding:2px 0">'+
+            '<span style="border:1px solid var(--border);border-radius:4px;padding:1px 7px">📸 Photo &amp; 🌿 Details ▾</span>'+
+          '</summary>'+
+          '<div style="margin-top:7px">'+
+            '<div style="display:flex;gap:5px;align-items:center;margin-bottom:5px">'+
+              '<input class="ed-photo-inp" id="edph-'+d.id+'" value="'+(d.photo||'')+'" placeholder="Paste Google Photos lh3 link…" oninput="previewDishPhoto(\''+d.id+'\'" style="flex:1;font-size:.62rem"/>'+
+              '<label style="background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.22);border-radius:7px;padding:5px 8px;font-size:.6rem;color:var(--saff);font-weight:700;cursor:pointer;flex-shrink:0">📷<input type="file" accept="image/*" style="display:none" data-dish="'+d.id+'" onchange="adminUploadPhoto(this)"></label>'+
+            '</div>'+
+            '<div class="ed-photo-hint" id="edph-hint-'+d.id+'" style="display:none;font-size:.6rem;color:#f59e0b;padding:5px 7px;background:rgba(245,158,11,.07);border-radius:6px;margin-bottom:5px"></div>'+
+            '<textarea class="ed-ing-inp" id="eding-'+d.id+'" rows="2" placeholder="Ingredients / description…" style="font-size:.63rem">'+(INGREDIENTS[d.id]||'')+'</textarea>'+
+          '</div>'+
+        '</details>'+
+        '</div>';
     }).join('');
+
+    // Sync filter button styles
+    ['all','avail'].forEach(v=>{
+      const btn=document.getElementById('af-'+cat+'-'+v);
+      if(!btn)return;
+      const on=filter===v;
+      btn.style.background=on?'var(--saff)':'none';
+      btn.style.color=on?'#000':'var(--muted)';
+      btn.style.borderColor=on?'var(--saff)':'var(--border)';
+    });
   });
 }
+
+function _refreshBadge(id){
+  const badge=document.getElementById('edb-'+id);if(!badge)return;
+  const isAvail=document.getElementById('edt-'+id)?.classList.contains('on');
+  const isSold=document.getElementById('edso-'+id)?.classList.contains('son');
+  const sc=isAvail&&!isSold?'#4e9e6b':isSold?'#f87171':'#888';
+  const sl=isAvail&&!isSold?'✅ Available':isSold?'🔥 Sold Out':'✗ Unavail';
+  badge.style.background=sc+'22';badge.style.color=sc;badge.style.borderColor=sc+'44';badge.textContent=sl;
+}
+
 
 // ── Add dish: picker modal (reuse existing or start blank) ────
 function addDish(cat){
