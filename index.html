@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v30</title>
+<title>BYOD — Bring Your Own Dabba v31</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v30.0</span>
+      <span class="ver-badge" id="ver-badge">v31.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -835,7 +835,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v30.0</span>
+          <span class="ver-badge">v31.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -890,20 +890,21 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div id="msec-si" class="menu-ssec">
           <!-- SOUTH INDIAN ALA CARTE (Lunch) -->
           <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer;background:rgba(78,158,107,.06);border-bottom:1px solid var(--border)" onclick="toggleAdminSection('si')">
-              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700">🍲 South Indian Ala Carte <span style="font-size:.6rem;font-weight:400;color:var(--muted)">(Lunch)</span></div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div id="adm-pub-dot-si" style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>
-                <span id="adm-arr-si" style="color:var(--saff);font-size:.8rem;transition:.2s">▼</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:rgba(78,158,107,.06);border-bottom:1px solid var(--border)">
+              <div style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1" onclick="toggleAdminSection('si')">
+                <div id="adm-pub-dot-si" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--muted)"></div>
+                <div style="font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700">🍲 Ala Carte <span style="font-size:.58rem;font-weight:400;color:var(--muted)">(Lunch)</span></div>
+                <span id="adm-arr-si" style="color:var(--saff);font-size:.75rem;transition:.2s;margin-left:2px">▼</span>
+              </div>
+              <div style="display:flex;gap:5px;flex-shrink:0">
+                <button onclick="event.stopPropagation();saveSection('si')" style="background:rgba(78,158,107,.12);border:1px solid rgba(78,158,107,.25);border-radius:7px;padding:5px 9px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
+                <button id="pub-btn-si" onclick="event.stopPropagation();publishSection('si')" style="background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:7px;padding:5px 9px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
               </div>
             </div>
             <div id="adm-sec-si" style="padding:10px">
               <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('si')">+ Add Dish</button>
               <div id="ed-si"></div>
-              <div style="display:flex;gap:6px;margin-top:10px">
-                <button onclick="saveSection('si')" style="flex:1;background:rgba(78,158,107,.12);border:1px solid rgba(78,158,107,.25);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
-                <button id="pub-btn-si" onclick="publishSection('si')" style="flex:2;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
-              </div>
+
             </div>
           </div>
 
@@ -911,21 +912,22 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div id="msec-pb" class="menu-ssec" style="display:none">
           <!-- BYOD SPECIAL (Occasion dishes) -->
           <div style="background:var(--card);border:1px solid rgba(244,163,37,.2);border-radius:12px;overflow:hidden;margin-bottom:8px">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer;background:rgba(244,163,37,.05);border-bottom:1px solid rgba(244,163,37,.15)" onclick="toggleAdminSection('pb')">
-              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700">✨ BYOD Special <span style="font-size:.6rem;font-weight:400;color:var(--muted)">(Occasion)</span></div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div id="adm-pub-dot-pb" style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>
-                <span id="adm-arr-pb" style="color:var(--saff);font-size:.8rem;transition:.2s">▼</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:rgba(244,163,37,.05);border-bottom:1px solid rgba(244,163,37,.15)">
+              <div style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1" onclick="toggleAdminSection('pb')">
+                <div id="adm-pub-dot-pb" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--muted)"></div>
+                <div style="font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700">✨ BYOD Special <span style="font-size:.58rem;font-weight:400;color:var(--muted)">(Occasion)</span></div>
+                <span id="adm-arr-pb" style="color:var(--saff);font-size:.75rem;transition:.2s;margin-left:2px">▼</span>
+              </div>
+              <div style="display:flex;gap:5px;flex-shrink:0">
+                <button onclick="event.stopPropagation();saveSection('pb')" style="background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.2);border-radius:7px;padding:5px 9px;font-size:.65rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
+                <button id="pub-btn-pb" onclick="event.stopPropagation();publishSection('pb')" style="background:rgba(244,163,37,.15);border:1.5px solid rgba(244,163,37,.3);border-radius:7px;padding:5px 9px;font-size:.65rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
               </div>
             </div>
             <div id="adm-sec-pb" style="padding:10px">
               <div style="font-size:.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5">Add special items here — Halwa, Murukku, etc. Publish when relevant for an occasion.</div>
               <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('pb')">+ Add Special Item</button>
               <div id="ed-pb"></div>
-              <div style="display:flex;gap:6px;margin-top:10px">
-                <button onclick="saveSection('pb')" style="flex:1;background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.2);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
-                <button id="pub-btn-pb" onclick="publishSection('pb')" style="flex:2;background:rgba(244,163,37,.15);border:1.5px solid rgba(244,163,37,.3);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
-              </div>
+
             </div>
           </div>
 
@@ -933,20 +935,21 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div id="msec-sv" class="menu-ssec" style="display:none">
           <!-- MILLET POHA & NOODLES (Dinner) -->
           <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer;background:rgba(140,100,200,.04);border-bottom:1px solid var(--border)" onclick="toggleAdminSection('sv')">
-              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700">🌾 Millet Poha &amp; Noodles <span style="font-size:.6rem;font-weight:400;color:var(--muted)">(Dinner)</span></div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <div id="adm-pub-dot-sv" style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>
-                <span id="adm-arr-sv" style="color:var(--saff);font-size:.8rem;transition:.2s">▼</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:rgba(140,100,200,.04);border-bottom:1px solid var(--border)">
+              <div style="display:flex;align-items:center;gap:8px;cursor:pointer;flex:1" onclick="toggleAdminSection('sv')">
+                <div id="adm-pub-dot-sv" style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--muted)"></div>
+                <div style="font-family:'Playfair Display',serif;font-size:.82rem;font-weight:700">🌾 Dinner <span style="font-size:.58rem;font-weight:400;color:var(--muted)">(Millet Poha &amp; Noodles)</span></div>
+                <span id="adm-arr-sv" style="color:var(--saff);font-size:.75rem;transition:.2s;margin-left:2px">▼</span>
+              </div>
+              <div style="display:flex;gap:5px;flex-shrink:0">
+                <button onclick="event.stopPropagation();saveSection('sv')" style="background:rgba(78,158,107,.12);border:1px solid rgba(78,158,107,.25);border-radius:7px;padding:5px 9px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
+                <button id="pub-btn-sv" onclick="event.stopPropagation();publishSection('sv')" style="background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:7px;padding:5px 9px;font-size:.65rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
               </div>
             </div>
             <div id="adm-sec-sv" style="padding:10px">
               <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('sv')">+ Add Dish</button>
               <div id="ed-sv"></div>
-              <div style="display:flex;gap:6px;margin-top:10px">
-                <button onclick="saveSection('sv')" style="flex:1;background:rgba(78,158,107,.12);border:1px solid rgba(78,158,107,.25);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
-                <button id="pub-btn-sv" onclick="publishSection('sv')" style="flex:2;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
-              </div>
+
             </div>
           </div>
 
@@ -1463,7 +1466,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v30', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v31', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1854,7 +1857,7 @@ function _renderHomeDishes(cat){
   const homeSection = document.getElementById('home-section-'+cat);
   if(!el) return;
   // Hide entire section if not published (except admin)
-  if(homeSection) homeSection.style.display = _sectionPublished[cat] ? '' : 'none';
+  if(homeSection) homeSection.style.display = ''; // always visible; publish gates ordering only
   const avail = MENU[cat].filter(d=>d.avail&&!d.soldOut);
   const maxShow = MAX_HOME_DISHES[cat] || 4;
   const shown = avail.slice(0, maxShow);
@@ -1905,6 +1908,7 @@ function _saveSectionPublish(){
 function _loadSectionPublish(){
   const saved = lsLoad('byod_section_pub', null);
   if(saved) _sectionPublished = {..._sectionPublished, ...saved};
+  // Always show sections on home page (publish only gates ordering, not visibility)
 }
 
 // ── Occasion Banner ───────────────────────────────────────────
