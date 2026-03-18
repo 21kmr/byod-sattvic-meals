@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v27</title>
+<title>BYOD — Bring Your Own Dabba v30</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -33,7 +33,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 
 /* PAGES */
 .pages{flex:1;overflow:hidden;position:relative}
-.page{position:absolute;top:56px;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom,0px));overflow-y:auto;display:none;padding-bottom:12px}
+.page{display:none;overflow-y:auto;height:calc(100vh - 44px - 58px - env(safe-area-inset-bottom,0px));padding-bottom:12px}
 .page.on{display:block;animation:su .26s cubic-bezier(.22,.85,.45,1)}
 @keyframes su{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 ::-webkit-scrollbar{display:none}
@@ -49,7 +49,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 /* ════════════════════════════
    HOME
 ════════════════════════════ */
-.home-hero{margin:11px 11px 0;background:linear-gradient(140deg,#221a08,#16110a);border:1px solid rgba(244,163,37,.18);border-radius:20px;padding:18px 17px;position:relative;overflow:hidden}
+.home-hero{margin:0 0 0;background:linear-gradient(140deg,rgba(244,163,37,.08),rgba(34,26,8,.18));border-bottom:1px solid rgba(244,163,37,.18);border-radius:0;padding:16px 15px 14px;position:relative;overflow:hidden}
 .home-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:radial-gradient(circle,rgba(244,163,37,.11) 0%,transparent 70%);pointer-events:none}
 .home-hero::after{content:'🍲';position:absolute;bottom:-10px;right:8px;font-size:5rem;opacity:.09;pointer-events:none}
 .htag{font-size:.53rem;letter-spacing:.12em;text-transform:uppercase;color:var(--saff);opacity:.62;margin-bottom:4px}
@@ -486,6 +486,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .t-via{font-size:.57rem;margin-top:3px;display:flex;align-items:center;gap:3px;color:var(--tele)}
 .spin{display:inline-block;width:11px;height:11px;border:2px solid rgba(0,0,0,.12);border-top-color:#000;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:4px}
 /* ════ SHEETS TAB ════ */
+.menu-stab{padding:6px 13px;border-radius:17px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:.68rem;font-weight:600;white-space:nowrap;transition:.15s;font-family:'DM Sans',sans-serif}
+.menu-stab.on{background:var(--saff);border-color:var(--saff);color:#000}
+.menu-ssec{display:block}
 .sh-ptab{padding:5px 11px;border-radius:17px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:.62rem;font-weight:600;white-space:nowrap;transition:.15s;font-family:'DM Sans',sans-serif;flex-shrink:0}
 .sh-ptab.on{background:var(--saff);border-color:var(--saff);color:#000}
 .sh-pane{display:none;overflow-x:auto;-webkit-overflow-scrolling:touch}
@@ -514,8 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <div class="hdr-date" id="hdrDate"></div>
-      <span class="ver-badge" id="ver-badge">v27.0</span>
+      <span class="ver-badge" id="ver-badge">v30.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -544,21 +546,83 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         </div>
       </div>
 
-      <div class="today-bar">
-        <div class="tb-top"><div class="tb-title">🍽️ Today's Menu</div><div class="tb-price" id="tb-total">Full set ₹200</div></div>
-        <div class="tb-items" id="tb-items"></div>
-        <div class="tb-btns">
-          <button class="btn-vm" onclick="showPage('submenu');loadSubMenu('si')">View Menu</button>
-          <button class="btn-oa" onclick="orderAll()">Order All ✓</button>
-        </div>
+      <!-- Occasion Banner -->
+      <div id="occasion-banner" style="display:none;margin:0 11px 10px;background:linear-gradient(135deg,rgba(244,163,37,.18),rgba(244,163,37,.06));border:1.5px solid rgba(244,163,37,.35);border-radius:14px;padding:13px 15px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:radial-gradient(circle,rgba(244,163,37,.2),transparent 70%);pointer-events:none"></div>
+        <div style="font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--saff);font-weight:700;margin-bottom:3px" id="occ-label">✨ Special Occasion</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:900;color:var(--cream)" id="occ-name">Amavasai Special</div>
+        <div style="font-size:.68rem;color:var(--muted);margin-top:3px" id="occ-desc">Limited availability · Order early</div>
       </div>
+      <!-- Collapsible Menu Sections -->
+      <div style="display:flex;flex-direction:column;gap:8px;margin:0 11px">
 
-      <div class="sec-lbl">Categories</div>
-      <div class="cat-grid">
-        <div class="ccat si" onclick="showPage('submenu');loadSubMenu('si')"><span class="ccat-em">🍲</span><div><div class="ccat-name">South Indian Àla Carte</div><div class="ccat-cnt" id="cnt-si"></div></div><div class="ccat-arr">→</div></div>
-        <div class="ccat sv" onclick="showPage('submenu');loadSubMenu('sv')"><span class="ccat-em">🥪</span><div><div class="ccat-name">Savoury</div><div class="ccat-cnt" id="cnt-sv"></div></div><div class="ccat-arr">→</div></div>
-        <div class="ccat pb" onclick="showPage('submenu');loadSubMenu('pb')"><span class="ccat-em">🫓</span><div><div class="ccat-name">Paranthas &amp; Pasta</div><div class="ccat-cnt" id="cnt-pb"></div></div><div class="ccat-arr">→</div></div>
-        <div class="ccat ck" onclick="showPage('submenu');loadSubMenu('ck')"><span class="ccat-em">🍪</span><div><div class="ccat-name">Cookies &amp; Breads</div><div class="ccat-cnt" id="cnt-ck"></div></div><div class="ccat-arr">→</div></div>
+        <!-- South Indian Ala Carte (Lunch) -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden" id="home-section-si">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px 10px;cursor:pointer" onclick="toggleSection('si')">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:1.4rem">🍲</span>
+              <div>
+                <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700">South Indian Ala Carte</div>
+                <div style="font-size:.62rem;color:var(--muted)" id="cnt-si"></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div id="pub-dot-si" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
+              <span id="arr-si" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
+            </div>
+          </div>
+          <div id="sec-si" style="padding:0 11px 11px">
+            <div id="home-dishes-si"></div>
+            <button id="more-si" style="display:none;width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('si')">See all dishes →</button>
+            <button id="home-checkout-si" style="display:none;width:100%;background:var(--saff);border:none;border-radius:10px;padding:11px;font-size:.82rem;font-weight:700;color:#000;cursor:pointer;margin-top:8px;font-family:'Playfair Display',serif" onclick="homeGoCheckout()">Go to Checkout →</button>
+            <button style="width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('si')">Browse full menu →</button>
+          </div>
+        </div>
+
+        <!-- BYOD Special (occasion) — hidden when not published -->
+        <div style="background:var(--card);border:1px solid rgba(244,163,37,.2);border-radius:14px;overflow:hidden" id="home-section-pb">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px 10px;cursor:pointer" onclick="toggleSection('pb')">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:1.4rem">✨</span>
+              <div>
+                <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700">BYOD Special</div>
+                <div style="font-size:.62rem;color:var(--muted)" id="cnt-pb"></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div id="pub-dot-pb" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
+              <span id="arr-pb" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
+            </div>
+          </div>
+          <div id="sec-pb" style="padding:0 11px 11px">
+            <div id="home-dishes-pb"></div>
+            <button id="more-pb" style="display:none;width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('pb')">See all dishes →</button>
+            <button style="width:100%;background:rgba(244,163,37,.12);border:1px solid rgba(244,163,37,.25);border-radius:8px;padding:9px;font-size:.75rem;font-weight:700;color:var(--saff);cursor:pointer;margin-top:6px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('pb')">Order from BYOD Special →</button>
+          </div>
+        </div>
+
+        <!-- Millet Poha & Noodles (Dinner) -->
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden" id="home-section-sv">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px 10px;cursor:pointer" onclick="toggleSection('sv')">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:1.4rem">🌾</span>
+              <div>
+                <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700">Millet Poha &amp; Noodles</div>
+                <div style="font-size:.62rem;color:var(--muted)" id="cnt-sv"></div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div id="pub-dot-sv" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
+              <span id="arr-sv" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
+            </div>
+          </div>
+          <div id="sec-sv" style="padding:0 11px 11px">
+            <div id="home-dishes-sv"></div>
+            <button id="more-sv" style="display:none;width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('sv')">See all dishes →</button>
+            <button style="width:100%;background:rgba(78,158,107,.12);border:1px solid rgba(78,158,107,.25);border-radius:8px;padding:9px;font-size:.75rem;font-weight:700;color:#4e9e6b;cursor:pointer;margin-top:6px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('sv')">Order Dinner →</button>
+          </div>
+        </div>
+
       </div>
 
       <!-- REVIEWS STRIP -->
@@ -771,7 +835,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v27.0</span>
+          <span class="ver-badge">v30.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -784,9 +848,10 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="atab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
       </div>
       <div class="asec on" id="atab-orders">
-        <div style="margin:10px 0 12px">
-          <button id="pub-menu-btn" onclick="publishMenu()" style="width:100%;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:12px;padding:13px 16px;font-size:.88rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.01em">📢 Publish Menu</button>
-          <div style="font-size:.62rem;color:var(--muted);text-align:center;margin-top:5px">Tap to open orders for the day. Tap again to close.</div>
+        <div style="display:flex;gap:6px;margin:10px 0 8px">
+          <div id="pub-status-si" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">🍲 Ala Carte<br><span style="font-weight:700">—</span></div>
+          <div id="pub-status-pb" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">✨ Special<br><span style="font-weight:700">—</span></div>
+          <div id="pub-status-sv" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">🌾 Dinner<br><span style="font-weight:700">—</span></div>
         </div><div class="stats-grid" style="margin-top:0">
           <div class="sbox"><div class="sbn s" id="st-orders">0</div><div class="sbl">Orders</div></div>
           <div class="sbox"><div class="sbn g" id="st-rev">₹0</div><div class="sbl">Revenue</div></div>
@@ -815,11 +880,80 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
       <div class="asec" id="atab-menu">
         <div style="margin-top:9px">
-          <div class="sec-lbl" style="padding:0 0 7px">🍲 South Indian</div><div id="ed-si"></div><button class="add-btn" onclick="addDish('si')">+ Add Dish</button>
-          <div class="sec-lbl" style="padding:10px 0 7px">🥪 Savoury</div><div id="ed-sv"></div><button class="add-btn" onclick="addDish('sv')">+ Add Dish</button>
-          <div class="sec-lbl" style="padding:10px 0 7px">🫓 Paranthas &amp; Pasta</div><div id="ed-pb"></div><button class="add-btn" onclick="addDish('pb')">+ Add Dish</button>
-          <div class="sec-lbl" style="padding:10px 0 7px">🍪 Cookies &amp; Breads</div><div id="ed-ck"></div><button class="add-btn" onclick="addDish('ck')">+ Add Dish</button>
-          <button class="save-btn" onclick="saveMenu()">💾 Save &amp; Publish Menu</button>
+          <!-- Menu sub-tabs -->
+          <div style="display:flex;gap:4px;margin-bottom:10px;overflow-x:auto">
+            <button class="menu-stab on" id="mstab-si" onclick="switchMenuTab('si',this)" style="flex-shrink:0">🍲 Ala Carte</button>
+            <button class="menu-stab" id="mstab-pb" onclick="switchMenuTab('pb',this)" style="flex-shrink:0">✨ BYOD Special</button>
+            <button class="menu-stab" id="mstab-sv" onclick="switchMenuTab('sv',this)" style="flex-shrink:0">🌾 Dinner</button>
+          </div>
+
+          <div id="msec-si" class="menu-ssec">
+          <!-- SOUTH INDIAN ALA CARTE (Lunch) -->
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer;background:rgba(78,158,107,.06);border-bottom:1px solid var(--border)" onclick="toggleAdminSection('si')">
+              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700">🍲 South Indian Ala Carte <span style="font-size:.6rem;font-weight:400;color:var(--muted)">(Lunch)</span></div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div id="adm-pub-dot-si" style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>
+                <span id="adm-arr-si" style="color:var(--saff);font-size:.8rem;transition:.2s">▼</span>
+              </div>
+            </div>
+            <div id="adm-sec-si" style="padding:10px">
+              <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('si')">+ Add Dish</button>
+              <div id="ed-si"></div>
+              <div style="display:flex;gap:6px;margin-top:10px">
+                <button onclick="saveSection('si')" style="flex:1;background:rgba(78,158,107,.12);border:1px solid rgba(78,158,107,.25);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
+                <button id="pub-btn-si" onclick="publishSection('si')" style="flex:2;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
+              </div>
+            </div>
+          </div>
+
+          </div><!-- /msec-si -->
+          <div id="msec-pb" class="menu-ssec" style="display:none">
+          <!-- BYOD SPECIAL (Occasion dishes) -->
+          <div style="background:var(--card);border:1px solid rgba(244,163,37,.2);border-radius:12px;overflow:hidden;margin-bottom:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer;background:rgba(244,163,37,.05);border-bottom:1px solid rgba(244,163,37,.15)" onclick="toggleAdminSection('pb')">
+              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700">✨ BYOD Special <span style="font-size:.6rem;font-weight:400;color:var(--muted)">(Occasion)</span></div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div id="adm-pub-dot-pb" style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>
+                <span id="adm-arr-pb" style="color:var(--saff);font-size:.8rem;transition:.2s">▼</span>
+              </div>
+            </div>
+            <div id="adm-sec-pb" style="padding:10px">
+              <div style="font-size:.62rem;color:var(--muted);margin-bottom:8px;line-height:1.5">Add special items here — Halwa, Murukku, etc. Publish when relevant for an occasion.</div>
+              <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('pb')">+ Add Special Item</button>
+              <div id="ed-pb"></div>
+              <div style="display:flex;gap:6px;margin-top:10px">
+                <button onclick="saveSection('pb')" style="flex:1;background:rgba(244,163,37,.1);border:1px solid rgba(244,163,37,.2);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
+                <button id="pub-btn-pb" onclick="publishSection('pb')" style="flex:2;background:rgba(244,163,37,.15);border:1.5px solid rgba(244,163,37,.3);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
+              </div>
+            </div>
+          </div>
+
+          </div><!-- /msec-pb -->
+          <div id="msec-sv" class="menu-ssec" style="display:none">
+          <!-- MILLET POHA & NOODLES (Dinner) -->
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;cursor:pointer;background:rgba(140,100,200,.04);border-bottom:1px solid var(--border)" onclick="toggleAdminSection('sv')">
+              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700">🌾 Millet Poha &amp; Noodles <span style="font-size:.6rem;font-weight:400;color:var(--muted)">(Dinner)</span></div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div id="adm-pub-dot-sv" style="width:8px;height:8px;border-radius:50%;background:var(--muted)"></div>
+                <span id="adm-arr-sv" style="color:var(--saff);font-size:.8rem;transition:.2s">▼</span>
+              </div>
+            </div>
+            <div id="adm-sec-sv" style="padding:10px">
+              <button class="add-btn" style="margin-bottom:8px;width:100%" onclick="addDish('sv')">+ Add Dish</button>
+              <div id="ed-sv"></div>
+              <div style="display:flex;gap:6px;margin-top:10px">
+                <button onclick="saveSection('sv')" style="flex:1;background:rgba(78,158,107,.12);border:1px solid rgba(78,158,107,.25);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">💾 Save</button>
+                <button id="pub-btn-sv" onclick="publishSection('sv')" style="flex:2;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:#4e9e6b;cursor:pointer;font-family:'DM Sans',sans-serif">📢 Publish</button>
+              </div>
+            </div>
+          </div>
+
+          </div><!-- /msec-sv -->
+          <!-- ck hidden, data preserved -->
+          <div id="ed-ck" style="display:none"></div>
+
         </div>
       </div>
       <div class="asec" id="atab-broadcast">
@@ -904,6 +1038,21 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <input id="cfg-chatid" style="width:100%;background:var(--surf);border:1.5px solid rgba(42,171,238,.2);border-radius:7px;padding:8px 10px;color:#2AABEE;font-family:monospace;font-size:.76rem;outline:none;margin-bottom:10px" placeholder="123456789"/>
             <button onclick="saveBotConfig()" style="width:100%;background:#2AABEE;border:none;border-radius:8px;padding:10px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:#fff;cursor:pointer">Save &amp; Activate</button>
             <div id="cfg-status" style="font-size:.65rem;color:var(--green);margin-top:6px;text-align:center"></div>
+          </div>
+
+          <!-- OCCASION BANNER CONFIG -->
+          <div style="background:linear-gradient(135deg,rgba(244,163,37,.1),rgba(244,163,37,.04));border:1px solid rgba(244,163,37,.2);border-radius:var(--r);padding:14px;margin-bottom:8px">
+            <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--saff);margin-bottom:4px">✨ Occasion Banner</div>
+            <div style="font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:10px">Show a special banner on the home page for occasions like Amavasai, festivals, etc.</div>
+            <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Banner Title</div>
+            <input id="occ-inp-name" style="width:100%;background:var(--surf);border:1.5px solid rgba(244,163,37,.2);border-radius:7px;padding:8px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;margin-bottom:8px" placeholder="e.g. Amavasai Special" value="Amavasai Special"/>
+            <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Subtitle</div>
+            <input id="occ-inp-desc" style="width:100%;background:var(--surf);border:1.5px solid rgba(244,163,37,.2);border-radius:7px;padding:8px 10px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.78rem;outline:none;margin-bottom:10px" placeholder="e.g. Limited availability · Order early" value="Limited availability · Order early"/>
+            <div style="display:flex;gap:8px">
+              <button onclick="setOccasionBanner(true)" style="flex:1;background:rgba(244,163,37,.18);border:1px solid rgba(244,163,37,.3);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:var(--saff);cursor:pointer;font-family:'DM Sans',sans-serif">✅ Enable Banner</button>
+              <button onclick="setOccasionBanner(false)" style="flex:1;background:rgba(200,200,200,.08);border:1px solid var(--border);border-radius:8px;padding:9px;font-size:.73rem;font-weight:700;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif">✕ Disable</button>
+            </div>
+            <div id="occ-banner-status" style="font-size:.63rem;color:var(--muted);margin-top:6px;text-align:center"></div>
           </div>
 
           <!-- GOOGLE SHEETS CONFIG -->
@@ -1160,7 +1309,7 @@ async function loadFromSheets(){
   }
   // Parse menu rows → MENU structure
   const cats = {si:'si',sv:'sv',pb:'pb',ck:'ck'};
-  const catMap = {'South Indian':'si','Savoury':'sv','Paranthas & Pasta':'pb','Cookies & Breads':'ck'};
+  const catMap = {'South Indian':'si','Millet Poha & Noodles':'sv','Paranthas & Pasta':'pb','Cookies & Breads':'ck'};
   const freshMenu = {si:[],sv:[],pb:[],ck:[]};
   const freshIngr = {};
   if(res.menu && res.menu.length > 1){
@@ -1186,10 +1335,13 @@ async function loadFromSheets(){
     INGREDIENTS = {...DEFAULT_INGREDIENTS,...freshIngr};
     _sheetsLoaded = true;
   }
-  // Parse settings (published state)
+  // Parse settings (published state + per-section)
   if(res.settings){
     const s = res.settings;
     if(s.published !== undefined) menuPublishedToday = (String(s.published).toLowerCase() === 'true');
+    if(s.pubSI !== undefined) _sectionPublished.si = (String(s.pubSI).toLowerCase() === 'true');
+    if(s.pubPB !== undefined) _sectionPublished.pb = (String(s.pubPB).toLowerCase() === 'true');
+    if(s.pubSV !== undefined) _sectionPublished.sv = (String(s.pubSV).toLowerCase() === 'true');
   }
   // Parse orders
   if(res.orders && res.orders.length > 1){
@@ -1240,7 +1392,7 @@ function hideLoadingBanner(){
 // Write full menu + ingredients to Sheet
 async function syncMenuToSheets(){
   const rows=[];
-  const catLabels={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const catLabels={si:'BYOD Special',sv:'Millet Poha & Noodles',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   ['si','sv','pb','ck'].forEach(cat=>{
     // Strip base64 photos from Sheet rows — they're enormous and stored locally only.
     // Photo URLs (lh3 / drive links) are kept; base64 data-URIs are cleared.
@@ -1266,9 +1418,14 @@ async function syncStatusToSheets(oid,status){
   return !!(res&&res.ok);
 }
 
-// Save settings (published state)
+// Save settings (published state + per-section)
 async function syncSettingsToSheets(){
-  const res=await sheetsCall({action:'settings',published:menuPublishedToday});
+  const res=await sheetsCall({action:'settings',
+    published:menuPublishedToday,
+    pubSI:_sectionPublished.si,
+    pubPB:_sectionPublished.pb,
+    pubSV:_sectionPublished.sv
+  });
   return !!(res&&res.ok);
 }
 
@@ -1306,7 +1463,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v27', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v30', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1506,13 +1663,28 @@ async function init(){
   }
 
   syncPublishBtn();
+  // Load occasion banner state
+  const _savedOcc=lsLoad('byod_occasion',null);
+  if(_savedOcc){_occasionData=_savedOcc;}
+  renderOccasionBanner();
+  // Load per-section publish state
+  _loadSectionPublish();
+  _syncAdminPubButtons();
+  // Admin accordions: start pb and sv collapsed
+  ['pb','sv'].forEach(cat=>{
+    _adminSecOpen[cat]=false;
+    const sec=document.getElementById('adm-sec-'+cat);
+    const arr=document.getElementById('adm-arr-'+cat);
+    if(sec)sec.style.display='none';
+    if(arr)arr.style.transform='rotate(-90deg)';
+  });
   renderBanner();updateOrderState();renderNotifFeed();
   renderAdminMenuEdit();renderReviews();renderKitchenGrid();
   countdown();setInterval(countdown,1000);setInterval(()=>{
     updateOrderState();
     const _n=new Date();
     if(currentCat==='si'&&_n.getHours()===9&&_n.getMinutes()===30&&_n.getSeconds()<16){
-      toast('⏰','South Indian orders closed','9:30 AM cutoff. Savoury & Breads still open!');
+      toast('⏰','South Indian orders closed','9:30 AM cutoff. Millet Poha & Noodles & Breads still open!');
       addAlert('⏰','t','SI orders auto-closed','9:30 AM cutoff triggered.');
     }
   },15000);
@@ -1523,14 +1695,18 @@ async function init(){
 // PUBLISH TOGGLE — synced to Sheets
 // ══════════════════════════════════════════════════════════════
 function syncPublishBtn(){
-  const btn=document.getElementById('pub-menu-btn');if(!btn)return;
-  if(menuPublishedToday){
-    btn.textContent='🔴 Unpublish Menu';btn.style.background='rgba(239,68,68,.15)';
-    btn.style.borderColor='rgba(239,68,68,.3)';btn.style.color='#f87171';
-  }else{
-    btn.textContent='📢 Publish Menu';btn.style.background='rgba(78,158,107,.15)';
-    btn.style.borderColor='rgba(78,158,107,.3)';btn.style.color='#4e9e6b';
-  }
+  // Update status indicators in Orders tab
+  const cats={si:'🍲 Ala Carte',pb:'✨ Special',sv:'🌾 Dinner'};
+  ['si','pb','sv'].forEach(cat=>{
+    const el=document.getElementById('pub-status-'+cat);
+    if(!el)return;
+    const pub=_sectionPublished[cat];
+    el.style.background=pub?'rgba(78,158,107,.1)':'var(--surf)';
+    el.style.borderColor=pub?'rgba(78,158,107,.3)':'var(--border)';
+    el.style.color=pub?'#4e9e6b':'var(--muted)';
+    el.innerHTML=cats[cat]+'<br><span style="font-weight:700">'+(pub?'LIVE':'Off')+'</span>';
+  });
+  _syncAdminPubButtons();
 }
 async function publishMenu(){
   menuPublishedToday=!menuPublishedToday;
@@ -1587,8 +1763,18 @@ function checkAdminPw(){
 // ORDER CUTOFF
 // ══════════════════════════════════════════════════════════════
 function getOrderStatus(cat){
-  if(!menuPublishedToday)return{open:false,msg:"Today's menu not published yet."};
-  if(cat==='si'){const now=new Date(),cut=new Date();cut.setHours(9,30,0,0);if(now>=cut)return{open:false,msg:'South Indian Ala Carte orders closed at 9:30 AM. Savoury, Breads & Cookies still open!'};}
+  // Each section has its own publish flag — overrides the global toggle
+  const secKey = cat==='si'?'si':cat==='pb'?'pb':'sv';
+  if(!_sectionPublished[secKey]) return{open:false,msg:"Section not published yet."};
+  // Ala Carte (si) auto-closes at 9:30 AM unless admin keeps it open
+  if(cat==='si'){
+    const now=new Date(),cut=new Date();cut.setHours(9,30,0,0);
+    if(now>=cut){
+      // Auto-unpublish si at 9:30
+      if(_sectionPublished.si){_sectionPublished.si=false;_saveSectionPublish();_syncAdminPubButtons();renderBanner();}
+      return{open:false,msg:'South Indian Ala Carte closed at 9:30 AM.'};
+    }
+  }
   return{open:true,msg:''};
 }
 function updateOrderState(){
@@ -1603,11 +1789,15 @@ function updateOrderState(){
 // BANNER & HOME
 // ══════════════════════════════════════════════════════════════
 function renderBanner(){
+  renderOccasionBanner();
   const dishes=MENU.si.filter(x=>x.avail).slice(0,4);
   const tot=dishes.reduce((s,x)=>s+x.p,0);
-  document.getElementById('tb-total').textContent='Full set Rs.'+tot;
-  document.getElementById('tb-items').innerHTML=dishes.map(x=>`<div class="tbi">${x.e} ${x.n}<span class="tp">Rs.${x.p}</span></div>`).join('');
-  ['si','sv','pb','ck'].forEach(cat=>{const el=document.getElementById('cnt-'+cat);if(el)el.textContent=MENU[cat].filter(x=>x.avail).length+' items';});
+  ['si','pb','sv'].forEach(cat=>{
+    const avail=MENU[cat].filter(x=>x.avail&&!x.soldOut).length,total=MENU[cat].length;
+    const el=document.getElementById('cnt-'+cat);
+    if(el)el.textContent=avail+' available'+(total>avail?' · '+(total-avail)+' on prior order':'');
+    _renderHomeDishes(cat);
+  });
 }
 function orderAll(){
   const s=getOrderStatus('si');if(!s.open){toast('⏰','South Indian Ala Carte closed',s.msg);return;}
@@ -1642,11 +1832,99 @@ function showIngTip(id){document.querySelectorAll('.ing-tip').forEach(t=>t.class
 function hideAllIngTips(){document.querySelectorAll('.ing-tip').forEach(t=>t.classList.remove('show'));}
 
 // ══════════════════════════════════════════════════════════════
+// HOME SECTIONS — collapsible, per-section publish, max items
+// ══════════════════════════════════════════════════════════════
+const MAX_HOME_DISHES = {si:8, pb:6, sv:6}; // si shows up to 8
+let _sectionOpen = {si:true, pb:true, sv:true};
+
+// Per-section publish state (saved to localStorage + Sheets)
+let _sectionPublished = {si:true, pb:true, sv:true};
+
+function toggleSection(cat){
+  _sectionOpen[cat] = !_sectionOpen[cat];
+  const sec = document.getElementById('sec-'+cat);
+  const arr = document.getElementById('arr-'+cat);
+  if(sec) sec.style.display = _sectionOpen[cat] ? '' : 'none';
+  if(arr) arr.style.transform = _sectionOpen[cat] ? '' : 'rotate(-90deg)';
+}
+
+function _renderHomeDishes(cat){
+  const el = document.getElementById('home-dishes-'+cat);
+  const moreBtn = document.getElementById('more-'+cat);
+  const homeSection = document.getElementById('home-section-'+cat);
+  if(!el) return;
+  // Hide entire section if not published (except admin)
+  if(homeSection) homeSection.style.display = _sectionPublished[cat] ? '' : 'none';
+  const avail = MENU[cat].filter(d=>d.avail&&!d.soldOut);
+  const maxShow = MAX_HOME_DISHES[cat] || 4;
+  const shown = avail.slice(0, maxShow);
+  el.innerHTML = shown.map(d=>{
+    const photoUrl = d.photo ? convertGoogleUrl(d.photo)||d.photo : '';
+    const isSoldOut = d.soldOut;
+    const isUnavail = !d.avail;
+    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);${isSoldOut||isUnavail?'opacity:.5':''}">
+      <div style="width:38px;height:38px;border-radius:8px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:1.1rem">
+        ${photoUrl?`<img src="${photoUrl}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<span>${d.e}</span>'"/>`:`<span>${d.e}</span>`}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.78rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${isSoldOut?' <span style="font-size:.55rem;color:#f87171;font-weight:700">SOLD OUT</span>':''}</div>
+        ${d.portionLabel?`<div style="font-size:.58rem;color:var(--muted)">${d.portionLabel}</div>`:''}
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
+        ${d.portionLabel?`<div style="font-size:.55rem;color:var(--muted);margin-top:1px">${d.portionLabel}</div>`:''}
+      </div>
+      ${cat==='si'?`<div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+        <button onclick="event.stopPropagation();homeChgQty('${d.id}',-1)" style="width:24px;height:24px;border-radius:50%;background:var(--surf);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1">−</button>
+        <span id="hqn-${d.id}" style="font-size:.75rem;font-weight:700;min-width:14px;text-align:center">${cart[d.id]||0}</span>
+        <button onclick="event.stopPropagation();homeChgQty('${d.id}',1)" style="width:24px;height:24px;border-radius:50%;background:var(--saff);border:none;color:#000;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1">+</button>
+      </div>`:''}
+    </div>`;
+  }).join('');
+  if(moreBtn) moreBtn.style.display = avail.length > maxShow ? 'block' : 'none';
+  // Checkout button for Ala Carte
+  if(cat==='si'){
+    const chkBtn = document.getElementById('home-checkout-si');
+    if(chkBtn){
+      const total = Object.keys(cart).filter(id=>id.startsWith('si')).reduce((s,id)=>{
+        const d=findDish(id); return s+(d?d.p*(cart[id]||0):0);
+      },0);
+      const qty = Object.keys(cart).filter(id=>id.startsWith('si')).reduce((s,id)=>s+(cart[id]||0),0);
+      chkBtn.style.display = qty>0 ? 'block' : 'none';
+      chkBtn.textContent = qty>0 ? `Go to Checkout — ${qty} item${qty>1?'s':''} · Rs.${total} →` : '';
+    }
+  }
+  // Publish dot
+  const dot = document.getElementById('pub-dot-'+cat);
+  if(dot) dot.style.background = _sectionPublished[cat] ? '#4e9e6b' : 'var(--muted)';
+}
+
+function _saveSectionPublish(){
+  lsSave('byod_section_pub', _sectionPublished);
+}
+function _loadSectionPublish(){
+  const saved = lsLoad('byod_section_pub', null);
+  if(saved) _sectionPublished = {..._sectionPublished, ...saved};
+}
+
+// ── Occasion Banner ───────────────────────────────────────────
+let _occasionData = {enabled:false, label:'✨ Special Occasion', name:'Amavasai Special', desc:'Limited availability · Order early'};
+
+function renderOccasionBanner(){
+  const banner = document.getElementById('occasion-banner');
+  if(!banner) return;
+  banner.style.display = _occasionData.enabled ? 'block' : 'none';
+  const l=document.getElementById('occ-label');if(l)l.textContent=_occasionData.label;
+  const n=document.getElementById('occ-name');if(n)n.textContent=_occasionData.name;
+  const d=document.getElementById('occ-desc');if(d)d.textContent=_occasionData.desc;
+}
+
+// ══════════════════════════════════════════════════════════════
 // SUBMENU
 // ══════════════════════════════════════════════════════════════
 function loadSubMenu(cat){
   currentCat=cat;
-  const names={si:'South Indian Àla Carte',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const names={si:'BYOD Special',sv:'Millet Poha & Noodles',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   document.getElementById('sm-title').textContent=names[cat];
   const _avail=MENU[cat].filter(x=>x.avail).length,_total=MENU[cat].length;
   document.getElementById('sm-sub').textContent=_avail+' available today'+(_total>_avail?' · '+(_total-_avail)+' on prior order':'');
@@ -1906,6 +2184,17 @@ async function sendBulk(){
 }
 
 // Settings
+function setOccasionBanner(enabled){
+  const name=document.getElementById('occ-inp-name')?.value.trim()||'Amavasai Special';
+  const desc=document.getElementById('occ-inp-desc')?.value.trim()||'Limited availability · Order early';
+  _occasionData={enabled, label:'✨ Special Occasion', name, desc};
+  lsSave('byod_occasion', _occasionData);
+  renderOccasionBanner();
+  const st=document.getElementById('occ-banner-status');
+  if(st) st.textContent = enabled ? '✅ Banner enabled — visible on home screen' : '✕ Banner hidden';
+  toast(enabled?'✨':'✕', enabled?'Occasion banner enabled!':'Banner disabled', enabled?name:'');
+}
+
 function saveBotConfig(){
   const tok=document.getElementById('cfg-token').value.trim(),cid=document.getElementById('cfg-chatid').value.trim();
   if(!tok||!cid){toast('⚠️','Fill both fields','Bot Token and Admin Chat ID required.');return;}
@@ -1927,6 +2216,104 @@ async function saveSheetsConfig(){
 }
 function copyAppsScript(){
   navigator.clipboard?.writeText(APPS_SCRIPT_CODE).then(()=>toast('📋','Apps Script code copied!','Paste into script.google.com → New project → Deploy.')).catch(()=>toast('⚠️','Copy failed','Try a different browser.'));
+}
+
+// ── Admin accordion toggles ──────────────────────────────────
+let _adminSecOpen = {si:true, pb:false, sv:false};
+function homeChgQty(id, delta){
+  const d = findDish(id);
+  if(!d || !d.avail || d.soldOut) return;
+  const s = getOrderStatus('si');
+  if(!s.open){ toast('⏰','Ala Carte closed', s.msg); return; }
+  cart[id] = Math.max(0, (cart[id]||0) + delta);
+  if(cart[id]===0) delete cart[id];
+  const el = document.getElementById('hqn-'+id);
+  if(el) el.textContent = cart[id]||0;
+  updateCartBadge();
+  _renderHomeDishes('si'); // refresh checkout button total
+}
+
+function homeGoCheckout(){
+  const s = getOrderStatus('si');
+  if(!s.open){ toast('⏰','Ala Carte closed', s.msg); return; }
+  const qty = Object.keys(cart).filter(id=>id.startsWith('si')).reduce((s,id)=>s+(cart[id]||0),0);
+  if(qty===0){ toast('⚠️','Nothing in cart','Add items first.'); return; }
+  currentCat='si';
+  goCheckout();
+}
+
+function switchMenuTab(cat, btn){
+  document.querySelectorAll('.menu-stab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.menu-ssec').forEach(s=>s.style.display='none');
+  if(btn) btn.classList.add('on');
+  const sec=document.getElementById('msec-'+cat);
+  if(sec) sec.style.display='block';
+}
+
+function toggleAdminSection(cat){
+  _adminSecOpen[cat] = !_adminSecOpen[cat];
+  const sec = document.getElementById('adm-sec-'+cat);
+  const arr = document.getElementById('adm-arr-'+cat);
+  if(sec) sec.style.display = _adminSecOpen[cat] ? '' : 'none';
+  if(arr) arr.style.transform = _adminSecOpen[cat] ? '' : 'rotate(-90deg)';
+}
+
+// ── Per-section save ──────────────────────────────────────────
+async function saveSection(cat){
+  // Read current form values for this section only
+  MENU[cat].forEach(d=>{
+    const n=document.getElementById('edn-'+d.id),
+          p=document.getElementById('edp-'+d.id),
+          q=document.getElementById('edq-'+d.id),
+          t=document.getElementById('edt-'+d.id),
+          so=document.getElementById('edso-'+d.id);
+    if(n)d.n=n.value;
+    if(p)d.p=parseFloat(p.value)||d.p;
+    if(q)d.portionLabel=q.value.trim();
+    if(t)d.avail=t.classList.contains('on');
+    if(so)d.soldOut=so.classList.contains('son');
+  });
+  renderBanner();
+  const ok = await syncMenuToSheets();
+  toast('💾', ok?'Saved to Sheet!':'Saved locally', cat==='si'?'South Indian Ala Carte':cat==='pb'?'BYOD Special':'Millet Poha & Noodles');
+}
+
+// ── Per-section publish toggle ────────────────────────────────
+async function publishSection(cat){
+  _sectionPublished[cat] = !_sectionPublished[cat];
+  _saveSectionPublish();
+  _syncAdminPubButtons();
+  renderBanner();
+  syncSettingsToSheets();
+  const names = {si:'South Indian Ala Carte', pb:'BYOD Special', sv:'Millet Poha & Noodles'};
+  if(_sectionPublished[cat]){
+    toast('📢', names[cat]+' published!', 'Now visible to customers.');
+    addAlert('📢','t',names[cat]+' is live!','Section published.');
+  } else {
+    toast('🔴', names[cat]+' hidden', 'Section unpublished.');
+  }
+}
+
+function _syncAdminPubButtons(){
+  ['si','pb','sv'].forEach(cat=>{
+    const btn=document.getElementById('pub-btn-'+cat);
+    const dot=document.getElementById('adm-pub-dot-'+cat);
+    const pub=_sectionPublished[cat];
+    if(dot) dot.style.background = pub ? '#4e9e6b' : 'var(--muted)';
+    if(btn){
+      if(pub){
+        btn.textContent='🔴 Unpublish';
+        btn.style.background='rgba(239,68,68,.12)';
+        btn.style.borderColor='rgba(239,68,68,.25)';
+        btn.style.color='#f87171';
+      } else {
+        btn.textContent='📢 Publish';
+        btn.style.background = cat==='pb'?'rgba(244,163,37,.15)':'rgba(78,158,107,.15)';
+        btn.style.borderColor = cat==='pb'?'rgba(244,163,37,.3)':'rgba(78,158,107,.3)';
+        btn.style.color = cat==='pb'?'var(--saff)':'#4e9e6b';
+      }
+    }
+  });
 }
 
 // Save menu → Sheet (single source of truth)
@@ -2018,7 +2405,7 @@ function renderAdminMenuEdit(){
 
 // ── Add dish: picker modal (reuse existing or start blank) ────
 function addDish(cat){
-  const catNames={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const catNames={si:'BYOD Special',sv:'Millet Poha & Noodles',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   const allDishes=[];
   MENU[cat].forEach(d=>allDishes.push({...d,_catLabel:catNames[cat]})); // only same-category dishes
 
@@ -2111,7 +2498,7 @@ function _diagClear(){
 
 async function runDiagnostic(){
   _diagClear();
-  _diagLine('━━━ BYOD Sheets Diagnostic v27 ━━━');
+  _diagLine('━━━ BYOD Sheets Diagnostic v30 ━━━');
   const url = SHEETS_URL || document.getElementById('cfg-sheets-url')?.value?.trim() || '';
   _diagLine('URL: '+(url ? url.slice(0,55)+'…' : '❌ not set'), url?'diag-info':'diag-err');
   if(!url){ _diagLine('→ Paste your Apps Script URL in ⚙️ Settings first.','diag-err'); return; }
@@ -2272,7 +2659,7 @@ function renderKitchenSheet(){
   const tp=orders.reduce((s,o)=>s+parseInt(o.portions),0),tr=orders.reduce((s,o)=>s+o.total,0);
   sum.innerHTML=`<div class="ks-stat"><div class="ks-num">${orders.length}</div><div class="ks-lbl">Orders</div></div><div class="ks-stat"><div class="ks-num">${tp}</div><div class="ks-lbl">Portions</div></div><div class="ks-stat"><div class="ks-num">Rs.${tr}</div><div class="ks-lbl">Revenue</div></div>`;
   const tally={};orders.forEach(o=>o.items.forEach(i=>{if(!tally[i.id])tally[i.id]={...i,total:0};tally[i.id].total+=i.qty;}));
-  const cL={si:'South Indian',sv:'Savoury',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const cL={si:'BYOD Special',sv:'Millet Poha & Noodles',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
   tal.innerHTML=Object.values(tally).sort((a,b)=>b.total-a.total).map(d=>`<div class="ks-tally-row"><div class="ktr-left"><span class="ktr-em">${d.e}</span><div><div class="ktr-name">${d.n}</div><div class="ktr-cat">${cL[d.id.slice(0,2)]||''}</div></div></div><div><div class="ktr-count">${d.total}</div><div class="ktr-unit">portion${d.total>1?'s':''}</div></div></div>`).join('');
   ord.innerHTML=orders.map((o,i)=>`<div class="ks-order-card"><div class="koc-num">${i+1}</div><div class="koc-body"><div class="koc-name">${o.name}</div><div class="koc-addr">🏠 Flat ${o.flat} · ${o.drop}</div><div class="koc-items">${o.items.map(it=>`<span class="koc-item">${it.e} ${it.n} x${it.qty}</span>`).join('')}</div><div class="koc-portions">📦 ${o.portions}</div></div><div class="koc-status" id="koc-chk-${o.oid}" onclick="toggleKocDone('${o.oid}')" title="Mark packed"></div></div>`).join('');
 }
