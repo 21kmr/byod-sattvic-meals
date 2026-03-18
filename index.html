@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v32</title>
+<title>BYOD — Bring Your Own Dabba v33</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v32.0</span>
+      <span class="ver-badge" id="ver-badge">v33.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -706,7 +706,6 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
           <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
           <div class="fld"><label>Flat Number</label><input id="cf-flat" placeholder="e.g. H-302"/></div>
-          <div class="fld"><label>Portions</label><select id="cf-portions"><option>1 portion</option><option>2 portions</option><option>3 portions</option><option>4 portions</option><option>5 portions</option></select></div>
           <div class="fld"><label>Drop-off Point</label><select id="cf-drop"><option>H-002 (Direct)</option><option>Exit Gate Security</option></select></div>
           
         </div>
@@ -835,7 +834,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v32.0</span>
+          <span class="ver-badge">v33.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -904,8 +903,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <div id="adm-sec-si" style="padding:10px">
               <!-- Filter bar -->
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
-                <button id="af-si-all" onclick="setAdminFilter('si\',\'all\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
-                <button id="af-si-avail" onclick="setAdminFilter('si\',\'avail\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
+                <button id="af-si-all" onclick="setAdminFilter('si','all')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
+                <button id="af-si-avail" onclick="setAdminFilter('si','avail')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
                 <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('si\')">+ Add</button>
               </div>
               <div id="ed-si"></div>
@@ -958,8 +957,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
             <div id="adm-sec-sv" style="padding:10px">
               <!-- Filter bar -->
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
-                <button id="af-sv-all" onclick="setAdminFilter('sv\',\'all\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
-                <button id="af-sv-avail" onclick="setAdminFilter('sv\',\'avail\')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
+                <button id="af-sv-all" onclick="setAdminFilter('sv','all')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
+                <button id="af-sv-avail" onclick="setAdminFilter('sv','avail')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
                 <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('sv\')">+ Add</button>
               </div>
               <div id="ed-sv"></div>
@@ -1480,7 +1479,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v32', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v33', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -2094,7 +2093,7 @@ async function placeOrder(){
   await new Promise(r=>setTimeout(r,600));
   const items=getItems(),total=getTotal();
   const oid='BYOD-'+(1040+orders.length+1);
-  const portions=document.getElementById('cf-portions').value;
+  const portions=Object.values(cart).reduce((s,q)=>s+q,0)+' portion'+(Object.values(cart).reduce((s,q)=>s+q,0)>1?'s':'');
   const drop=document.getElementById('cf-drop').value;
   const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
   const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
@@ -2278,22 +2277,37 @@ function toggleAdminSection(cat){
 
 // ── Per-section save ──────────────────────────────────────────
 async function saveSection(cat){
-  // Read current form values for this section only
-  MENU[cat].forEach(d=>{
-    const n=document.getElementById('edn-'+d.id),
-          p=document.getElementById('edp-'+d.id),
-          q=document.getElementById('edq-'+d.id),
-          t=document.getElementById('edt-'+d.id),
-          so=document.getElementById('edso-'+d.id);
-    if(n)d.n=n.value;
-    if(p)d.p=parseFloat(p.value)||d.p;
-    if(q)d.portionLabel=q.value.trim();
-    if(t)d.avail=t.classList.contains('on');
-    if(so)d.soldOut=so.classList.contains('son');
-  });
-  renderBanner();
-  const ok = await syncMenuToSheets();
-  toast('💾', ok?'Saved to Sheet!':'Saved locally', cat==='si'?'South Indian Ala Carte':cat==='pb'?'BYOD Special':'Millet Poha & Noodles');
+  // Lock save button with spinner
+  const saveBtn = document.querySelector('#pub-btn-'+cat)?.previousElementSibling ||
+                  [...document.querySelectorAll('button')].find(b=>b.onclick&&b.onclick.toString().includes("saveSection('"+cat+"')"));
+  // Find by text content fallback
+  const allBtns = [...document.querySelectorAll('button')];
+  const sBtn = allBtns.find(b=>b.textContent.includes('💾 Save') && b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+cat+"'"));
+  const origLabel = sBtn ? sBtn.innerHTML : '';
+  if(sBtn){ sBtn.disabled=true; sBtn.style.opacity='.5'; sBtn.style.cursor='not-allowed'; sBtn.innerHTML='<span class="spin"></span>'; }
+
+  try{
+    MENU[cat].forEach(d=>{
+      const n=document.getElementById('edn-'+d.id),
+            p=document.getElementById('edp-'+d.id),
+            q=document.getElementById('edq-'+d.id),
+            t=document.getElementById('edt-'+d.id),
+            so=document.getElementById('edso-'+d.id);
+      if(n)d.n=n.value;
+      if(p)d.p=parseFloat(p.value)||d.p;
+      if(q)d.portionLabel=q.value.trim();
+      if(t)d.avail=t.classList.contains('on');
+      if(so)d.soldOut=so.classList.contains('son');
+    });
+    renderBanner();
+    const ok = await syncMenuToSheets();
+    if(sBtn){ sBtn.innerHTML='✅'; sBtn.style.opacity='1'; sBtn.style.cursor=''; }
+    setTimeout(()=>{ if(sBtn){sBtn.innerHTML=origLabel;sBtn.disabled=false;} }, 1800);
+    toast('💾', ok?'Saved to Sheet!':'Saved locally', cat==='si'?'South Indian Ala Carte':cat==='pb'?'BYOD Special':'Millet Poha & Noodles');
+  } catch(e){
+    if(sBtn){sBtn.innerHTML=origLabel;sBtn.disabled=false;sBtn.style.opacity='1';sBtn.style.cursor='';}
+    toast('⚠️','Save failed',e.message||'');
+  }
 }
 
 // ── Per-section publish toggle ────────────────────────────────
