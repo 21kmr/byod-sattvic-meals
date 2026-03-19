@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v34</title>
+<title>BYOD — Bring Your Own Dabba v35</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v34.0</span>
+      <span class="ver-badge" id="ver-badge">v35.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v34.0</span>
+          <span class="ver-badge">v35.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1479,7 +1479,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v34', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v35', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1974,11 +1974,11 @@ function loadSubMenu(cat){
       <span style="font-size:1.2rem;flex-shrink:0">${d.e}</span>
       <div style="flex:1;min-width:0">
         <div style="font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${_sold?'  <span style="font-size:.58rem;color:#f87171;font-weight:700">🔥 SOLD OUT</span>':''}</div>
-        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${_unavail&&!_sold?'📅 Prior order':d.portionLabel||'&nbsp;'}</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${_unavail&&!_sold?'📅 Prior order — contact to pre-order':d.portionLabel?`📦 ${d.portionLabel}`:''}</div>
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
-        ${d.portionLabel&&!_unavail?`<div style="font-size:.55rem;color:var(--muted)">${d.portionLabel}</div>`:''}
+        ${d.portionLabel?`<div style="font-size:.6rem;color:var(--muted);font-weight:500;margin-top:1px">${d.portionLabel}</div>`:''}
       </div>
       ${_clickable?`<div style="width:26px;height:26px;border-radius:50%;background:${sel?'var(--green)':'rgba(255,255,255,.08)'};border:1.5px solid ${sel?'var(--green)':'var(--border)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.75rem;color:${sel?'#000':'var(--muted)'};font-weight:700">${sel?'✓':'+'}</div>`:''}
       ${_clickable&&sel?`<div class="dqbar" id="dqb-${d.id}" style="display:flex;align-items:center;gap:6px">
