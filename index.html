@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v36</title>
+<title>BYOD — Bring Your Own Dabba v37</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v36.0</span>
+      <span class="ver-badge" id="ver-badge">v37.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v36.0</span>
+          <span class="ver-badge">v37.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1331,7 +1331,7 @@ async function loadFromSheets(){
   if(res.menu && res.menu.length > 1){
     res.menu.slice(1).forEach(row => { // skip header row
       // Columns: id, category, emoji, name, price, available, photo, ingredients
-      const [id, cat, emoji, name, price, avail, soldOutCol, maxQtyCol, photo, ing] = row;
+      const [id, cat, emoji, name, price, avail, soldOutCol, maxQtyCol, photo, ing, portionLabelCol] = row;
       if(!id) return;
       const catKey = catMap[cat] || id.slice(0,2);
       if(!freshMenu[catKey]) freshMenu[catKey]=[];
@@ -1343,7 +1343,8 @@ async function loadFromSheets(){
         avail: String(avail).toLowerCase()!=='false'&&String(avail).toLowerCase()!=='no',
         soldOut: String(soldOutCol||'').toLowerCase()==='sold out',
         maxQty: parseInt(maxQtyCol)||10,
-        photo: photo||''
+        photo: photo||'',
+        portionLabel: String(portionLabelCol||'')
       });
       if(ing) freshIngr[String(id)] = String(ing);
     });
@@ -1413,7 +1414,7 @@ async function syncMenuToSheets(){
     // Strip base64 photos from Sheet rows — they're enormous and stored locally only.
     // Photo URLs (lh3 / drive links) are kept; base64 data-URIs are cleared.
     const photo=(d)=>{const p=d.photo||'';return p.startsWith('data:')?'':p;};
-    MENU[cat].forEach(d=>rows.push([d.id,catLabels[cat],d.e,d.n,d.p,d.avail?'Yes':'No',d.soldOut?'Sold Out':'No',d.maxQty||10,photo(d),INGREDIENTS[d.id]||'']));
+    MENU[cat].forEach(d=>rows.push([d.id,catLabels[cat],d.e,d.n,d.p,d.avail?'Yes':'No',d.soldOut?'Sold Out':'No',d.maxQty||10,photo(d),INGREDIENTS[d.id]||'',d.portionLabel||'']));
   });
   const res=await sheetsCall({action:'saveMenu',rows});
   return !!(res&&res.ok);
@@ -1479,7 +1480,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v36', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v37', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1543,10 +1544,10 @@ function handleRequest(data) {
 
     // ── SAVE MENU ─────────────────────────────────────────────
     if (action === 'saveMenu') {
-      var sheet = getOrCreateSheet(ss,'Menu',['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients']);
+      var sheet = getOrCreateSheet(ss,'Menu',['ID','Category','Emoji','Name','Price','Available','Sold Out','Max Qty','Photo URL','Ingredients','Portion Label']);
       var last = sheet.getLastRow();
-      if (last > 1) sheet.getRange(2,1,last-1,10).clearContent();
-      if (data.rows && data.rows.length) sheet.getRange(2,1,data.rows.length,10).setValues(data.rows);
+      if (last > 1) sheet.getRange(2,1,last-1,11).clearContent();
+      if (data.rows && data.rows.length) sheet.getRange(2,1,data.rows.length,11).setValues(data.rows);
       return respond({ok:true});
     }
 
