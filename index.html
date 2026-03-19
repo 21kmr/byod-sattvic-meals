@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v37</title>
+<title>BYOD — Bring Your Own Dabba v39</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v37.0</span>
+      <span class="ver-badge" id="ver-badge">v39.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -574,7 +574,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div id="sec-si" style="padding:0 11px 11px">
             <div id="home-dishes-si"></div>
             <button id="more-si" style="display:none;width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('si')">See all dishes →</button>
-            <button id="home-checkout-si" style="display:none;width:100%;background:var(--saff);border:none;border-radius:10px;padding:11px;font-size:.82rem;font-weight:700;color:#000;cursor:pointer;margin-top:8px;font-family:'Playfair Display',serif" onclick="homeGoCheckout()">Go to Checkout →</button>
+            <button id="home-checkout-si" style="display:none;width:100%;background:var(--saff);border:none;border-radius:10px;padding:11px;font-size:.82rem;font-weight:700;color:#000;cursor:pointer;margin-top:8px;font-family:'Playfair Display',serif" onclick="homeGoCheckout('si')">Go to Checkout →</button>
             <button style="width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('si')">Browse full menu →</button>
           </div>
         </div>
@@ -597,7 +597,8 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div id="sec-pb" style="padding:0 11px 11px">
             <div id="home-dishes-pb"></div>
             <button id="more-pb" style="display:none;width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('pb')">See all dishes →</button>
-            <button style="width:100%;background:rgba(244,163,37,.12);border:1px solid rgba(244,163,37,.25);border-radius:8px;padding:9px;font-size:.75rem;font-weight:700;color:var(--saff);cursor:pointer;margin-top:6px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('pb')">Order from BYOD Special →</button>
+            <button id="home-checkout-pb" style="display:none;width:100%;background:var(--saff);border:none;border-radius:10px;padding:11px;font-size:.82rem;font-weight:700;color:#000;cursor:pointer;margin-top:8px;font-family:'Playfair Display',serif" onclick="homeGoCheckout('pb')">Go to Checkout →</button>
+            <button style="width:100%;background:none;border:1px solid var(--border);border-radius:8px;padding:7px;font-size:.7rem;color:var(--muted);cursor:pointer;margin-top:5px;font-family:'DM Sans',sans-serif" onclick="showPage('submenu');loadSubMenu('pb')">Browse all BYOD Special →</button>
           </div>
         </div>
 
@@ -639,7 +640,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
         <button class="bbtn" onclick="showPage('home')">←</button>
         <div><div class="smtitle" id="sm-title">Menu</div><div class="smsub" id="sm-sub"></div></div>
       </div>
-      <div class="min-note">ℹ️ Minimum 2 items to order</div>
+      <div class="min-note" id="submenu-min-note">ℹ️ Minimum 2 items to order</div>
       <div id="dish-list"></div>
   <div id="sm-price-note" style="display:none;margin:6px 11px 0;font-size:.62rem;color:var(--muted);font-style:italic;line-height:1.5;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">💡 Prices are indicative and may vary based on ingredient availability and portion size.</div>
   <div id="prior-order-section"></div>
@@ -834,7 +835,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v37.0</span>
+          <span class="ver-badge">v39.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -959,7 +960,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
                 <button id="af-sv-all" onclick="setAdminFilter('sv','all')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
                 <button id="af-sv-avail" onclick="setAdminFilter('sv','avail')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
-                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('sv\')">+ Add</button>
+                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('sv')">+ Add</button>
               </div>
               <div id="ed-sv"></div>
 
@@ -1217,9 +1218,35 @@ const DEFAULT_MENU = {
     {id:'si6',e:'🥦',n:'Poriyal',p:50,avail:true,soldOut:false,photo:''},
   ],
   sv:[
-    {id:'sv1',e:'🥪',n:'Masala Oats Upma',p:70,avail:true,soldOut:false,photo:''},
-    {id:'sv2',e:'🫔',n:'Ragi Idli',p:60,avail:true,soldOut:false,photo:''},
-    {id:'sv3',e:'🥞',n:'Mixed Veg Dosa',p:80,avail:true,soldOut:false,photo:''},
+    // POHA
+    {id:'sv_kp1',e:'🌾',n:'Karuppukavuni Poha (கருப்பு கவுனி அவல்)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp2',e:'🌾',n:'Barnyard Millet Poha (குதிரைவாலி அவல்)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp3',e:'🌾',n:'Finger Millet Poha (ராகி அவல்)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp4',e:'🌾',n:'Red Poha (சிவப்பு அவல்)',p:70,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp5',e:'🌾',n:'Mapillai Samba Poha (மாப்பிள்ளை சம்பா அவல்)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    // NOODLES
+    {id:'sv_n1',e:'🍜',n:'Carrot Noodles',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n2',e:'🍜',n:'Beetroot Noodles',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n3',e:'🍜',n:'Moringa Noodles (முருங்கை)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n4',e:'🍜',n:'Tomato Noodles',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n5',e:'🍜',n:'Wheat Noodles (கோதுமை நூடுல்ஸ்)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n6',e:'🍜',n:'Foxtail Millet Noodles (தினை நூடுல்ஸ்)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n7',e:'🍜',n:'Mapillai Samba Noodles (மாப்பிள்ளை சம்பா நூடுல்ஸ்)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n8',e:'🍜',n:'Finger Millet Noodles (ராகி நூடுல்ஸ்)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n9',e:'🍜',n:'Multi Millet Noodles (பல தானிய நூடுல்ஸ்)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n10',e:'🍜',n:'Moringa Little Millet Noodles (சாமை முருங்கை நூடுல்ஸ்)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n11',e:'🍜',n:'Pearl Millet Noodles (கம்பு நூடுல்ஸ்)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n12',e:'🍜',n:'Black Rice Noodles (கருப்பு அரிசி நூடுல்ஸ்)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    // SEMIYA (VERMICELLI)
+    {id:'sv_s1',e:'🍝',n:'Red Rice Semiya (சிவப்பு அரிசி சேமியா)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s2',e:'🍝',n:'Wheat Semiya (கோதுமை சேமியா)',p:75,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s3',e:'🍝',n:'Foxtail Millet Semiya (தினை சேமியா)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s4',e:'🍝',n:'Finger Millet Semiya (ராகி சேமியா)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s5',e:'🍝',n:'Kodo Millet Semiya (வரகு சேமியா)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s6',e:'🍝',n:'Little Millet Semiya (சாமை சேமியா)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s7',e:'🍝',n:'Pearl Millet Semiya (கம்பு சேமியா)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s8',e:'🍝',n:'Sorghum Semiya (சோளம் சேமியா)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s9',e:'🍝',n:'Mapillai Samba Semiya (மாப்பிள்ளை சம்பா சேமியா)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
   ],
   pb:[
     {id:'pb1',e:'🫓',n:'Methi Parantha',p:70,avail:true,soldOut:false,photo:''},
@@ -1480,7 +1507,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v37', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v39', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1866,48 +1893,44 @@ function _renderHomeDishes(cat){
   const moreBtn = document.getElementById('more-'+cat);
   const homeSection = document.getElementById('home-section-'+cat);
   if(!el) return;
-  // Hide entire section if not published (except admin)
-  if(homeSection) homeSection.style.display = ''; // always visible; publish gates ordering only
-  const avail = MENU[cat].filter(d=>d.avail); // includes sold-out so they show with badge
+  if(homeSection) homeSection.style.display = '';
+  const avail = MENU[cat].filter(d=>d.avail);
   const maxShow = MAX_HOME_DISHES[cat] || 4;
   const shown = avail.slice(0, maxShow);
+  const hasQtyBtns = (cat==='si'||cat==='pb'||cat==='sv');
   el.innerHTML = shown.map(d=>{
-    const photoUrl = d.photo ? convertGoogleUrl(d.photo)||d.photo : '';
     const isSoldOut = d.soldOut;
-    const isUnavail = !d.avail;
-    return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);${isSoldOut||isUnavail?'opacity:.5':''}">
-      <div style="width:38px;height:38px;border-radius:8px;overflow:hidden;flex-shrink:0;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:1.1rem">
-        ${photoUrl?`<img src="${photoUrl}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.outerHTML='<span>${d.e}</span>'"/>`:`<span>${d.e}</span>`}
-      </div>
+    const canOrder = !isSoldOut && _sectionPublished[cat];
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:1.15rem;flex-shrink:0">${d.e}</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:.78rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${isSoldOut?' <span style="font-size:.55rem;color:#f87171;font-weight:700">SOLD OUT</span>':''}</div>
-        ${d.portionLabel?`<div style="font-size:.58rem;color:var(--muted)">${d.portionLabel}</div>`:''}
+        <div style="font-size:.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${isSoldOut?' <span style="font-size:.6rem;color:#f87171;font-weight:700">🔥 Sold Out</span>':''}</div>
+        ${d.portionLabel?`<div style="font-size:.68rem;color:var(--muted);margin-top:1px;font-weight:500">${d.portionLabel}</div>`:''}
       </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div style="font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
-        ${d.portionLabel?`<div style="font-size:.55rem;color:var(--muted);margin-top:1px">${d.portionLabel}</div>`:''}
+      <div style="text-align:right;flex-shrink:0;min-width:44px">
+        <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
       </div>
-      ${cat==='si'?`<div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
-        <button onclick="event.stopPropagation();homeChgQty('${d.id}',-1)" style="width:24px;height:24px;border-radius:50%;background:var(--surf);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1">−</button>
-        <span id="hqn-${d.id}" style="font-size:.75rem;font-weight:700;min-width:14px;text-align:center">${cart[d.id]||0}</span>
-        <button onclick="event.stopPropagation();homeChgQty('${d.id}',1)" style="width:24px;height:24px;border-radius:50%;background:var(--saff);border:none;color:#000;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center;line-height:1">+</button>
-      </div>`:''}
+      ${hasQtyBtns&&canOrder?`<div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+        <button onclick="event.stopPropagation();homeChgQty('${d.id}','${cat}',-1)" style="width:26px;height:26px;border-radius:50%;background:var(--surf);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;line-height:1">−</button>
+        <span id="hqn-${d.id}" style="font-size:.78rem;font-weight:700;min-width:16px;text-align:center">${cart[d.id]||0}</span>
+        <button onclick="event.stopPropagation();homeChgQty('${d.id}','${cat}',1)" style="width:26px;height:26px;border-radius:50%;background:var(--saff);border:none;color:#000;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;line-height:1">+</button>
+      </div>`:(isSoldOut?`<span style="font-size:.6rem;color:#f87171;flex-shrink:0"></span>`:`<span style="font-size:.6rem;color:var(--muted);flex-shrink:0">${_sectionPublished[cat]?'':'–'}</span>`)}
     </div>`;
   }).join('');
   if(moreBtn) moreBtn.style.display = avail.length > maxShow ? 'block' : 'none';
-  // Checkout button for Ala Carte
-  if(cat==='si'){
-    const chkBtn = document.getElementById('home-checkout-si');
-    if(chkBtn){
-      const total = Object.keys(cart).filter(id=>id.startsWith('si')).reduce((s,id)=>{
-        const d=findDish(id); return s+(d?d.p*(cart[id]||0):0);
-      },0);
-      const qty = Object.keys(cart).filter(id=>id.startsWith('si')).reduce((s,id)=>s+(cart[id]||0),0);
-      chkBtn.style.display = qty>0 ? 'block' : 'none';
-      chkBtn.textContent = qty>0 ? `Go to Checkout — ${qty} item${qty>1?'s':''} · Rs.${total} →` : '';
-    }
-  }
-  // Publish dot
+  // Checkout button — for si and pb
+  ['si','pb'].forEach(c2=>{
+    if(cat!==c2) return;
+    const prefix = c2;
+    const chkBtn = document.getElementById('home-checkout-'+prefix);
+    if(!chkBtn) return;
+    const total = Object.keys(cart).filter(id=>id.startsWith(prefix)).reduce((s,id)=>{
+      const d2=findDish(id); return s+(d2?d2.p*(cart[id]||0):0);
+    },0);
+    const qty = Object.keys(cart).filter(id=>id.startsWith(prefix)).reduce((s,id)=>s+(cart[id]||0),0);
+    chkBtn.style.display = qty>0 ? 'block' : 'none';
+    chkBtn.textContent = qty>0 ? `Go to Checkout — ${qty} item${qty>1?'s':''} · Rs.${total} →` : '';
+  });
   const dot = document.getElementById('pub-dot-'+cat);
   if(dot) dot.style.background = _sectionPublished[cat] ? '#4e9e6b' : 'var(--muted)';
 }
@@ -1943,6 +1966,8 @@ function loadSubMenu(cat){
   const _avail=MENU[cat].filter(x=>x.avail&&!x.soldOut).length,_total=MENU[cat].length;
   document.getElementById('sm-sub').textContent=_avail+' available today'+(_total>_avail?' · '+(_total-_avail)+' on prior order':'');
   const _pnote=document.getElementById('sm-price-note');if(_pnote)_pnote.style.display='block';
+  const _minnote=document.getElementById('submenu-min-note');
+  if(_minnote)_minnote.style.display=cat==='si'?'':'none';
 
   // Sort: available (orderable) → sold out → unavailable
   const _sorted=[
@@ -1984,11 +2009,11 @@ function loadSubMenu(cat){
       <span style="font-size:1.2rem;flex-shrink:0">${d.e}</span>
       <div style="flex:1;min-width:0">
         <div style="font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${_sold?'  <span style="font-size:.58rem;color:#f87171;font-weight:700">🔥 SOLD OUT</span>':(_unavail?'  <span style="font-size:.56rem;color:var(--muted);font-weight:500">📅 Prior order</span>':'')}</div>
-        ${_portionLine?`<div style="font-size:.6rem;color:var(--muted);margin-top:2px">${_portionLine}</div>`:''}
+        ${_portionLine?`<div style="font-size:.7rem;color:var(--muted);margin-top:2px;font-weight:500">${_portionLine}</div>`:''}
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
-        ${d.portionLabel?`<div style="font-size:.6rem;color:var(--muted);font-weight:500;margin-top:1px">${d.portionLabel}</div>`:''}
+        ${d.portionLabel?`<div style="font-size:.7rem;color:var(--muted);font-weight:600;margin-top:1px">${d.portionLabel}</div>`:''}
       </div>
       ${_clickable?`<div style="width:26px;height:26px;border-radius:50%;background:${sel?'var(--green)':'rgba(255,255,255,.08)'};border:1.5px solid ${sel?'var(--green)':'var(--border)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.75rem;color:${sel?'#000':'var(--muted)'};font-weight:700">${sel?'✓':'+'}</div>`:''}
       ${_clickable&&sel?`<div class="dqbar" id="dqb-${d.id}" style="display:flex;align-items:center;gap:6px">
@@ -2039,6 +2064,7 @@ function updateCheckBtn(){
   const btn=document.getElementById('sm-checkout-btn');btn.style.fontSize='';
   if(currentCat==='si'&&!s.open){btn.disabled=true;btn.textContent='South Indian Ala Carte orders closed at 9:30 AM';btn.style.fontSize='.62rem';}
   else if(currentCat==='si'&&siCount>0&&siCount<2&&n===siCount){btn.disabled=true;btn.textContent='Select 1 more South Indian dish (min 2)';btn.style.fontSize='.65rem';}
+  // No minimum for BYOD Special or Dinner
   else{btn.disabled=n<1;btn.textContent=n<1?'Add items to order…':`Checkout (${n} items) →`;}
   updateCartBadge();
 }
@@ -2048,7 +2074,7 @@ function goCheckout(){
   const s=getOrderStatus(allSI?'si':null);
   if(!s.open){toast('⏰','South Indian Ala Carte closed',s.msg);return;}
   const siCount=getItems().filter(i=>i.id.startsWith('si')).length;
-  if(siCount>0&&siCount<2&&getItems().filter(i=>!i.id.startsWith('si')).length===0){toast('⚠️','Min 2 for South Indian','Select at least 2 South Indian dishes.');return;}
+  if(currentCat==='si'&&siCount>0&&siCount<2&&getItems().filter(i=>!i.id.startsWith('si')).length===0){toast('⚠️','Min 2 for South Indian','Select at least 2 South Indian dishes.');return;}
   if(Object.keys(cart).length<1){toast('⚠️','Add items','Select at least 1 dish.');return;}
   showPage('checkout');
   const items=getItems(),tot=getTotal();
@@ -2236,25 +2262,26 @@ function copyAppsScript(){
 
 // ── Admin accordion toggles ──────────────────────────────────
 let _adminSecOpen = {si:true, pb:false, sv:false};
-function homeChgQty(id, delta){
+function homeChgQty(id, cat, delta){
   const d = findDish(id);
   if(!d || !d.avail || d.soldOut) return;
-  const s = getOrderStatus('si');
-  if(!s.open){ toast('⏰','Ala Carte closed', s.msg); return; }
+  const s = getOrderStatus(cat);
+  if(!s.open){ toast('⏰', cat==='pb'?'BYOD Special closed':'Ala Carte closed', s.msg); return; }
   cart[id] = Math.max(0, (cart[id]||0) + delta);
   if(cart[id]===0) delete cart[id];
   const el = document.getElementById('hqn-'+id);
   if(el) el.textContent = cart[id]||0;
   updateCartBadge();
-  _renderHomeDishes('si'); // refresh checkout button total
+  _renderHomeDishes(cat); // refresh checkout button total
 }
 
-function homeGoCheckout(){
-  const s = getOrderStatus('si');
-  if(!s.open){ toast('⏰','Ala Carte closed', s.msg); return; }
-  const qty = Object.keys(cart).filter(id=>id.startsWith('si')).reduce((s,id)=>s+(cart[id]||0),0);
+function homeGoCheckout(cat){
+  cat = cat||'si';
+  const s = getOrderStatus(cat);
+  if(!s.open){ toast('⏰', cat==='pb'?'BYOD Special not published':'Ala Carte closed', s.msg); return; }
+  const qty = Object.keys(cart).filter(id=>id.startsWith(cat)).reduce((s,id)=>s+(cart[id]||0),0);
   if(qty===0){ toast('⚠️','Nothing in cart','Add items first.'); return; }
-  currentCat='si';
+  currentCat=cat;
   goCheckout();
 }
 
@@ -2496,7 +2523,7 @@ function _refreshBadge(id){
 
 // ── Add dish: picker modal (reuse existing or start blank) ────
 function addDish(cat){
-  const catNames={si:'BYOD Special',sv:'Millet Poha & Noodles',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const catNames={si:'South Indian Ala Carte',sv:'Millet Poha & Noodles',pb:'BYOD Special',ck:'Cookies & Breads'};
   const allDishes=[];
   MENU[cat].forEach(d=>allDishes.push({...d,_catLabel:catNames[cat]})); // only same-category dishes
 
