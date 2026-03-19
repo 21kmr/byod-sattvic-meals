@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v33</title>
+<title>BYOD — Bring Your Own Dabba v34</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v33.0</span>
+      <span class="ver-badge" id="ver-badge">v34.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v33.0</span>
+          <span class="ver-badge">v34.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1408,7 +1408,7 @@ function hideLoadingBanner(){
 // Write full menu + ingredients to Sheet
 async function syncMenuToSheets(){
   const rows=[];
-  const catLabels={si:'BYOD Special',sv:'Millet Poha & Noodles',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const catLabels={si:'South Indian Ala Carte',sv:'Millet Poha & Noodles',pb:'BYOD Special',ck:'Cookies & Breads'};
   ['si','sv','pb','ck'].forEach(cat=>{
     // Strip base64 photos from Sheet rows — they're enormous and stored locally only.
     // Photo URLs (lh3 / drive links) are kept; base64 data-URIs are cleared.
@@ -1479,7 +1479,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v33', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v34', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1779,17 +1779,12 @@ function checkAdminPw(){
 // ORDER CUTOFF
 // ══════════════════════════════════════════════════════════════
 function getOrderStatus(cat){
-  // Each section has its own publish flag — overrides the global toggle
   const secKey = cat==='si'?'si':cat==='pb'?'pb':'sv';
   if(!_sectionPublished[secKey]) return{open:false,msg:"Section not published yet."};
-  // Ala Carte (si) auto-closes at 9:30 AM unless admin keeps it open
-  if(cat==='si'){
+  // Ala Carte auto-closes at 9:30 AM ONLY if admin hasn't manually overridden
+  if(cat==='si' && !_sectionAdminOverride.si){
     const now=new Date(),cut=new Date();cut.setHours(9,30,0,0);
-    if(now>=cut){
-      // Auto-unpublish si at 9:30
-      if(_sectionPublished.si){_sectionPublished.si=false;_saveSectionPublish();_syncAdminPubButtons();renderBanner();}
-      return{open:false,msg:'South Indian Ala Carte closed at 9:30 AM.'};
-    }
+    if(now>=cut) return{open:false,msg:'South Indian Ala Carte orders closed at 9:30 AM.'};
   }
   return{open:true,msg:''};
 }
@@ -1855,6 +1850,7 @@ let _sectionOpen = {si:true, pb:true, sv:true};
 
 // Per-section publish state (saved to localStorage + Sheets)
 let _sectionPublished = {si:true, pb:true, sv:true};
+let _sectionAdminOverride = {si:false, pb:false, sv:false}; // admin can force keep open past cutoff
 
 function toggleSection(cat){
   _sectionOpen[cat] = !_sectionOpen[cat];
@@ -1871,7 +1867,7 @@ function _renderHomeDishes(cat){
   if(!el) return;
   // Hide entire section if not published (except admin)
   if(homeSection) homeSection.style.display = ''; // always visible; publish gates ordering only
-  const avail = MENU[cat].filter(d=>d.avail&&!d.soldOut);
+  const avail = MENU[cat].filter(d=>d.avail); // includes sold-out so they show with badge
   const maxShow = MAX_HOME_DISHES[cat] || 4;
   const shown = avail.slice(0, maxShow);
   el.innerHTML = shown.map(d=>{
@@ -1941,68 +1937,61 @@ function renderOccasionBanner(){
 // ══════════════════════════════════════════════════════════════
 function loadSubMenu(cat){
   currentCat=cat;
-  const names={si:'BYOD Special',sv:'Millet Poha & Noodles',pb:'Paranthas & Pasta',ck:'Cookies & Breads'};
+  const names={si:'South Indian Ala Carte',sv:'Millet Poha & Noodles',pb:'BYOD Special',ck:'Cookies & Breads'};
   document.getElementById('sm-title').textContent=names[cat];
-  const _avail=MENU[cat].filter(x=>x.avail).length,_total=MENU[cat].length;
+  const _avail=MENU[cat].filter(x=>x.avail&&!x.soldOut).length,_total=MENU[cat].length;
   document.getElementById('sm-sub').textContent=_avail+' available today'+(_total>_avail?' · '+(_total-_avail)+' on prior order':'');
   const _pnote=document.getElementById('sm-price-note');if(_pnote)_pnote.style.display='block';
-  const _sorted=[...MENU[cat].filter(d=>d.avail&&!d.soldOut),...MENU[cat].filter(d=>d.soldOut),...MENU[cat].filter(d=>!d.avail&&!d.soldOut)];
-  document.getElementById('dish-list').innerHTML=_sorted.map(d=>{
-    const sel=!!cart[d.id];
-    const photoUrl=d.photo?convertGoogleUrl(d.photo)||d.photo:'';
-    const imgHtml=photoUrl?`<img src="${photoUrl}" alt="${d.n}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:cover"/>`:`<span style="position:relative;z-index:1">${d.e}</span>`;
-    const ing=INGREDIENTS[d.id]||'';
-    const _sold=!!d.soldOut,_unavail=!d.avail,_clickable=!d.soldOut&&d.avail;
-    return `<div class="dcard${(sel&&_clickable)?' sel':''}${_sold?' sold-out-card':''}" id="dc-${d.id}" onclick="${_clickable?('toggleDish(\''+d.id+'\')') :'void(0)'}" style="${_unavail?'opacity:.6;pointer-events:none':''}" title="${_unavail?'Available on prior order — contact us to pre-order':''}">
-      <div class="dimg" id="dimg-${d.id}">${imgHtml}</div>
-      ${_sold?'<div class="sold-badge">🔥 Sold Out</div>':(_unavail?'<div class="unavail-badge">📅 Prior Order</div>':'<div class="dsel-badge">✓</div>')}
-      <div class="dinfo">
-        <div class="dname">${d.n}</div>
-        ${ing?`<div class="ding">${ing}</div>`:''}
-        <div class="dfoot">
-          <div class="dtags"><span class="dtag">🧄 No ONG</span><span class="dtag">🔥 Low Flame</span><span class="dtag">🏠 Home Made</span></div>
-          <div class="dprice">Rs.${d.p}${d.portionLabel?`<span style="font-size:.58rem;font-weight:400;color:var(--muted);margin-left:3px">${d.portionLabel}</span>`:''}</div>
-        </div>
-      </div>
-            <div class="dqbar" id="dqb-${d.id}">
-        <div class="qctrl">
-          <button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',-1)">−</button>
-          <span class="qnum" id="qn-${d.id}">${cart[d.id]||1}</span>
-          <button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',1)">+</button>
-        </div>
-        <span class="qsub" id="qs-${d.id}">Rs.${d.p*(cart[d.id]||1)}</span>
-      </div>
-    </div>`;
-  }).join('');
-  document.getElementById('dish-list').addEventListener('click',e=>{if(!e.target.closest('.ing-btn')&&!e.target.closest('.ing-tip'))hideAllIngTips();},{capture:true});
 
-  // ── Prior Order section — all dishes in this category ─────
+  // Sort: available (orderable) → sold out → unavailable
+  const _sorted=[
+    ...MENU[cat].filter(d=>d.avail&&!d.soldOut),
+    ...MENU[cat].filter(d=>d.soldOut),
+    ...MENU[cat].filter(d=>!d.avail&&!d.soldOut)
+  ];
+
+  // Divider tracker
+  let shownPriorHeader=false;
+  let html='';
+
+  _sorted.forEach(d=>{
+    const _sold=!!d.soldOut, _unavail=!d.avail, _clickable=d.avail&&!d.soldOut;
+    const sel=!!cart[d.id];
+
+    // Insert Prior Order divider before first unavailable/soldout-unavailable item
+    if((_unavail&&!_sold)&&!shownPriorHeader){
+      shownPriorHeader=true;
+      html+=`<div style="display:flex;align-items:center;gap:8px;margin:14px 11px 8px">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <span style="font-size:.58rem;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap">📅 Available on Prior Order</span>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+      </div>
+      <div style="font-size:.6rem;color:var(--muted);margin:0 11px 8px;line-height:1.5">Prepared with <b>1–2 days notice</b>. Contact us to pre-order.</div>`;
+    }
+
+    // Sleek list card — no photo, no ingredients by default
+    html+=`<div style="display:flex;align-items:center;gap:10px;margin:0 11px 6px;background:var(--card);border:1px solid ${_unavail?'var(--border)':sel?'var(--green)':'var(--border)'};border-radius:12px;padding:11px 12px;${_unavail?'opacity:.65':''}${_clickable?';cursor:pointer':''}" id="dc-${d.id}" onclick="${_clickable?'toggleDish(\''+d.id+'\')':'void(0)'}">
+      <span style="font-size:1.2rem;flex-shrink:0">${d.e}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${_sold?'  <span style="font-size:.58rem;color:#f87171;font-weight:700">🔥 SOLD OUT</span>':''}</div>
+        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${_unavail&&!_sold?'📅 Prior order':d.portionLabel||'&nbsp;'}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
+        ${d.portionLabel&&!_unavail?`<div style="font-size:.55rem;color:var(--muted)">${d.portionLabel}</div>`:''}
+      </div>
+      ${_clickable?`<div style="width:26px;height:26px;border-radius:50%;background:${sel?'var(--green)':'rgba(255,255,255,.08)'};border:1.5px solid ${sel?'var(--green)':'var(--border)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.75rem;color:${sel?'#000':'var(--muted)'};font-weight:700">${sel?'✓':'+'}</div>`:''}
+      ${_clickable&&sel?`<div class="dqbar" id="dqb-${d.id}" style="display:flex;align-items:center;gap:6px">
+        <button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',-1)">−</button>
+        <span class="qnum" id="qn-${d.id}">${cart[d.id]||1}</span>
+        <button class="qb" onclick="event.stopPropagation();chgQty('${d.id}',1)">+</button>
+      </div>`:''}
+    </div>`;
+  });
+
+  document.getElementById('dish-list').innerHTML=html;
   const _priorEl=document.getElementById('prior-order-section');
-  const _allDishes=MENU[cat]; // every dish, avail or not
-  if(_priorEl&&_allDishes.length){
-    _priorEl.innerHTML=`
-      <div style="margin:14px 11px 6px;display:flex;align-items:center;gap:8px">
-        <div style="flex:1;height:1px;background:var(--border)"></div>
-        <div style="font-size:.6rem;color:var(--muted);font-weight:700;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap">📅 Available on Prior Order</div>
-        <div style="flex:1;height:1px;background:var(--border)"></div>
-      </div>
-      <div style="margin:0 11px 6px;font-size:.62rem;color:var(--muted);line-height:1.5">All items below can be prepared with <b>1–2 days notice</b>. DM or call to pre-order.</div>
-      <div style="display:flex;flex-direction:column;gap:6px;margin:0 11px">
-        ${_allDishes.map(d=>`
-          <div style="display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px">
-            <span style="font-size:1.3rem;flex-shrink:0">${d.e}</span>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:.8rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}</div>
-              ${INGREDIENTS[d.id]?`<div style="font-size:.6rem;color:var(--muted);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${INGREDIENTS[d.id].slice(0,60)}${INGREDIENTS[d.id].length>60?'…':''}</div>`:''}
-            </div>
-            <div style="text-align:right;flex-shrink:0">
-              <div style="font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
-              ${d.portionLabel?`<div style="font-size:.55rem;color:var(--muted)">${d.portionLabel}</div>`:''}
-            </div>
-          </div>`).join('')}
-      </div>
-      <div style="height:8px"></div>`;
-  }
+  if(_priorEl) _priorEl.innerHTML=''; // cleared — integrated above
 
   updateCheckBtn();updateOrderState();
 }
@@ -2313,13 +2302,18 @@ async function saveSection(cat){
 // ── Per-section publish toggle ────────────────────────────────
 async function publishSection(cat){
   _sectionPublished[cat] = !_sectionPublished[cat];
+  if(_sectionPublished[cat]){
+    _sectionAdminOverride[cat] = true; // admin manually published = override auto-cutoff
+  } else {
+    _sectionAdminOverride[cat] = false;
+  }
   _saveSectionPublish();
   _syncAdminPubButtons();
   renderBanner();
   syncSettingsToSheets();
   const names = {si:'South Indian Ala Carte', pb:'BYOD Special', sv:'Millet Poha & Noodles'};
   if(_sectionPublished[cat]){
-    toast('📢', names[cat]+' published!', 'Now visible to customers.');
+    toast('📢', names[cat]+' published!', cat==='si'?'Orders open — will auto-close at 9:30 AM (override active).':'Now visible to customers.');
     addAlert('📢','t',names[cat]+' is live!','Section published.');
   } else {
     toast('🔴', names[cat]+' hidden', 'Section unpublished.');
