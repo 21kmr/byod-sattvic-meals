@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v35</title>
+<title>BYOD — Bring Your Own Dabba v36</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -517,7 +517,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
       </div>
     </div>
     <div class="hdr-right">
-      <span class="ver-badge" id="ver-badge">v35.0</span>
+      <span class="ver-badge" id="ver-badge">v36.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v35.0</span>
+          <span class="ver-badge">v36.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1479,7 +1479,7 @@ function doGet(e) {
     if (e.parameter && e.parameter.payload) {
       return handleRequest(JSON.parse(decodeURIComponent(e.parameter.payload)));
     }
-    return respond({ok:true, service:'BYOD Kitchen v35', ready:true});
+    return respond({ok:true, service:'BYOD Kitchen v36', ready:true});
   } catch(err) { return respond({ok:false, error:err.toString()}); }
 }
 
@@ -1958,9 +1958,16 @@ function loadSubMenu(cat){
     const _sold=!!d.soldOut, _unavail=!d.avail, _clickable=d.avail&&!d.soldOut;
     const sel=!!cart[d.id];
 
-    // Insert Prior Order divider before first unavailable/soldout-unavailable item
+    // Insert checkout button + prior order divider before first unavailable item
     if((_unavail&&!_sold)&&!shownPriorHeader){
       shownPriorHeader=true;
+      // Checkout button above prior order section
+      const _cartQty=Object.keys(cart).filter(id=>MENU[cat].find(d=>d.id===id)).reduce((s,id)=>s+(cart[id]||0),0);
+      html+=`<div id="sm-inline-checkout" style="padding:0 11px;margin:10px 0 4px">
+        <button id="sm-inline-checkout-btn" onclick="goCheckout()" style="width:100%;background:var(--saff);border:none;border-radius:10px;padding:11px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:#000;cursor:pointer;opacity:${_cartQty>0?1:.4}" ${_cartQty>0?'':'disabled'}>
+          ${_cartQty>0?`Go to Checkout — ${_cartQty} item${_cartQty>1?'s':''} →`:'Add items to checkout →'}
+        </button>
+      </div>`;
       html+=`<div style="display:flex;align-items:center;gap:8px;margin:14px 11px 8px">
         <div style="flex:1;height:1px;background:var(--border)"></div>
         <span style="font-size:.58rem;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap">📅 Available on Prior Order</span>
@@ -1969,12 +1976,14 @@ function loadSubMenu(cat){
       <div style="font-size:.6rem;color:var(--muted);margin:0 11px 8px;line-height:1.5">Prepared with <b>1–2 days notice</b>. Contact us to pre-order.</div>`;
     }
 
-    // Sleek list card — no photo, no ingredients by default
-    html+=`<div style="display:flex;align-items:center;gap:10px;margin:0 11px 6px;background:var(--card);border:1px solid ${_unavail?'var(--border)':sel?'var(--green)':'var(--border)'};border-radius:12px;padding:11px 12px;${_unavail?'opacity:.65':''}${_clickable?';cursor:pointer':''}" id="dc-${d.id}" onclick="${_clickable?'toggleDish(\''+d.id+'\')':'void(0)'}">
+    // Sleek list card — no photo, no ingredients
+    // portion always shown regardless of availability status
+    const _portionLine = d.portionLabel ? `📦 ${d.portionLabel}` : (_unavail&&!_sold ? '📅 Prior order' : '');
+    html+=`<div style="display:flex;align-items:center;gap:10px;margin:0 11px 6px;background:var(--card);border:1px solid ${sel?'var(--green)':'var(--border)'};border-radius:12px;padding:11px 12px;${_unavail?'opacity:.65':''}${_clickable?';cursor:pointer':''}" id="dc-${d.id}" onclick="${_clickable?'toggleDish(\''+d.id+'\')':'void(0)'}">
       <span style="font-size:1.2rem;flex-shrink:0">${d.e}</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${_sold?'  <span style="font-size:.58rem;color:#f87171;font-weight:700">🔥 SOLD OUT</span>':''}</div>
-        <div style="font-size:.6rem;color:var(--muted);margin-top:2px">${_unavail&&!_sold?'📅 Prior order — contact to pre-order':d.portionLabel?`📦 ${d.portionLabel}`:''}</div>
+        <div style="font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.n}${_sold?'  <span style="font-size:.58rem;color:#f87171;font-weight:700">🔥 SOLD OUT</span>':(_unavail?'  <span style="font-size:.56rem;color:var(--muted);font-weight:500">📅 Prior order</span>':'')}</div>
+        ${_portionLine?`<div style="font-size:.6rem;color:var(--muted);margin-top:2px">${_portionLine}</div>`:''}
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:var(--saff)">Rs.${d.p}</div>
