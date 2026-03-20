@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v64</title>
+<title>BYOD — Bring Your Own Dabba v65</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v64.0</span>
+      <span class="ver-badge" id="ver-badge">v65.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v64.0</span>
+          <span class="ver-badge">v65.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1181,7 +1181,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v64.0 — Bring Your Own Dabba
+// BYOD v65.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -2215,30 +2215,45 @@ function handleSS(e){
 }
 function copyUPI(){navigator.clipboard?.writeText('shruthips@sbi').catch(()=>{});toast('📋','UPI ID copied!','Paste in your payment app.');}
 
-async function markPaymentDone(){
+async async function markPaymentDone(){
+  if(!_screenshotDataUrl){
+    toast('⚠️','Upload screenshot first','Tap the upload button above to attach your payment screenshot.');
+    return;
+  }
   const tag=document.getElementById('payment-status-tag');
   const btn=document.getElementById('mark-paid-btn');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Sending…';}
-  // Get last order
   const order=orders.length>0?orders[orders.length-1]:null;
   if(order){
     order.paymentStatus='paid';
-    order.screenshotUrl=_screenshotDataUrl||'';
-    // Send screenshot to Telegram if available
-    if(_screenshotDataUrl && teleReady()){
-      try{ await telegramSendPhoto(TELE_CONFIG.ADMIN_CHAT_ID,_screenshotDataUrl,'💳 Payment screenshot — '+order.name+' · '+order.oid+' · Rs.'+order.total); }catch(e){}
-    } else if(teleReady()&&!_screenshotDataUrl){
-      // At least notify admin payment is marked done
-      try{
-        const msg='💚 Payment marked done — '+order.name+' (Flat '+order.flat+') · '+order.oid+' · Rs.'+order.total;
-        await fetch('https://api.telegram.org/bot'+TELE_CONFIG.BOT_TOKEN+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:TELE_CONFIG.ADMIN_CHAT_ID,text:msg})});
-      }catch(e){}
-    }
+    order.screenshotUrl=_screenshotDataUrl;
   }
-  if(tag){tag.textContent='✅ Payment Done — Thank you!';tag.style.color='#4e9e6b';tag.style.background='rgba(78,158,107,.08)';}
-  if(btn){btn.style.opacity='.5';btn.innerHTML='✅ Payment Marked Done';}
+  try{
+    // Send screenshot as photo
+    await telegramSendPhoto(
+      _HARDCODED_CHATID,
+      _screenshotDataUrl,
+      '💳 Payment screenshot\n👤 '+(order?order.name:'')
+        +' · Flat '+(order?order.flat:'')
+        +'\n🛒 '+(order?order.oid:'')
+        +' · ₹'+(order?order.total:'')
+    );
+    // Send text confirmation
+    await telegramSend(
+      _HARDCODED_CHATID,
+      '✅ Payment done — '+(order?order.name:'')
+        +' (Flat '+(order?order.flat:'')+')'
+        +'\n🛒 '+(order?order.oid:'')
+        +' · ₹'+(order?order.total:'')
+    );
+    if(tag){tag.textContent='✅ Payment screenshot sent to host!';tag.style.color='#4e9e6b';tag.style.background='rgba(78,158,107,.08)';}
+    if(btn){btn.style.opacity='.5';btn.innerHTML='✅ Screenshot Sent';}
+    toast('💚','Payment screenshot sent!','Host notified via Telegram ✈️');
+  }catch(e){
+    if(btn){btn.disabled=false;btn.innerHTML='✅ Mark Payment Done';}
+    toast('⚠️','Send failed',''+e.message);
+  }
   renderAdmin();
-  toast('💚','Payment confirmed!','Thank you! Host has been notified.');
 }
 
 function openTeleBot(){window.open('https://t.me/BYODSattvicMeals','_blank');}
