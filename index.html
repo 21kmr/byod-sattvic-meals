@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v49</title>
+<title>BYOD — Bring Your Own Dabba v50</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v49.0</span>
+      <span class="ver-badge" id="ver-badge">v50.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -654,9 +654,13 @@ body.dark-mode{
   <div id="prior-order-section"></div>
       <div style="height:160px"></div><!-- spacer for sticky bar -->
     </div>
-    <!-- Sticky checkout bar — always visible at bottom of submenu page -->
-    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:0;left:0;right:0;width:100%;max-width:480px;margin:0 auto;padding:12px 16px max(14px,env(safe-area-inset-bottom));background:var(--bg);border-top:2px solid var(--border);z-index:9999;box-shadow:0 -4px 24px rgba(0,0,0,.4)">
-      <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0;font-size:.9rem;padding:14px">Add items to order →</button>
+    <!-- Checkout modal popup — centre of screen, no positioning issues -->
+    <div id="sm-checkout-bar" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)">
+      <div style="width:100%;max-width:480px;background:var(--card);border-radius:20px 20px 0 0;padding:18px 16px max(20px,env(safe-area-inset-bottom));box-shadow:0 -8px 40px rgba(0,0,0,.5)">
+        <div style="width:36px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;margin:0 auto 14px"></div>
+        <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled>Add items to order →</button>
+        <div id="sm-cart-summary" style="text-align:center;font-size:.68rem;color:var(--muted);margin-top:6px"></div>
+      </div>
     </div>
 
     <!-- ══ CHECKOUT ══ -->
@@ -844,7 +848,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v49.0</span>
+          <span class="ver-badge">v50.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1190,7 +1194,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v49.0 — Bring Your Own Dabba
+// BYOD v50.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -1365,6 +1369,31 @@ async function _sheetsFetch(url){
 
 // Load ALL persistent data from Sheet on startup
 async function loadFromSheets(){
+  // Name migration — fixes old Tamil/shortened names from Sheet
+  const _NAME_FIX={
+    'Karuppu Kavuni Poha':'Black Rice Poha (Karuppu Kavuni)',
+    'Karuppu Kavuni Poha (Black Rice Flakes)':'Black Rice Poha (Karuppu Kavuni)',
+    'Barnyard Millet Poha (Kuthiraivali)':'Barnyard Millet Poha (Kuthiraivali / Jhangora)',
+    'Finger Millet Poha (Ragi)':'Finger Millet Poha (Ragi / Kelvaragu)',
+    'Mapillai Samba Poha (Heritage Red Rice)':'Heritage Red Rice Poha (Mapillai Samba)',
+    'Mapillai Samba Poha':'Heritage Red Rice Poha (Mapillai Samba)',
+    'Foxtail Millet Noodles (Thinai)':'Foxtail Millet Noodles (Thinai / Kangni)',
+    'Mapillai Samba Noodles':'Heritage Red Rice Noodles (Mapillai Samba)',
+    'Finger Millet Noodles (Ragi)':'Finger Millet Noodles (Ragi / Kelvaragu)',
+    'Pearl Millet Noodles (Kambu)':'Pearl Millet Noodles (Kambu / Bajra)',
+    'Moringa Noodles (Drumstick Leaf)':'Drumstick Leaf Noodles (Moringa / Murungai)',
+    'Moringa Little Millet Noodles':'Drumstick Leaf & Little Millet Noodles (Moringa Samai)',
+    'Foxtail Millet Vermicelli (Thinai)':'Foxtail Millet Vermicelli (Thinai / Kangni)',
+    'Finger Millet Vermicelli (Ragi)':'Finger Millet Vermicelli (Ragi / Kelvaragu)',
+    'Kodo Millet Vermicelli (Varagu)':'Kodo Millet Vermicelli (Varagu / Kodra)',
+    'Little Millet Vermicelli (Samai)':'Little Millet Vermicelli (Samai / Kutki)',
+    'Pearl Millet Vermicelli (Kambu)':'Pearl Millet Vermicelli (Kambu / Bajra)',
+    'Sorghum Vermicelli (Jowar)':'Sorghum Vermicelli (Jowar / Cholam)',
+    'Mapillai Samba Vermicelli':'Heritage Red Rice Vermicelli (Mapillai Samba)',
+    'Multi Millet Noodles':'Multi Millet Noodles (Mixed Grain)',
+  };
+  function _fixName(n){ return _NAME_FIX[n]||n; }
+
   if(!SHEETS_URL) return false;
   showLoadingBanner('Loading your menu from Google Sheets…');
   const res = await sheetsCall({action:'load'});
@@ -1388,7 +1417,7 @@ async function loadFromSheets(){
       freshMenu[catKey].push({
         id: String(id),
         e: emoji||'🍽️',
-        n: name||'',
+        n: _fixName(String(name||'')),
         p: parseFloat(price)||0,
         avail: String(avail).toLowerCase()!=='false'&&String(avail).toLowerCase()!=='no',
         soldOut: String(soldOutCol||'').toLowerCase()==='sold out',
@@ -1406,6 +1435,8 @@ async function loadFromSheets(){
     });
     INGREDIENTS = {...DEFAULT_INGREDIENTS,...freshIngr};
     _sheetsLoaded = true;
+    // Immediately write corrected names back to Sheet
+    setTimeout(()=>syncMenuToSheets(),2000);
   }
   // Parse settings (published state + per-section)
   if(res.settings){
@@ -2132,6 +2163,15 @@ function findDish(id){return[...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d
 function getItems(){return Object.keys(cart).map(id=>({...findDish(id),qty:cart[id]}));}
 function getTotal(){return getItems().reduce((s,i)=>s+i.p*i.qty,0);}
 function updateCheckBtn(){
+  // Update cart summary line
+  const summEl=document.getElementById('sm-cart-summary');
+  if(summEl){
+    const items=getItems();
+    if(items.length>0){
+      summEl.textContent=items.length+' item'+(items.length>1?'s':'')+' · ₹'+getTotal();
+    } else { summEl.textContent=''; }
+  }
+
   const s=getOrderStatus(currentCat),n=Object.keys(cart).length;
   const siCount=Object.keys(cart).filter(id=>id.startsWith('si')).length;
   const btn=document.getElementById('sm-checkout-btn');
@@ -2915,7 +2955,7 @@ function hideToast(){document.getElementById('toast').classList.remove('show');}
 let _pageHistory=[];
 function showPage(name,_fromPop){
   const bar=document.getElementById('sm-checkout-bar');
-  if(bar) bar.style.display=(name==='submenu'?'block':'none');
+  if(bar) bar.style.display=(name==='submenu'?'flex':'none');
   // Hide bottom nav on submenu so checkout bar has full bottom — show on all other pages
   const navEl=document.querySelector('nav');
   if(navEl) navEl.style.display=(name==='submenu'?'none':'flex');
