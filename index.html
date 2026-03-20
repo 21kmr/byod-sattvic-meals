@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v63</title>
+<title>BYOD — Bring Your Own Dabba v64</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v63.0</span>
+      <span class="ver-badge" id="ver-badge">v64.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v63.0</span>
+          <span class="ver-badge">v64.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1181,7 +1181,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v63.0 — Bring Your Own Dabba
+// BYOD v64.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -1690,10 +1690,11 @@ function handleRequest(data) {
 // TELEGRAM
 // ══════════════════════════════════════════════════════════════
 async function telegramSend(chatId,text){
-  TELE_CONFIG = lsLoad(LS.TELE, TELE_CONFIG); // always reload fresh from storage
-  if(!TELE_CONFIG.BOT_TOKEN||!chatId) return false;
+  // Always use hardcoded token — works on every device without any configuration
+  const _token=_HARDCODED_TOKEN;
+  if(!_token||!chatId) return false;
   try{
-    const r=await fetch('https://api.telegram.org/bot'+TELE_CONFIG.BOT_TOKEN+'/sendMessage',{
+    const r=await fetch('https://api.telegram.org/bot'+_token+'/sendMessage',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({chat_id:String(chatId),text,parse_mode:'HTML'})
     });
@@ -1716,13 +1717,13 @@ async function telegramSendPhoto(chatId,dataUrl,caption){
   }catch(e){return false;}
 }
 async function teleNotifyAdmin(o,screenshotDataUrl){
-  if(!teleReady())return false;
+  // credentials hardcoded — always ready
   const items=o.items.map(i=>'  '+i.e+' '+i.n+' x'+i.qty+' — Rs.'+(i.p*i.qty)).join('\n');
   const msg='🛒 <b>New Order — '+o.oid+'</b>\n\n👤 '+o.name+'\n📱 '+(o.phone||'—')+
     '\n🏠 Flat '+o.flat+'\n📍 Drop: '+o.drop+'\n\n<b>Items:</b>\n'+items+
     '\n\n💰 Rs.'+o.total+' · '+o.portions+'\n⏰ Dabba expected by 11:30 AM';
-  const sent=await telegramSend(TELE_CONFIG.ADMIN_CHAT_ID,msg);
-  if(sent&&screenshotDataUrl) await telegramSendPhoto(TELE_CONFIG.ADMIN_CHAT_ID,screenshotDataUrl,'💳 Payment — '+o.name+' · '+o.oid);
+  const sent=await telegramSend(_HARDCODED_CHATID,msg);
+  if(sent&&screenshotDataUrl) await telegramSendPhoto(_HARDCODED_CHATID,screenshotDataUrl,'💳 Payment — '+o.name+' · '+o.oid);
   return sent;
 }
 async function teleNotifyAdminDabba(o){
