@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v54</title>
+<title>BYOD — Bring Your Own Dabba v56</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v54.0</span>
+      <span class="ver-badge" id="ver-badge">v56.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -676,7 +676,7 @@ body.dark-mode{
       <div class="cosec"><div class="cotitle">🛒 Your Order</div><div id="co-items"></div>
         <div class="tcard"><div class="trow"><span>Subtotal</span><span id="co-sub">₹0</span></div><div class="trow"><span>Packing</span><span>₹0</span></div><div class="trow tot"><span>Total</span><span id="co-tot">₹0</span></div></div>
       </div>
-      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">🍱 Dabba Drop-off</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
+      <div class="cosec"><div style="margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">🍱 Dabba Drop-off</div></div><button onclick="placeOrder()" style="width:100%;background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:12px;padding:14px;font-size:.92rem;font-weight:800;cursor:pointer;text-align:center;box-shadow:0 4px 16px rgba(244,163,37,.4);font-family:'DM Sans',sans-serif;margin-top:8px;letter-spacing:.01em;display:block">🎉 Place Order &amp; Notify Host</button></div>
         <div class="dabba-card">
           <div class="dab-title">📍 Where to drop</div>
           <div class="dab-info">Place clean dabba at <strong>H-002</strong> or <strong>Exit Gate Security</strong> with your flat number</div>
@@ -686,24 +686,7 @@ body.dark-mode{
           </div>
         </div>
       </div>
-      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">✈️ Telegram Updates</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
-        <div class="tele-connect" id="co-tele-wrap">
-          <div class="tc-top"><div class="tc-ico">✈️</div><div><div class="tc-title">Link Telegram</div><div class="tc-sub">Get order confirmation &amp; ready alerts</div></div></div>
-          <ul class="tc-steps">
-            <li class="tc-step"><div class="sn">1</div><div>Open Telegram, search <strong>@BYODSattvicMeals</strong></div></li>
-            <li class="tc-step"><div class="sn">2</div><div>Send <strong>/start</strong> to the bot. It will reply with your Chat ID.</div></li>
-            <li class="tc-step"><div class="sn">3</div><div>Paste your Telegram username and the Chat ID below to receive ready alerts.</div></li>
-          </ul>
-          <div class="tele-id-row" style="margin-bottom:6px">
-            <input class="tele-id-inp" id="co-tele-inp" placeholder="@yourusername"/>
-            <button class="btn-link-tele" onclick="linkTele('co')">Link ✓</button>
-          </div>
-          <div style="font-size:.62rem;color:var(--muted);margin-bottom:4px">Your Telegram Chat ID (bot will send it on /start):</div>
-          <input class="tele-id-inp" id="co-tele-uid" placeholder="e.g. 123456789" style="width:100%;margin-bottom:0"/>
-          <div class="tele-linked-badge" id="co-tele-linked">✅ Telegram linked! You will get a message when your dabba is ready.</div>
-        </div>
-      </div>
-      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">👤 Your Details</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
+      <div class="cosec"><div style="margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">👤 Your Details</div></div><button onclick="placeOrder()" style="width:100%;background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:12px;padding:14px;font-size:.92rem;font-weight:800;cursor:pointer;text-align:center;box-shadow:0 4px 16px rgba(244,163,37,.4);font-family:'DM Sans',sans-serif;margin-top:8px;letter-spacing:.01em;display:block">🎉 Place Order &amp; Notify Host</button></div>
         <div class="cform">
           <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
           <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
@@ -851,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v54.0</span>
+          <span class="ver-badge">v56.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1077,7 +1060,7 @@ body.dark-mode{
         <div style="margin-top:9px">
           <div style="background:linear-gradient(135deg,rgba(42,171,238,.1),rgba(42,171,238,.04));border:1px solid rgba(42,171,238,.2);border-radius:var(--r);padding:14px;margin-bottom:8px">
             <div style="font-family:'Playfair Display',serif;font-size:.9rem;font-weight:700;color:#2AABEE;margin-bottom:4px">Telegram Bot Configuration</div>
-            <div style="font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Enter your bot credentials here. These are used to send real Telegram notifications for orders, dabba drops, and ready alerts. Get these from @BotFather and @userinfobot on Telegram.</div>
+            <div style="font-size:.68rem;color:var(--muted);line-height:1.55;margin-bottom:12px">Orders are sent to <b>your</b> Telegram automatically — customers configure nothing.<br>Get your credentials once from Telegram:<br>1. <b>Bot Token</b> → search @BotFather → /newbot → copy token<br>2. <b>Your Chat ID</b> → search @userinfobot → send any message → copy the ID number<br>Save both below, then tap <b>Send Test Message</b> to confirm it works.</div>
             <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Bot Token (from @BotFather)</div>
             <input id="cfg-token" style="width:100%;background:var(--surf);border:1.5px solid rgba(42,171,238,.2);border-radius:7px;padding:8px 10px;color:#2AABEE;font-family:monospace;font-size:.76rem;outline:none;margin-bottom:10px" placeholder="7123456789:AAFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
             <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Your Admin Telegram Chat ID (from @userinfobot)</div>
@@ -1197,7 +1180,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v54.0 — Bring Your Own Dabba
+// BYOD v56.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -2249,16 +2232,7 @@ async function markPaymentDone(){
   renderAdmin();
   toast('💚','Payment confirmed!','Thank you! Host has been notified.');
 }
-function linkTele(ctx){
-  const inp=document.getElementById(ctx==='co'?'co-tele-inp':'tele-main-inp');
-  const val=(inp.value||'').trim();if(!val||!val.startsWith('@')){toast('⚠️','Invalid username','Enter your @username');return;}
-  teleLinked=true;teleUser=val;subs++;
-  const st=document.getElementById('st-subs');if(st)st.textContent=subs;
-  document.getElementById('pill-tele').classList.add('at');document.getElementById('pill-tele-lbl').textContent='Linked '+val;
-  if(ctx==='co'){const el=document.getElementById('co-tele-linked');if(el)el.style.display='flex';}
-  else{const el=document.getElementById('tele-linked-main');if(el)el.style.display='flex';}
-  toast('✈️','Telegram linked!','Alerts will go to '+val);
-}
+
 function openTeleBot(){window.open('https://t.me/BYODSattvicMeals','_blank');}
 
 async function placeOrder(){
@@ -2277,8 +2251,8 @@ async function placeOrder(){
   const oid='BYOD-'+(1040+orders.length+1);
   const portions=Object.values(cart).reduce((s,q)=>s+q,0)+' portion'+(Object.values(cart).reduce((s,q)=>s+q,0)>1?'s':'');
   const drop=document.getElementById('cf-drop').value;
-  const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
-  const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
+  const tele='Not linked';
+  const teleUid='';
   const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',paymentStatus:'pending',screenshotUrl:'',time:new Date().toISOString()};
   orders.push(order);
 
@@ -2401,6 +2375,30 @@ function setOccasionBanner(enabled){
   toast(enabled?'✨':'✕', enabled?'Occasion banner enabled!':'Banner disabled', enabled?name:'');
 }
 
+async function testTelegram(){
+  const tok=document.getElementById('cfg-token').value.trim();
+  const cid=document.getElementById('cfg-chatid').value.trim();
+  if(!tok||!cid){toast('⚠️','Fill in token and chat ID first','');return;}
+  const btn=document.getElementById('tele-test-btn');
+  if(btn){btn.textContent='Sending…';btn.disabled=true;}
+  try{
+    const r=await fetch('https://api.telegram.org/bot'+tok+'/sendMessage',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:String(cid),text:'✅ BYOD Test Message\n\nTelegram is working! Orders will be sent here.',parse_mode:'HTML'})
+    });
+    const d=await r.json();
+    if(d.ok){
+      toast('✅','Test message sent!','Check your Telegram now.');
+      if(btn){btn.textContent='✅ Test Sent!';btn.style.background='rgba(78,158,107,.2)';}
+    } else {
+      toast('⚠️','Failed: '+d.description,'Check your token and chat ID.');
+      if(btn){btn.textContent='⚠️ Failed — tap to retry';btn.disabled=false;}
+    }
+  }catch(e){
+    toast('⚠️','Error: '+e.message,'');
+    if(btn){btn.textContent='⚠️ Error';btn.disabled=false;}
+  }
+}
 function saveBotConfig(){
   const tok=document.getElementById('cfg-token').value.trim(),cid=document.getElementById('cfg-chatid').value.trim();
   if(!tok||!cid){toast('⚠️','Fill both fields','Bot Token and Admin Chat ID required.');return;}
