@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v62</title>
+<title>BYOD — Bring Your Own Dabba v63</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v62.0</span>
+      <span class="ver-badge" id="ver-badge">v63.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v62.0</span>
+          <span class="ver-badge">v63.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1066,6 +1066,7 @@ body.dark-mode{
             <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px">Your Admin Telegram Chat ID (from @userinfobot)</div>
             <input id="cfg-chatid" style="width:100%;background:var(--surf);border:1.5px solid rgba(42,171,238,.2);border-radius:7px;padding:8px 10px;color:#2AABEE;font-family:monospace;font-size:.76rem;outline:none;margin-bottom:10px" placeholder="123456789"/>
             <button onclick="saveBotConfig()" style="width:100%;background:#2AABEE;border:none;border-radius:8px;padding:10px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;color:#fff;cursor:pointer">Save &amp; Activate</button>
+            <button id="tele-test-btn" onclick="testTelegram()" style="width:100%;margin-top:7px;background:rgba(37,211,102,.12);border:1.5px solid rgba(37,211,102,.3);border-radius:8px;padding:10px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#25d366;cursor:pointer">📨 Send Test Message to My Telegram</button>
             <div id="cfg-status" style="font-size:.65rem;color:var(--green);margin-top:6px;text-align:center"></div>
           </div>
 
@@ -1180,7 +1181,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v62.0 — Bring Your Own Dabba
+// BYOD v63.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -1211,20 +1212,17 @@ let _screenshotDataUrl = '';
 let _sheetsLoaded = false; // true once menu loaded from Sheet
 
 // ── Telegram config (from localStorage) ──────────────────────
-let // ── Hardcoded admin Telegram credentials ──────────────────
-const _HARDCODED_TOKEN  = '8597777677:AAEa9BWagKKTtCJsI_2Nwn5ZiKN-gubRDPM';
-const _HARDCODED_CHATID = '7428826094';
-// Load from localStorage (Admin → Settings can override), fall back to hardcoded
-TELE_CONFIG = lsLoad(LS.TELE, { BOT_TOKEN:_HARDCODED_TOKEN, ADMIN_CHAT_ID:_HARDCODED_CHATID });
-if(!TELE_CONFIG.BOT_TOKEN) TELE_CONFIG.BOT_TOKEN = _HARDCODED_TOKEN;
-if(!TELE_CONFIG.ADMIN_CHAT_ID) TELE_CONFIG.ADMIN_CHAT_ID = _HARDCODED_CHATID;
+const _HARDCODED_TOKEN='8597777677:AAEa9BWagKKTtCJsI_2Nwn5ZiKN-gubRDPM';
+const _HARDCODED_CHATID='7428826094';
+let TELE_CONFIG = lsLoad(LS.TELE, { BOT_TOKEN:_HARDCODED_TOKEN, ADMIN_CHAT_ID:_HARDCODED_CHATID });
+if(!TELE_CONFIG.BOT_TOKEN) TELE_CONFIG.BOT_TOKEN=_HARDCODED_TOKEN;
+if(!TELE_CONFIG.ADMIN_CHAT_ID) TELE_CONFIG.ADMIN_CHAT_ID=_HARDCODED_CHATID;
 let SHEETS_URL = lsLoad(LS.SHEETS, '');
 
 function teleReady(){
-  // Always refresh — use localStorage override if set, else fall back to hardcoded
-  const _saved = lsLoad(LS.TELE, {});
-  TELE_CONFIG.BOT_TOKEN  = (_saved.BOT_TOKEN  && _saved.BOT_TOKEN.includes(':'))  ? _saved.BOT_TOKEN  : _HARDCODED_TOKEN;
-  TELE_CONFIG.ADMIN_CHAT_ID = (_saved.ADMIN_CHAT_ID && _saved.ADMIN_CHAT_ID.length>3) ? _saved.ADMIN_CHAT_ID : _HARDCODED_CHATID;
+  const _s=lsLoad(LS.TELE,{});
+  TELE_CONFIG.BOT_TOKEN=(_s.BOT_TOKEN&&_s.BOT_TOKEN.includes(':'))?_s.BOT_TOKEN:_HARDCODED_TOKEN;
+  TELE_CONFIG.ADMIN_CHAT_ID=(_s.ADMIN_CHAT_ID&&_s.ADMIN_CHAT_ID.length>3)?_s.ADMIN_CHAT_ID:_HARDCODED_CHATID;
   return !!(TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.BOT_TOKEN.includes(':') &&
             TELE_CONFIG.ADMIN_CHAT_ID && TELE_CONFIG.ADMIN_CHAT_ID.length > 3);
 }
@@ -2431,6 +2429,28 @@ function setOccasionBanner(enabled){
   toast(enabled?'✨':'✕', enabled?'Occasion banner enabled!':'Banner disabled', enabled?name:'');
 }
 
+async function testTelegram(){
+  const btn=document.getElementById('tele-test-btn');
+  if(btn){btn.textContent='Sending…';btn.disabled=true;}
+  try{
+    const r=await fetch('https://api.telegram.org/bot'+_HARDCODED_TOKEN+'/sendMessage',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:String(_HARDCODED_CHATID),
+        text:'✅ BYOD Test\n\nTelegram is working! Orders will notify you here.',parse_mode:'HTML'})
+    });
+    const d=await r.json();
+    if(d.ok){
+      toast('✅','Test message sent!','Check your Telegram now.');
+      if(btn){btn.textContent='✅ Working!';btn.style.background='rgba(78,158,107,.2)';btn.style.color='#4e9e6b';}
+    } else {
+      toast('⚠️','Failed: '+d.description,'Check token and chat ID.');
+      if(btn){btn.textContent='⚠️ Failed — tap to retry';btn.disabled=false;}
+    }
+  }catch(e){
+    toast('⚠️','Error',''+e.message);
+    if(btn){btn.textContent='⚠️ Error — tap to retry';btn.disabled=false;}
+  }
+}
 function saveBotConfig(){
   const tok=document.getElementById('cfg-token').value.trim(),cid=document.getElementById('cfg-chatid').value.trim();
   if(!tok||!cid){toast('⚠️','Fill both fields','Bot Token and Admin Chat ID required.');return;}
