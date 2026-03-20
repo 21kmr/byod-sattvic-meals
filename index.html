@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v59</title>
+<title>BYOD — Bring Your Own Dabba v61</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v59.0</span>
+      <span class="ver-badge" id="ver-badge">v61.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -719,8 +719,8 @@ body.dark-mode{
           <div id="payment-status-tag" style="text-align:center;margin-top:7px;font-size:.72rem;font-weight:700;color:#f87171;padding:6px;background:rgba(239,68,68,.07);border-radius:8px">⏳ Payment Pending</div>
         </div>
         <div class="tele-confirm" id="tele-confirm-box">
-          <div class="tc-conf-t">✈️ Telegram confirmation sent!</div>
-          <div class="tc-conf-b">Check Telegram — bot has sent your order details and timeline.</div>
+          <div class="tc-conf-t">✅ Order saved!</div>
+          <div class="tc-conf-b"></div>
         </div>
         <div class="track-card" id="track-steps"></div>
         <button class="btn-notify-dabba" style="display:flex;width:100%;margin-bottom:9px" onclick="notifyDabbaDropped()">📦 I've Dropped My Dabba!</button>
@@ -834,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v59.0</span>
+          <span class="ver-badge">v61.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1180,7 +1180,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v59.0 — Bring Your Own Dabba
+// BYOD v61.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -2236,42 +2236,89 @@ async function markPaymentDone(){
 function openTeleBot(){window.open('https://t.me/BYODSattvicMeals','_blank');}
 
 async function placeOrder(){
-  const allSI=getItems().every(i=>i.id.startsWith('si'));
-  const s=getOrderStatus(allSI?'si':null);
-  if(!s.open){toast('⏰','South Indian Ala Carte closed',s.msg);return;}
-  const name=document.getElementById('cf-name').value.trim();
-  const phone=document.getElementById('cf-phone').value.trim();
-  const flat=document.getElementById('cf-flat').value.trim();
-  if(!name){toast('⚠️','Name required','Enter your name.');return;}
-  if(!flat){toast('⚠️','Flat required','Enter your flat number.');return;}
-  // Screenshot optional — payment happens after order
-  const btn=document.getElementById('placeBtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>Placing…';
-  await new Promise(r=>setTimeout(r,600));
-  const items=getItems(),total=getTotal();
-  const oid='BYOD-'+(1040+orders.length+1);
-  const portions=Object.values(cart).reduce((s,q)=>s+q,0)+' portion'+(Object.values(cart).reduce((s,q)=>s+q,0)>1?'s':'');
-  const drop=document.getElementById('cf-drop').value;
-  const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
-  const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
-  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',paymentStatus:'pending',screenshotUrl:'',time:new Date().toISOString()};
-  orders.push(order);
+  // Prevent double-tap
+  if(window._placingOrder) return;
+  window._placingOrder=true;
 
-  const [adminSent,sheetsSynced]=await Promise.all([teleNotifyAdmin(order,_screenshotDataUrl),syncOrderToSheets(order)]);
-  let msgs=[];if(adminSent)msgs.push('Host notified ✈️ + 📸');if(sheetsSynced)msgs.push('📊 In your Sheet');
-  addAlert('✅','t','New order — '+name,oid+' · Rs.'+total+(msgs.length?' · '+msgs.join(' · '):''));
-  btn.disabled=false;btn.innerHTML='🎉 Place Order & Notify Host';
-  document.getElementById('placeBtn').style.display='none';document.getElementById('notifyDabbaBtn').style.display='flex';
-  const succ=document.getElementById('success-sec');succ.style.display='block';succ.scrollIntoView({behavior:'smooth'});
-  const tcBox=document.getElementById('tele-confirm-box');tcBox.style.display='block';
-  tcBox.querySelector('.tc-conf-t').textContent=adminSent?'✈️ Host notified!'+(sheetsSynced?' · 📊 In Google Sheet':''):teleReady()?'⚠️ Telegram failed — check bot token':'📋 Order saved. Set up Telegram in Admin → Settings.';
-  tcBox.querySelector('.tc-conf-b').textContent=adminSent?'Tap below to activate dabba-ready alerts.':'Admin → Settings → Bot Token + Chat ID.';
-  document.getElementById('track-steps').innerHTML=`
-    <div class="tstep"><div class="tsi done">✅</div><div><div class="tst">Order confirmed ${oid}</div><div class="tstime">Just now${adminSent?' · Host notified ✈️':''}${sheetsSynced?' · 📊':''}</div></div></div>
-    <div class="tstep"><div class="tsi pend">💳</div><div><div class="tst">Payment pending</div><div class="tstime">Pay via UPI → shruthips@sbi then tap Mark as Paid below</div></div></div>
-    <div class="tstep"><div class="tsi pend">📦</div><div><div class="tst">Drop your dabba by 11:30 AM</div><div class="tstime">${drop}</div></div></div>
-    <div class="tstep"><div class="tsi pend">🍲</div><div><div class="tst">Meal being cooked</div><div class="tstime">Ready ~12:30 PM</div></div></div>
-    <div class="tstep"><div class="tsi pend">🎉</div><div><div class="tst">Dabba packed — Telegram alert coming</div></div></div>`;
-  renderAdmin();toast(adminSent?'✈️':'✅','Order placed, '+name+'!',adminSent?'Host notified — now complete payment below':'Saved in Admin panel — complete payment below');
+  // Grey out ALL place order buttons immediately
+  document.querySelectorAll('[onclick*="placeOrder"], #placeBtn').forEach(b=>{
+    b.disabled=true;
+    b.style.opacity='.45';
+    b.style.pointerEvents='none';
+    if(b.id==='placeBtn') b.innerHTML='<span class="spin"></span> Placing…';
+    else b.textContent='⏳ Placing…';
+  });
+
+  const done=(success)=>{
+    window._placingOrder=false;
+    document.querySelectorAll('[onclick*="placeOrder"], #placeBtn').forEach(b=>{
+      if(!success){
+        b.disabled=false;
+        b.style.opacity='';
+        b.style.pointerEvents='';
+        if(b.id==='placeBtn') b.innerHTML='🎉 Place Order & Notify Host';
+        else b.textContent='🎉 Place Order & Notify Host';
+      }
+    });
+  };
+
+  try{
+    const allSI=getItems().every(i=>i.id.startsWith('si'));
+    const s=getOrderStatus(allSI?'si':null);
+    if(!s.open){ toast('⏰','Orders closed',s.msg); done(false); return; }
+
+    const name=document.getElementById('cf-name').value.trim();
+    const phone=(document.getElementById('cf-phone')?.value||'').trim();
+    const flat=document.getElementById('cf-flat').value.trim();
+    if(!name){ toast('⚠️','Name required','Enter your name.'); done(false); return; }
+    if(!flat){ toast('⚠️','Flat required','Enter your flat number.'); done(false); return; }
+
+    const items=getItems(), total=getTotal();
+    if(!items.length){ toast('⚠️','No items','Add items to your cart first.'); done(false); return; }
+
+    const oid='BYOD-'+(1040+orders.length+1);
+    const qty=Object.values(cart).reduce((s,q)=>s+q,0);
+    const portions=qty+' portion'+(qty>1?'s':'');
+    const drop=document.getElementById('cf-drop')?.value||'Main gate';
+    const order={oid,name,phone,flat,tele:'',teleUserId:'',items,total,portions,drop,
+                 status:'confirmed',paymentStatus:'pending',screenshotUrl:'',
+                 time:new Date().toISOString()};
+    orders.push(order);
+
+    const [adminSent,sheetsSynced]=await Promise.all([
+      teleNotifyAdmin(order,_screenshotDataUrl),
+      syncOrderToSheets(order)
+    ]);
+
+    addAlert('✅','t','New order — '+name, oid+' · ₹'+total);
+
+    // Hide all place order buttons, show success
+    document.querySelectorAll('[onclick*="placeOrder"], #placeBtn').forEach(b=>{
+      b.style.display='none';
+    });
+    const notifyBtn=document.getElementById('notifyDabbaBtn');
+    if(notifyBtn) notifyBtn.style.display='flex';
+
+    const succ=document.getElementById('success-sec');
+    if(succ){ succ.style.display='block'; succ.scrollIntoView({behavior:'smooth'}); }
+
+    const tcBox=document.getElementById('tele-confirm-box');
+    if(tcBox){
+      tcBox.style.display='block';
+      const t=tcBox.querySelector('.tc-conf-t');
+      const b2=tcBox.querySelector('.tc-conf-b');
+      if(t) t.textContent='✅ Order saved!'+(adminSent?' · Host notified ✈️':'');
+      if(b2) b2.textContent='Drop your dabba by 11:30 AM.';
+    }
+
+    toast('✅','Order placed, '+name+'!', adminSent?'Host notified via Telegram ✈️':'Order saved.');
+    done(true);
+
+  } catch(e){
+    console.error('placeOrder error:',e);
+    toast('⚠️','Something went wrong',e.message||'Please try again.');
+    done(false);
+  }
 }
 
 async function notifyDabbaDropped(){
