@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v61</title>
+<title>BYOD — Bring Your Own Dabba v62</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v61.0</span>
+      <span class="ver-badge" id="ver-badge">v62.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v61.0</span>
+          <span class="ver-badge">v62.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1180,7 +1180,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v61.0 — Bring Your Own Dabba
+// BYOD v62.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -1211,11 +1211,20 @@ let _screenshotDataUrl = '';
 let _sheetsLoaded = false; // true once menu loaded from Sheet
 
 // ── Telegram config (from localStorage) ──────────────────────
-let TELE_CONFIG = lsLoad(LS.TELE, { BOT_TOKEN:'', ADMIN_CHAT_ID:'' });
+let // ── Hardcoded admin Telegram credentials ──────────────────
+const _HARDCODED_TOKEN  = '8597777677:AAEa9BWagKKTtCJsI_2Nwn5ZiKN-gubRDPM';
+const _HARDCODED_CHATID = '7428826094';
+// Load from localStorage (Admin → Settings can override), fall back to hardcoded
+TELE_CONFIG = lsLoad(LS.TELE, { BOT_TOKEN:_HARDCODED_TOKEN, ADMIN_CHAT_ID:_HARDCODED_CHATID });
+if(!TELE_CONFIG.BOT_TOKEN) TELE_CONFIG.BOT_TOKEN = _HARDCODED_TOKEN;
+if(!TELE_CONFIG.ADMIN_CHAT_ID) TELE_CONFIG.ADMIN_CHAT_ID = _HARDCODED_CHATID;
 let SHEETS_URL = lsLoad(LS.SHEETS, '');
 
 function teleReady(){
-  TELE_CONFIG = lsLoad(LS.TELE, TELE_CONFIG); // always fresh
+  // Always refresh — use localStorage override if set, else fall back to hardcoded
+  const _saved = lsLoad(LS.TELE, {});
+  TELE_CONFIG.BOT_TOKEN  = (_saved.BOT_TOKEN  && _saved.BOT_TOKEN.includes(':'))  ? _saved.BOT_TOKEN  : _HARDCODED_TOKEN;
+  TELE_CONFIG.ADMIN_CHAT_ID = (_saved.ADMIN_CHAT_ID && _saved.ADMIN_CHAT_ID.length>3) ? _saved.ADMIN_CHAT_ID : _HARDCODED_CHATID;
   return !!(TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.BOT_TOKEN.includes(':') &&
             TELE_CONFIG.ADMIN_CHAT_ID && TELE_CONFIG.ADMIN_CHAT_ID.length > 3);
 }
