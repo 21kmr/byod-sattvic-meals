@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v45.0</span>
+      <span class="ver-badge" id="ver-badge">v46.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -652,10 +652,10 @@ body.dark-mode{
       <div id="dish-list"></div>
   <div id="sm-price-note" style="display:none;margin:6px 11px 0;font-size:.62rem;color:var(--muted);font-style:italic;line-height:1.5;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">💡 Prices are indicative and may vary based on ingredient availability and portion size.</div>
   <div id="prior-order-section"></div>
-      <div style="height:72px"></div><!-- spacer for sticky bar -->
+      <div style="height:130px"></div><!-- spacer for sticky bar -->
     </div>
     <!-- Sticky checkout bar — always visible at bottom of submenu page -->
-    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:10px 14px;background:var(--bg);border-top:1px solid var(--border);z-index:8;box-shadow:0 -2px 12px rgba(0,0,0,.12)">
+    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:10px 14px;padding-bottom:calc(10px + 58px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--border);z-index:11;box-shadow:0 -2px 16px rgba(0,0,0,.18)">
       <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0;font-size:.9rem;padding:14px">Add items to order →</button>
     </div>
 
@@ -843,7 +843,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v45.0</span>
+          <span class="ver-badge">v46.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1207,10 +1207,11 @@ let _screenshotDataUrl = '';
 let _sheetsLoaded = false; // true once menu loaded from Sheet
 
 // ── Telegram config (from localStorage) ──────────────────────
-const TELE_CONFIG = lsLoad(LS.TELE, { BOT_TOKEN:'', ADMIN_CHAT_ID:'' });
+let TELE_CONFIG = lsLoad(LS.TELE, { BOT_TOKEN:'', ADMIN_CHAT_ID:'' });
 let SHEETS_URL = lsLoad(LS.SHEETS, '');
 
 function teleReady(){
+  TELE_CONFIG = lsLoad(LS.TELE, TELE_CONFIG); // always fresh
   return !!(TELE_CONFIG.BOT_TOKEN && TELE_CONFIG.BOT_TOKEN.includes(':') &&
             TELE_CONFIG.ADMIN_CHAT_ID && TELE_CONFIG.ADMIN_CHAT_ID.length > 3);
 }
@@ -1643,6 +1644,7 @@ function handleRequest(data) {
 // TELEGRAM
 // ══════════════════════════════════════════════════════════════
 async function telegramSend(chatId,text){
+  TELE_CONFIG = lsLoad(LS.TELE, TELE_CONFIG); // always reload fresh from storage
   if(!TELE_CONFIG.BOT_TOKEN||!chatId) return false;
   try{
     const r=await fetch('https://api.telegram.org/bot'+TELE_CONFIG.BOT_TOKEN+'/sendMessage',{
@@ -1653,6 +1655,7 @@ async function telegramSend(chatId,text){
   }catch(e){return false;}
 }
 async function telegramSendPhoto(chatId,dataUrl,caption){
+  TELE_CONFIG = lsLoad(LS.TELE, TELE_CONFIG); // always reload fresh from storage
   if(!TELE_CONFIG.BOT_TOKEN||!chatId||!dataUrl) return false;
   try{
     const blob=await(await fetch(dataUrl)).blob();
