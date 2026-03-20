@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v39</title>
+<title>BYOD — Bring Your Own Dabba v48</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -208,7 +208,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .fld select option{background:var(--card)}
 .btn-place{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(90deg,var(--saff),var(--saff2));color:#000;border:none;border-radius:var(--r);padding:13px;font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:6px}
 .btn-place:active{opacity:.86;transform:scale(.98)}
-.btn-place:disabled{background:var(--muted);cursor:not-allowed;transform:none;color:rgba(255,255,255,.35)}
+.btn-place:disabled{background:rgba(100,100,100,.3);border:1.5px solid rgba(255,255,255,.1);cursor:not-allowed;transform:none;color:rgba(255,255,255,.5)}
 .btn-notify-dabba{width:100%;background:none;border:1.5px solid var(--green);color:var(--green);border-radius:var(--r);padding:11px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;display:none;align-items:center;justify-content:center;gap:5px;margin-bottom:6px}
 .btn-notify-dabba:active{background:rgba(78,158,107,.1)}
 .success-sec{display:none;padding:26px 15px;text-align:center;animation:su .4s ease}
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v47.0</span>
+      <span class="ver-badge" id="ver-badge">v48.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -575,8 +575,8 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <button id="pub-pill-si" onclick="event.stopPropagation();publishSection('si')" style="font-size:.58rem;font-weight:800;padding:3px 9px;border-radius:20px;border:1.5px solid rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#f87171;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:.2s">OFFLINE</button>
-              <span id="arr-si" style="color:var(--saff);font-size:.85rem;transition:.2s;margin-left:2px">▼</span>
+              <div id="pub-dot-si" style="width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.3s"></div>
+              <span id="arr-si" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
             </div>
           </div>
           <div id="sec-si" style="padding:0 11px 11px">
@@ -598,8 +598,8 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <button id="pub-pill-pb" onclick="event.stopPropagation();publishSection('pb')" style="font-size:.58rem;font-weight:800;padding:3px 9px;border-radius:20px;border:1.5px solid rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#f87171;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:.2s">OFFLINE</button>
-              <span id="arr-pb" style="color:var(--saff);font-size:.85rem;transition:.2s;margin-left:2px">▼</span>
+              <div id="pub-dot-pb" style="width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.3s"></div>
+              <span id="arr-pb" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
             </div>
           </div>
           <div id="sec-pb" style="padding:0 11px 11px">
@@ -621,8 +621,8 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <button id="pub-pill-sv" onclick="event.stopPropagation();publishSection('sv')" style="font-size:.58rem;font-weight:800;padding:3px 9px;border-radius:20px;border:1.5px solid rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#f87171;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:.2s">OFFLINE</button>
-              <span id="arr-sv" style="color:var(--saff);font-size:.85rem;transition:.2s;margin-left:2px">▼</span>
+              <div id="pub-dot-sv" style="width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.3s"></div>
+              <span id="arr-sv" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
             </div>
           </div>
           <div id="sec-sv" style="padding:0 11px 11px">
@@ -652,10 +652,10 @@ body.dark-mode{
       <div id="dish-list"></div>
   <div id="sm-price-note" style="display:none;margin:6px 11px 0;font-size:.62rem;color:var(--muted);font-style:italic;line-height:1.5;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">💡 Prices are indicative and may vary based on ingredient availability and portion size.</div>
   <div id="prior-order-section"></div>
-      <div style="height:130px"></div><!-- spacer for sticky bar -->
+      <div style="height:160px"></div><!-- spacer for sticky bar -->
     </div>
     <!-- Sticky checkout bar — always visible at bottom of submenu page -->
-    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:12px 14px 16px;background:var(--bg);border-top:1px solid var(--border);z-index:9999;box-shadow:0 -4px 24px rgba(0,0,0,.4)">
+    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:calc(64px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:12px 14px 12px;background:var(--bg);border-top:1px solid var(--border);z-index:9999;box-shadow:0 -4px 20px rgba(0,0,0,.35)">
       <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0;font-size:.9rem;padding:14px">Add items to order →</button>
     </div>
 
@@ -844,7 +844,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v47.0</span>
+          <span class="ver-badge">v48.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -857,10 +857,23 @@ body.dark-mode{
         <button class="atab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
       </div>
       <div class="asec on" id="atab-orders">
-        <div style="display:flex;gap:6px;margin:10px 0 8px">
-          <div id="pub-status-si" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">🍲 Ala Carte<br><span style="font-weight:700">—</span></div>
-          <div id="pub-status-pb" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">✨ Special<br><span style="font-weight:700">—</span></div>
-          <div id="pub-status-sv" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">🌾 Dinner<br><span style="font-weight:700">—</span></div>
+        <!-- Section Publish/Unpublish buttons — Admin Orders tab -->
+        <div style="margin:10px 0 10px">
+          <div style="font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">📢 Publish Sections</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <button id="pub-btn-si" onclick="publishSection('si')"
+              style="width:100%;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#4e9e6b;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+              <span>🍲 South Indian Ala Carte</span><span id="pub-btn-si-lbl" style="font-size:.72rem;opacity:.8">OFFLINE</span>
+            </button>
+            <button id="pub-btn-pb" onclick="publishSection('pb')"
+              style="width:100%;background:rgba(244,163,37,.12);border:1.5px solid rgba(244,163,37,.25);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:var(--saff);cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+              <span>✨ BYOD Special</span><span id="pub-btn-pb-lbl" style="font-size:.72rem;opacity:.8">OFFLINE</span>
+            </button>
+            <button id="pub-btn-sv" onclick="publishSection('sv')"
+              style="width:100%;background:rgba(100,149,237,.12);border:1.5px solid rgba(100,149,237,.25);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#6495ed;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+              <span>🌾 Millet & Dinner</span><span id="pub-btn-sv-lbl" style="font-size:.72rem;opacity:.8">OFFLINE</span>
+            </button>
+          </div>
         </div><div class="stats-grid" style="margin-top:0">
           <div class="sbox"><div class="sbn s" id="st-orders">0</div><div class="sbl">Orders</div></div>
           <div class="sbox"><div class="sbn g" id="st-rev">₹0</div><div class="sbl">Revenue</div></div>
@@ -1177,7 +1190,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v14.0 — Bring Your Own Dabba
+// BYOD v48.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -2467,71 +2480,30 @@ async function publishSection(cat){
 }
 
 function _syncAdminPubButtons(){
+  const cfg={
+    si:{name:'🍲 Ala Carte',liveCol:'rgba(78,158,107,.2)',liveBorder:'rgba(78,158,107,.4)',liveText:'#4e9e6b',offCol:'rgba(100,100,100,.1)',offBorder:'rgba(100,100,100,.2)',offText:'var(--muted)'},
+    pb:{name:'✨ BYOD Special',liveCol:'rgba(244,163,37,.18)',liveBorder:'rgba(244,163,37,.35)',liveText:'var(--saff)',offCol:'rgba(100,100,100,.1)',offBorder:'rgba(100,100,100,.2)',offText:'var(--muted)'},
+    sv:{name:'🌾 Dinner',liveCol:'rgba(100,149,237,.18)',liveBorder:'rgba(100,149,237,.35)',liveText:'#6495ed',offCol:'rgba(100,100,100,.1)',offBorder:'rgba(100,100,100,.2)',offText:'var(--muted)'}
+  };
   ['si','pb','sv'].forEach(cat=>{
-    const btn=document.getElementById('pub-btn-'+cat);
-    const dot=document.getElementById('adm-pub-dot-'+cat);
     const pub=_sectionPublished[cat];
-    if(dot) dot.style.background = pub ? '#4e9e6b' : 'var(--muted)';
+    const c=cfg[cat];
+    // Admin orders tab buttons
+    const btn=document.getElementById('pub-btn-'+cat);
+    const lbl=document.getElementById('pub-btn-'+cat+'-lbl');
     if(btn){
-      if(pub){
-        btn.textContent='🔴 Unpublish';
-        btn.style.background='rgba(239,68,68,.12)';
-        btn.style.borderColor='rgba(239,68,68,.25)';
-        btn.style.color='#f87171';
-      } else {
-        btn.textContent='📢 Publish';
-        btn.style.background = cat==='pb'?'rgba(244,163,37,.15)':'rgba(78,158,107,.15)';
-        btn.style.borderColor = cat==='pb'?'rgba(244,163,37,.3)':'rgba(78,158,107,.3)';
-        btn.style.color = cat==='pb'?'var(--saff)':'#4e9e6b';
-      }
+      btn.style.background=pub?c.liveCol:c.offCol;
+      btn.style.borderColor=pub?c.liveBorder:c.offBorder;
+      btn.style.color=pub?c.liveText:c.offText;
     }
-    const pill=document.getElementById('pub-pill-'+cat);
-    if(pill){
-      if(pub){pill.textContent='🟢 LIVE';pill.style.background='rgba(78,158,107,.15)';pill.style.borderColor='rgba(78,158,107,.3)';pill.style.color='#4e9e6b';}
-      else{pill.textContent='OFFLINE';pill.style.background='rgba(239,68,68,.1)';pill.style.borderColor='rgba(239,68,68,.3)';pill.style.color='#f87171';}
-    }
+    if(lbl) lbl.textContent=pub?'🟢 LIVE — tap to unpublish':'⚫ OFFLINE — tap to publish';
+    // Old admin dot (if still present)
+    const dot=document.getElementById('adm-pub-dot-'+cat);
+    if(dot) dot.style.background=pub?'#4e9e6b':'var(--muted)';
+    // Home section dot (read-only indicator)
+    const homeDot=document.getElementById('pub-dot-'+cat);
+    if(homeDot) homeDot.style.background=pub?'#4e9e6b':'var(--muted)';
   });
-}
-
-// Save menu → Sheet (single source of truth)
-async function saveMenu(){
-  // ── Lock the save button while uploading ─────────────────
-  const saveBtn=document.querySelector('.save-btn');
-  const origLabel=saveBtn?saveBtn.innerHTML:'';
-  if(saveBtn){
-    saveBtn.disabled=true;
-    saveBtn.style.opacity='.55';
-    saveBtn.style.cursor='not-allowed';
-    saveBtn.innerHTML='<span class="spin"></span> Saving to Google Sheets…';
-  }
-  try{
-    ['si','sv','pb','ck'].forEach(cat=>{
-      MENU[cat].forEach(d=>{
-        const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),
-              t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id),
-              ing=document.getElementById('eding-'+d.id);
-        const q=document.getElementById('edq-'+d.id),so=document.getElementById('edso-'+d.id);
-        if(n)d.n=n.value;if(p)d.p=parseFloat(p.value)||d.p;
-        if(q)d.portionLabel=q.value.trim();
-        if(t)d.avail=t.classList.contains('on');
-        if(so)d.soldOut=so.classList.contains('son');
-        if(ph)d.photo=ph.value.trim();if(ing)INGREDIENTS[d.id]=ing.value.trim();
-      });
-    });
-    renderBanner();
-    const sheetsSynced=await syncMenuToSheets();
-    if(saveBtn){
-      saveBtn.innerHTML='✅ Saved!';
-      saveBtn.style.background='rgba(78,158,107,.9)';
-      setTimeout(()=>{
-        if(saveBtn){saveBtn.innerHTML=origLabel;saveBtn.style.opacity='';saveBtn.style.cursor='';saveBtn.style.background='';saveBtn.disabled=false;}
-      },2200);
-    }
-    toast('💾','Menu saved!',sheetsSynced?'✅ Synced to Google Sheets — safe across all future builds!':'Saved locally. Connect Sheets in Admin → Settings to persist across builds.');
-  }catch(e){
-    if(saveBtn){saveBtn.innerHTML='⚠️ Error — tap to retry';saveBtn.style.opacity='';saveBtn.style.cursor='';saveBtn.disabled=false;}
-    toast('⚠️','Save failed',e.message||'Unknown error');
-  }
 }
 
 function deleteDish(cat,id){
