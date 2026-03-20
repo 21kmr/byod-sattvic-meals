@@ -13,7 +13,7 @@
   --r:16px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;overflow:hidden;font-size:17px}
+html,body{height:100%;background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;overflow:hidden;font-size:18px}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.022;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
@@ -206,7 +206,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--saff);box-shadow:0 0 0 2px rgba(244,163,37,.07)}
 .fld input::placeholder,.fld textarea::placeholder{color:var(--muted)}
 .fld select option{background:var(--card)}
-.btn-place{width:100%;display:block!important;background:linear-gradient(90deg,var(--saff),var(--saff2));color:#000;border:none;border-radius:var(--r);padding:13px;font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-place{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(90deg,var(--saff),var(--saff2));color:#000;border:none;border-radius:var(--r);padding:13px;font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:6px}
 .btn-place:active{opacity:.86;transform:scale(.98)}
 .btn-place:disabled{background:var(--muted);cursor:not-allowed;transform:none;color:rgba(255,255,255,.35)}
 .btn-notify-dabba{width:100%;background:none;border:1.5px solid var(--green);color:var(--green);border-radius:var(--r);padding:11px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;display:none;align-items:center;justify-content:center;gap:5px;margin-bottom:6px}
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v42.0</span>
+      <span class="ver-badge" id="ver-badge">v44.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -841,7 +841,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v42.0</span>
+          <span class="ver-badge">v44.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1381,7 +1381,12 @@ async function loadFromSheets(){
       });
       if(ing) freshIngr[String(id)] = String(ing);
     });
-    MENU = freshMenu;
+    // Merge: Sheet rows update/replace matched IDs; DEFAULT_MENU items not in Sheet are preserved
+    ['si','sv','pb','ck'].forEach(cat=>{
+      const sheetIds = new Set((freshMenu[cat]||[]).map(d=>d.id));
+      const defaults = (DEFAULT_MENU[cat]||[]).filter(d=>!sheetIds.has(d.id));
+      MENU[cat] = [...(freshMenu[cat]||[]), ...defaults];
+    });
     INGREDIENTS = {...DEFAULT_INGREDIENTS,...freshIngr};
     _sheetsLoaded = true;
   }
@@ -2164,7 +2169,7 @@ async function placeOrder(){
   const flat=document.getElementById('cf-flat').value.trim();
   if(!name){toast('⚠️','Name required','Enter your name.');return;}
   if(!flat){toast('⚠️','Flat required','Enter your flat number.');return;}
-  if(!_screenshotDataUrl){toast('⚠️','Payment screenshot needed','Upload screenshot first.');return;}
+  // Screenshot optional — payment happens after order
   const btn=document.getElementById('placeBtn');btn.disabled=true;btn.innerHTML='<span class="spin"></span>Placing…';
   await new Promise(r=>setTimeout(r,600));
   const items=getItems(),total=getTotal();
@@ -2173,7 +2178,7 @@ async function placeOrder(){
   const drop=document.getElementById('cf-drop').value;
   const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
   const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
-  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',time:new Date().toISOString()};
+  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',paymentStatus:'pending',time:new Date().toISOString()};
   orders.push(order);
 
   const [adminSent,sheetsSynced]=await Promise.all([teleNotifyAdmin(order,_screenshotDataUrl),syncOrderToSheets(order)]);
@@ -2183,15 +2188,15 @@ async function placeOrder(){
   document.getElementById('placeBtn').style.display='none';document.getElementById('notifyDabbaBtn').style.display='flex';
   const succ=document.getElementById('success-sec');succ.style.display='block';succ.scrollIntoView({behavior:'smooth'});
   const tcBox=document.getElementById('tele-confirm-box');tcBox.style.display='block';
-  tcBox.querySelector('.tc-conf-t').textContent=adminSent?'✈️ Host notified + payment screenshot sent!'+(sheetsSynced?' · 📊 In Google Sheet':''):teleReady()?'⚠️ Telegram failed — check bot token':'📋 Order saved. Set up Telegram in Admin → Settings.';
+  tcBox.querySelector('.tc-conf-t').textContent=adminSent?'✈️ Host notified!'+(sheetsSynced?' · 📊 In Google Sheet':''):teleReady()?'⚠️ Telegram failed — check bot token':'📋 Order saved. Set up Telegram in Admin → Settings.';
   tcBox.querySelector('.tc-conf-b').textContent=adminSent?'Tap below to activate dabba-ready alerts.':'Admin → Settings → Bot Token + Chat ID.';
   document.getElementById('track-steps').innerHTML=`
     <div class="tstep"><div class="tsi done">✅</div><div><div class="tst">Order confirmed ${oid}</div><div class="tstime">Just now${adminSent?' · Host notified ✈️':''}${sheetsSynced?' · 📊':''}</div></div></div>
-    <div class="tstep"><div class="tsi done">💳</div><div><div class="tst">Payment screenshot${adminSent?' sent via Telegram':' attached'}</div><div class="tstime">Will be verified</div></div></div>
+    <div class="tstep"><div class="tsi pend">💳</div><div><div class="tst">Payment pending</div><div class="tstime">Pay via UPI → shruthips@sbi then tap Mark as Paid below</div></div></div>
     <div class="tstep"><div class="tsi pend">📦</div><div><div class="tst">Drop your dabba by 11:30 AM</div><div class="tstime">${drop}</div></div></div>
     <div class="tstep"><div class="tsi pend">🍲</div><div><div class="tst">Meal being cooked</div><div class="tstime">Ready ~12:30 PM</div></div></div>
     <div class="tstep"><div class="tsi pend">🎉</div><div><div class="tst">Dabba packed — Telegram alert coming</div></div></div>`;
-  renderAdmin();toast(adminSent?'✈️':'✅','Order placed, '+name+'!',adminSent?'Host notified + screenshot sent':'Saved in Admin panel');
+  renderAdmin();toast(adminSent?'✈️':'✅','Order placed, '+name+'!',adminSent?'Host notified — now complete payment below':'Saved in Admin panel — complete payment below');
 }
 
 async function notifyDabbaDropped(){
@@ -2202,7 +2207,7 @@ async function notifyDabbaDropped(){
 }
 function resetAll(){
   cart={};_screenshotDataUrl='';
-  document.getElementById('placeBtn').style.display='flex';document.getElementById('notifyDabbaBtn').style.display='none';
+  document.getElementById('placeBtn').style.display='flex';document.getElementById('placeBtn').style.removeProperty('visibility');document.getElementById('notifyDabbaBtn').style.display='none';
   document.getElementById('success-sec').style.display='none';
   ['cf-name','cf-phone','cf-flat'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('ss-prev').style.display='none';document.getElementById('ss-img').src='';
@@ -2246,7 +2251,7 @@ function renderAdmin(){
       <div class="oc-addr">🏠 Flat ${o.flat} · ${o.drop}</div>
       ${o.tele&&o.tele!=='Not linked'?`<div class="oc-tele">✈️ ${o.tele}</div>`:''}
       <div class="oc-items">${o.items.map(i=>i.e+' '+i.n+' x'+i.qty).join(' · ')}</div>
-      <div class="oc-foot"><span class="oc-total">Rs.${o.total} · ${o.portions}</span>
+      <div class="oc-foot"><span class="oc-total">Rs.${o.total} · ${o.portions}</span><span style="font-size:.58rem;padding:2px 7px;border-radius:8px;font-weight:700;${o.paymentStatus==='paid'?'background:rgba(78,158,107,.15);color:#4e9e6b':'background:rgba(239,68,68,.1);color:#f87171'}">${o.paymentStatus==='paid'?'✅ Paid':'⏳ Pending'}</span>
         <div class="oc-acts"><button class="ocbtn g" id="rb-${o.oid}" onclick="markReady('${o.oid}')">Mark Ready</button><button class="ocbtn t" onclick="notifyCust('${o.oid}')">✈️ Notify</button></div>
       </div>
     </div>`).join('');
@@ -2584,42 +2589,8 @@ function _refreshBadge(id){
 
 // ── Add dish: picker modal (reuse existing or start blank) ────
 function addDish(cat){
-  const catNames={si:'South Indian Ala Carte',sv:'Millet Poha & Noodles',pb:'BYOD Special',ck:'Cookies & Breads'};
-  const allDishes=[];
-  MENU[cat].forEach(d=>allDishes.push({...d,_catLabel:catNames[cat]})); // only same-category dishes
-
-  const listHTML=allDishes.length ? allDishes.map(d=>`
-    <div onclick="reuseDish('${cat}','${d.id}')" style="display:flex;align-items:center;gap:10px;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:9px 11px;cursor:pointer;transition:.15s" onmouseenter="this.style.borderColor='var(--saff)'" onmouseleave="this.style.borderColor='var(--border)'" ontouchstart="this.style.borderColor='var(--saff)'" ontouchend="this.style.borderColor='var(--border)'">
-      <span style="font-size:1.25rem;flex-shrink:0">${d.e}</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${d.n}</div>
-        <div style="font-size:.6rem;color:var(--muted);margin-top:1px">${d._catLabel} · Rs.${d.p}${d.portionLabel?' · '+d.portionLabel:''}</div>
-      </div>
-      <span style="font-size:.65rem;color:var(--saff);font-weight:700;flex-shrink:0">Copy →</span>
-    </div>`).join('') : '<div style="font-size:.72rem;color:var(--muted);padding:10px 0">No existing dishes yet.</div>';
-
-  const modal=document.createElement('div');
-  modal.id='dish-picker-modal';
-  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:99999;display:flex;align-items:flex-end;justify-content:center';
-  modal.innerHTML=`
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:78vh;display:flex;flex-direction:column">
-      <div style="padding:14px 14px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
-        <div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700">➕ Add to ${catNames[cat]}</div>
-        <button onclick="document.getElementById('dish-picker-modal').remove()" style="width:28px;height:28px;border-radius:7px;background:var(--surf);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:.9rem">✕</button>
-      </div>
-      <div style="overflow-y:auto;flex:1;padding:11px 12px">
-        <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px">Reuse a dish from this category</div>
-        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px">${listHTML}</div>
-        <div style="border-top:1px solid var(--border);padding-top:11px">
-          <div style="font-size:.58rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px">Or start from scratch</div>
-          <button onclick="addBlankDish('${cat}')" style="width:100%;background:none;border:1.5px dashed rgba(244,163,37,.28);border-radius:9px;padding:11px;color:var(--saff);font-size:.76rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">✦ New Blank Dish</button>
-        </div>
-      </div>
-    </div>`;
-  document.body.appendChild(modal);
-  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  addBlankDish(cat);
 }
-
 function reuseDish(targetCat,sourceId){
   const source=[...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d=>d.id===sourceId);
   if(!source)return;
