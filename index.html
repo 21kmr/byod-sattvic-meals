@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v50</title>
+<title>BYOD — Bring Your Own Dabba v51</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -109,7 +109,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 /* ════════════════════════════
    SUBMENU
 ════════════════════════════ */
-.smhdr{padding:12px 11px 9px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:5;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.smhdr{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px 8px;border-bottom:1px solid var(--border)}
 .bbtn{width:29px;height:29px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .smtitle{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
 .smsub{font-size:.6rem;color:var(--muted)}
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v50.0</span>
+      <span class="ver-badge" id="ver-badge">v51.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -647,6 +647,10 @@ body.dark-mode{
       <div class="smhdr">
         <button class="bbtn" onclick="showPage('home')">←</button>
         <div><div class="smtitle" id="sm-title">Menu</div><div class="smsub" id="sm-sub"></div></div>
+        <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled
+          style="margin:0;padding:9px 14px;font-size:.78rem;border-radius:10px;min-width:100px;white-space:nowrap">
+          Cart (0)
+        </button>
       </div>
       <div class="min-note" id="submenu-min-note">ℹ️ Minimum 2 items to order</div>
       <div id="dish-list"></div>
@@ -654,15 +658,7 @@ body.dark-mode{
   <div id="prior-order-section"></div>
       <div style="height:160px"></div><!-- spacer for sticky bar -->
     </div>
-    <!-- Checkout modal popup — centre of screen, no positioning issues -->
-    <div id="sm-checkout-bar" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.55);backdrop-filter:blur(3px)">
-      <div style="width:100%;max-width:480px;background:var(--card);border-radius:20px 20px 0 0;padding:18px 16px max(20px,env(safe-area-inset-bottom));box-shadow:0 -8px 40px rgba(0,0,0,.5)">
-        <div style="width:36px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;margin:0 auto 14px"></div>
-        <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled>Add items to order →</button>
-        <div id="sm-cart-summary" style="text-align:center;font-size:.68rem;color:var(--muted);margin-top:6px"></div>
-      </div>
-    </div>
-
+    
     <!-- ══ CHECKOUT ══ -->
     <div class="page" id="pg-checkout">
       <div class="smhdr">
@@ -848,7 +844,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v50.0</span>
+          <span class="ver-badge">v51.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1194,7 +1190,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v50.0 — Bring Your Own Dabba
+// BYOD v51.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -2955,10 +2951,8 @@ function hideToast(){document.getElementById('toast').classList.remove('show');}
 let _pageHistory=[];
 function showPage(name,_fromPop){
   const bar=document.getElementById('sm-checkout-bar');
-  if(bar) bar.style.display=(name==='submenu'?'flex':'none');
-  // Hide bottom nav on submenu so checkout bar has full bottom — show on all other pages
-  const navEl=document.querySelector('nav');
-  if(navEl) navEl.style.display=(name==='submenu'?'none':'flex');
+  // checkout btn now in header — no separate bar needed
+
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
   const pg=document.getElementById('pg-'+name);if(pg)pg.classList.add('on');
   const navMap={home:'nav-home',submenu:'nav-submenu',checkout:'nav-submenu',admin:'nav-admin',alerts:'nav-alerts',reviews:'nav-byod'};
@@ -2990,4 +2984,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 init();
 </script>
 </body>
-</html>
+</html>btn.disabled=n<1;
+    btn.style.opacity=n<1?'.4':'1';
+    btn.textContent=n<1?'Cart (0)':`₹${getTotal()} · Checkout →`;
+    btn.style.fontSize=n<1?'.78rem':'.82rem';
+  }
