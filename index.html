@@ -575,8 +575,8 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div id="pub-dot-si" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
-              <span id="arr-si" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
+              <button id="pub-pill-si" onclick="event.stopPropagation();publishSection('si')" style="font-size:.58rem;font-weight:800;padding:3px 9px;border-radius:20px;border:1.5px solid rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#f87171;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:.2s">OFFLINE</button>
+              <span id="arr-si" style="color:var(--saff);font-size:.85rem;transition:.2s;margin-left:2px">▼</span>
             </div>
           </div>
           <div id="sec-si" style="padding:0 11px 11px">
@@ -598,8 +598,8 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div id="pub-dot-pb" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
-              <span id="arr-pb" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
+              <button id="pub-pill-pb" onclick="event.stopPropagation();publishSection('pb')" style="font-size:.58rem;font-weight:800;padding:3px 9px;border-radius:20px;border:1.5px solid rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#f87171;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:.2s">OFFLINE</button>
+              <span id="arr-pb" style="color:var(--saff);font-size:.85rem;transition:.2s;margin-left:2px">▼</span>
             </div>
           </div>
           <div id="sec-pb" style="padding:0 11px 11px">
@@ -621,8 +621,8 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div id="pub-dot-sv" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
-              <span id="arr-sv" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
+              <button id="pub-pill-sv" onclick="event.stopPropagation();publishSection('sv')" style="font-size:.58rem;font-weight:800;padding:3px 9px;border-radius:20px;border:1.5px solid rgba(239,68,68,.35);background:rgba(239,68,68,.1);color:#f87171;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.05em;transition:.2s">OFFLINE</button>
+              <span id="arr-sv" style="color:var(--saff);font-size:.85rem;transition:.2s;margin-left:2px">▼</span>
             </div>
           </div>
           <div id="sec-sv" style="padding:0 11px 11px">
@@ -655,7 +655,7 @@ body.dark-mode{
       <div style="height:130px"></div><!-- spacer for sticky bar -->
     </div>
     <!-- Sticky checkout bar — always visible at bottom of submenu page -->
-    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:10px 14px;padding-bottom:calc(10px + 58px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--border);z-index:11;box-shadow:0 -2px 16px rgba(0,0,0,.18)">
+    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:12px 14px 16px;background:var(--bg);border-top:1px solid var(--border);z-index:9999;box-shadow:0 -4px 24px rgba(0,0,0,.4)">
       <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0;font-size:.9rem;padding:14px">Add items to order →</button>
     </div>
 
@@ -1229,34 +1229,34 @@ const DEFAULT_MENU = {
   ],
   sv:[
     // POHA
-    {id:'sv_kp1',e:'🌾',n:'Karuppu Kavuni Poha (Black Rice Flakes)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp1',e:'🌾',n:'Black Rice Flakes Poha (Karuppu Kavuni)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_kp2',e:'🌾',n:'Barnyard Millet Poha (Kuthiraivali)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_kp3',e:'🌾',n:'Finger Millet Poha (Ragi)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_kp4',e:'🌾',n:'Red Rice Poha',p:70,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_kp5',e:'🌾',n:'Mapillai Samba Poha (Heritage Red Rice)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp5',e:'🌾',n:'Heritage Red Rice Poha (Mapillai Samba)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     // NOODLES
     {id:'sv_n1',e:'🍜',n:'Carrot Noodles',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n2',e:'🍜',n:'Beetroot Noodles',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n3',e:'🍜',n:'Moringa Noodles (Drumstick Leaf)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n3',e:'🍜',n:'Drumstick Leaf Noodles (Moringa / Murungai)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n4',e:'🍜',n:'Tomato Noodles',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n5',e:'🍜',n:'Wheat Noodles',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n6',e:'🍜',n:'Foxtail Millet Noodles (Thinai)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n7',e:'🍜',n:'Mapillai Samba Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n7',e:'🍜',n:'Heritage Red Rice Noodles (Mapillai Samba)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n8',e:'🍜',n:'Finger Millet Noodles (Ragi)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n9',e:'🍜',n:'Multi Millet Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n10',e:'🍜',n:'Moringa Little Millet Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n11',e:'🍜',n:'Pearl Millet Noodles (Kambu)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n10',e:'🍜',n:'Drumstick Leaf & Little Millet Noodles (Moringa Samai)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n11',e:'🍜',n:'Pearl Millet Noodles (Kambu / Bajra)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n12',e:'🍜',n:'Black Rice Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
     // SEMIYA (VERMICELLI)
     {id:'sv_s1',e:'🍝',n:'Red Rice Vermicelli',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_s2',e:'🍝',n:'Wheat Vermicelli',p:75,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_s3',e:'🍝',n:'Foxtail Millet Vermicelli (Thinai)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_s4',e:'🍝',n:'Finger Millet Vermicelli (Ragi)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s5',e:'🍝',n:'Kodo Millet Vermicelli (Varagu)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s5',e:'🍝',n:'Kodo Millet Vermicelli (Varagu / Koden)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_s6',e:'🍝',n:'Little Millet Vermicelli (Samai)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s7',e:'🍝',n:'Pearl Millet Vermicelli (Kambu)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s8',e:'🍝',n:'Sorghum Vermicelli (Jowar)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s9',e:'🍝',n:'Mapillai Samba Vermicelli',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s7',e:'🍝',n:'Pearl Millet Vermicelli (Kambu / Bajra)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s8',e:'🍝',n:'Sorghum Vermicelli (Jowar / Cholam)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s9',e:'🍝',n:'Heritage Red Rice Vermicelli (Mapillai Samba)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
   ],
   pb:[
     {id:'pb1',e:'🫓',n:'Methi Parantha',p:70,avail:true,soldOut:false,photo:''},
@@ -2289,9 +2289,15 @@ function renderAdmin(){
       ${o.tele&&o.tele!=='Not linked'?`<div class="oc-tele">✈️ ${o.tele}</div>`:''}
       <div class="oc-items">${o.items.map(i=>i.e+' '+i.n+' x'+i.qty).join(' · ')}</div>
       <div class="oc-foot"><span class="oc-total">Rs.${o.total} · ${o.portions}</span><span style="font-size:.58rem;padding:2px 7px;border-radius:8px;font-weight:700;${o.paymentStatus==='paid'?'background:rgba(78,158,107,.15);color:#4e9e6b':'background:rgba(239,68,68,.1);color:#f87171'}">${o.paymentStatus==='paid'?'✅ Paid':'⚠️ Payment Pending'}</span>
-        <div class="oc-acts"><button class="ocbtn g" id="rb-${o.oid}" onclick="markReady('${o.oid}')">Mark Ready</button><button class="ocbtn t" onclick="notifyCust('${o.oid}')">✈️ Notify</button></div>
+        <div class="oc-acts"><button class="ocbtn g" id="rb-${o.oid}" onclick="markReady('${o.oid}')">Mark Ready</button><button class="ocbtn t" onclick="notifyCust('${o.oid}')">✈️ Notify</button><button class="ocbtn" onclick="deleteOrder('${o.oid}')" style="background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;padding:5px 9px">🗑</button></div>
       </div>
     </div>`).join('');
+}
+function deleteOrder(oid){
+  if(!confirm('Delete order '+oid+'? This cannot be undone.')) return;
+  orders=orders.filter(o=>o.oid!==oid);
+  renderAdmin();
+  toast('🗑','Order deleted','Removed from today\'s list.');
 }
 async function notifyCust(oid){
   const o=orders.find(x=>x.oid===oid);if(!o)return;
@@ -2478,6 +2484,11 @@ function _syncAdminPubButtons(){
         btn.style.borderColor = cat==='pb'?'rgba(244,163,37,.3)':'rgba(78,158,107,.3)';
         btn.style.color = cat==='pb'?'var(--saff)':'#4e9e6b';
       }
+    }
+    const pill=document.getElementById('pub-pill-'+cat);
+    if(pill){
+      if(pub){pill.textContent='🟢 LIVE';pill.style.background='rgba(78,158,107,.15)';pill.style.borderColor='rgba(78,158,107,.3)';pill.style.color='#4e9e6b';}
+      else{pill.textContent='OFFLINE';pill.style.background='rgba(239,68,68,.1)';pill.style.borderColor='rgba(239,68,68,.3)';pill.style.color='#f87171';}
     }
   });
 }
