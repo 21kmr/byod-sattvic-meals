@@ -2215,43 +2215,27 @@ function handleSS(e){
 }
 function copyUPI(){navigator.clipboard?.writeText('shruthips@sbi').catch(()=>{});toast('📋','UPI ID copied!','Paste in your payment app.');}
 
-async async function markPaymentDone(){
+async function markPaymentDone(){
   if(!_screenshotDataUrl){
-    toast('⚠️','Upload screenshot first','Tap the upload button above to attach your payment screenshot.');
+    toast('⚠️','Upload screenshot first','Attach your payment screenshot above.');
     return;
   }
   const tag=document.getElementById('payment-status-tag');
   const btn=document.getElementById('mark-paid-btn');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Sending…';}
   const order=orders.length>0?orders[orders.length-1]:null;
-  if(order){
-    order.paymentStatus='paid';
-    order.screenshotUrl=_screenshotDataUrl;
-  }
+  if(order){order.paymentStatus='paid';order.screenshotUrl=_screenshotDataUrl;}
   try{
-    // Send screenshot as photo
-    await telegramSendPhoto(
-      _HARDCODED_CHATID,
-      _screenshotDataUrl,
-      '💳 Payment screenshot\n👤 '+(order?order.name:'')
-        +' · Flat '+(order?order.flat:'')
-        +'\n🛒 '+(order?order.oid:'')
-        +' · ₹'+(order?order.total:'')
-    );
-    // Send text confirmation
-    await telegramSend(
-      _HARDCODED_CHATID,
-      '✅ Payment done — '+(order?order.name:'')
-        +' (Flat '+(order?order.flat:'')+')'
-        +'\n🛒 '+(order?order.oid:'')
-        +' · ₹'+(order?order.total:'')
-    );
-    if(tag){tag.textContent='✅ Payment screenshot sent to host!';tag.style.color='#4e9e6b';tag.style.background='rgba(78,158,107,.08)';}
+    await telegramSendPhoto(_HARDCODED_CHATID,_screenshotDataUrl,
+      '💳 Payment — '+(order?order.name:'')+' Flat '+(order?order.flat:'')+' · '+(order?order.oid:'')+' · ₹'+(order?order.total:''));
+    await telegramSend(_HARDCODED_CHATID,
+      '✅ Payment done — '+(order?order.name:'')+' (Flat '+(order?order.flat:'')+')'+'\n🛒 '+(order?order.oid:'')+' · ₹'+(order?order.total:''));
+    if(tag){tag.textContent='✅ Screenshot sent to host!';tag.style.color='#4e9e6b';tag.style.background='rgba(78,158,107,.08)';}
     if(btn){btn.style.opacity='.5';btn.innerHTML='✅ Screenshot Sent';}
-    toast('💚','Payment screenshot sent!','Host notified via Telegram ✈️');
+    toast('💚','Payment screenshot sent!','Host notified ✈️');
   }catch(e){
     if(btn){btn.disabled=false;btn.innerHTML='✅ Mark Payment Done';}
-    toast('⚠️','Send failed',''+e.message);
+    toast('⚠️','Failed to send',''+e.message);
   }
   renderAdmin();
 }
@@ -3057,8 +3041,4 @@ document.addEventListener('DOMContentLoaded',()=>{
 init();
 </script>
 </body>
-</html>btn.disabled=n<1;
-    btn.style.opacity=n<1?'.4':'1';
-    btn.textContent=n<1?'Cart (0)':`₹${getTotal()} · Checkout →`;
-    btn.style.fontSize=n<1?'.78rem':'.82rem';
-  }
+</html>
