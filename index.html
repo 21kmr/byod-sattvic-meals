@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v44.0</span>
+      <span class="ver-badge" id="ver-badge">v45.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -652,9 +652,11 @@ body.dark-mode{
       <div id="dish-list"></div>
   <div id="sm-price-note" style="display:none;margin:6px 11px 0;font-size:.62rem;color:var(--muted);font-style:italic;line-height:1.5;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">💡 Prices are indicative and may vary based on ingredient availability and portion size.</div>
   <div id="prior-order-section"></div>
-      <div style="padding:11px">
-        <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0">Go to Checkout →</button>
-      </div>
+      <div style="height:72px"></div><!-- spacer for sticky bar -->
+    </div>
+    <!-- Sticky checkout bar — always visible at bottom of submenu page -->
+    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:calc(58px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:10px 14px;background:var(--bg);border-top:1px solid var(--border);z-index:8;box-shadow:0 -2px 12px rgba(0,0,0,.12)">
+      <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0;font-size:.9rem;padding:14px">Add items to order →</button>
     </div>
 
     <!-- ══ CHECKOUT ══ -->
@@ -841,7 +843,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v44.0</span>
+          <span class="ver-badge">v45.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -2070,6 +2072,9 @@ function loadSubMenu(cat){
   if(_priorEl) _priorEl.innerHTML=''; // cleared — integrated above
 
   updateCheckBtn();updateOrderState();
+  // Show sticky checkout bar
+  const bar=document.getElementById('sm-checkout-bar');
+  if(bar) bar.style.display='block';
 }
 
 function uploadDishPhoto(input){
@@ -2102,11 +2107,20 @@ function getTotal(){return getItems().reduce((s,i)=>s+i.p*i.qty,0);}
 function updateCheckBtn(){
   const s=getOrderStatus(currentCat),n=Object.keys(cart).length;
   const siCount=Object.keys(cart).filter(id=>id.startsWith('si')).length;
-  const btn=document.getElementById('sm-checkout-btn');btn.style.fontSize='';
-  if(currentCat==='si'&&!s.open){btn.disabled=true;btn.textContent='South Indian Ala Carte orders closed at 9:30 AM';btn.style.fontSize='.62rem';}
-  else if(currentCat==='si'&&siCount>0&&siCount<2&&n===siCount){btn.disabled=true;btn.textContent='Select 1 more South Indian dish (min 2)';btn.style.fontSize='.65rem';}
-  // No minimum for BYOD Special or Dinner
-  else{btn.disabled=n<1;btn.textContent=n<1?'Add items to order…':`Checkout (${n} items) →`;}
+  const btn=document.getElementById('sm-checkout-btn');
+  const total=getTotal();
+  btn.style.fontSize='';
+  if(currentCat==='si'&&!s.open){
+    btn.disabled=true;btn.textContent='Ala Carte orders closed at 9:30 AM';btn.style.fontSize='.75rem';
+  } else if(currentCat==='si'&&siCount>0&&siCount<2&&n===siCount){
+    btn.disabled=true;btn.textContent='Add 1 more dish (min 2 for Ala Carte)';btn.style.fontSize='.75rem';
+  } else if(n<1){
+    btn.disabled=true;btn.textContent='Add items to order →';
+  } else {
+    btn.disabled=false;
+    btn.textContent=`🛒 Checkout — ${n} item${n>1?'s':''} · Rs.${total} →`;
+    btn.style.background='linear-gradient(90deg,var(--saff),var(--saff2))';
+  }
   updateCartBadge();
 }
 function updateCartBadge(){const n=Object.keys(cart).length,b=document.getElementById('cbadge');b.textContent=n;b.style.display=n?'flex':'none';}
@@ -2140,13 +2154,30 @@ function handleSS(e){
 }
 function copyUPI(){navigator.clipboard?.writeText('shruthips@sbi').catch(()=>{});toast('📋','UPI ID copied!','Paste in your payment app.');}
 
-function markPaymentDone(){
+async function markPaymentDone(){
   const tag=document.getElementById('payment-status-tag');
   const btn=document.getElementById('mark-paid-btn');
+  if(btn){btn.disabled=true;btn.innerHTML='<span class="spin"></span> Sending…';}
+  // Get last order
+  const order=orders.length>0?orders[orders.length-1]:null;
+  if(order){
+    order.paymentStatus='paid';
+    order.screenshotUrl=_screenshotDataUrl||'';
+    // Send screenshot to Telegram if available
+    if(_screenshotDataUrl && teleReady()){
+      try{ await telegramSendPhoto(TELE_CONFIG.ADMIN_CHAT_ID,_screenshotDataUrl,'💳 Payment screenshot — '+order.name+' · '+order.oid+' · Rs.'+order.total); }catch(e){}
+    } else if(teleReady()&&!_screenshotDataUrl){
+      // At least notify admin payment is marked done
+      try{
+        const msg='💚 Payment marked done — '+order.name+' (Flat '+order.flat+') · '+order.oid+' · Rs.'+order.total;
+        await fetch('https://api.telegram.org/bot'+TELE_CONFIG.BOT_TOKEN+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:TELE_CONFIG.ADMIN_CHAT_ID,text:msg})});
+      }catch(e){}
+    }
+  }
   if(tag){tag.textContent='✅ Payment Done — Thank you!';tag.style.color='#4e9e6b';tag.style.background='rgba(78,158,107,.08)';}
-  if(btn){btn.style.opacity='.5';btn.disabled=true;}
-  toast('💚','Payment marked!','Thank you! Dabba will be ready by 12:30 PM.');
-  if(orders.length>0){const last=orders[orders.length-1];if(last)last.paymentStatus='paid';}
+  if(btn){btn.style.opacity='.5';btn.innerHTML='✅ Payment Marked Done';}
+  renderAdmin();
+  toast('💚','Payment confirmed!','Thank you! Host has been notified.');
 }
 function linkTele(ctx){
   const inp=document.getElementById(ctx==='co'?'co-tele-inp':'tele-main-inp');
@@ -2178,7 +2209,7 @@ async function placeOrder(){
   const drop=document.getElementById('cf-drop').value;
   const tele=(document.getElementById('co-tele-inp').value||'').trim()||'Not linked';
   const teleUid=(document.getElementById('co-tele-uid')?.value||'').trim();
-  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',paymentStatus:'pending',time:new Date().toISOString()};
+  const order={oid,name,phone,flat,tele,teleUserId:teleUid,items,total,portions,drop,status:'confirmed',paymentStatus:'pending',screenshotUrl:'',time:new Date().toISOString()};
   orders.push(order);
 
   const [adminSent,sheetsSynced]=await Promise.all([teleNotifyAdmin(order,_screenshotDataUrl),syncOrderToSheets(order)]);
@@ -2251,7 +2282,7 @@ function renderAdmin(){
       <div class="oc-addr">🏠 Flat ${o.flat} · ${o.drop}</div>
       ${o.tele&&o.tele!=='Not linked'?`<div class="oc-tele">✈️ ${o.tele}</div>`:''}
       <div class="oc-items">${o.items.map(i=>i.e+' '+i.n+' x'+i.qty).join(' · ')}</div>
-      <div class="oc-foot"><span class="oc-total">Rs.${o.total} · ${o.portions}</span><span style="font-size:.58rem;padding:2px 7px;border-radius:8px;font-weight:700;${o.paymentStatus==='paid'?'background:rgba(78,158,107,.15);color:#4e9e6b':'background:rgba(239,68,68,.1);color:#f87171'}">${o.paymentStatus==='paid'?'✅ Paid':'⏳ Pending'}</span>
+      <div class="oc-foot"><span class="oc-total">Rs.${o.total} · ${o.portions}</span><span style="font-size:.58rem;padding:2px 7px;border-radius:8px;font-weight:700;${o.paymentStatus==='paid'?'background:rgba(78,158,107,.15);color:#4e9e6b':'background:rgba(239,68,68,.1);color:#f87171'}">${o.paymentStatus==='paid'?'✅ Paid':'⚠️ Payment Pending'}</span>
         <div class="oc-acts"><button class="ocbtn g" id="rb-${o.oid}" onclick="markReady('${o.oid}')">Mark Ready</button><button class="ocbtn t" onclick="notifyCust('${o.oid}')">✈️ Notify</button></div>
       </div>
     </div>`).join('');
@@ -2885,6 +2916,8 @@ function toast(ico,title,body){clearTimeout(_tT);document.getElementById('tIco')
 function hideToast(){document.getElementById('toast').classList.remove('show');}
 let _pageHistory=[];
 function showPage(name,_fromPop){
+  const bar=document.getElementById('sm-checkout-bar');
+  if(bar) bar.style.display=(name==='submenu'?'block':'none');
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
   const pg=document.getElementById('pg-'+name);if(pg)pg.classList.add('on');
   const navMap={home:'nav-home',submenu:'nav-submenu',checkout:'nav-submenu',admin:'nav-admin',alerts:'nav-alerts',reviews:'nav-byod'};
