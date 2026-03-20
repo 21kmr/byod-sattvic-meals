@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v52</title>
+<title>BYOD — Bring Your Own Dabba v54</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v52.0</span>
+      <span class="ver-badge" id="ver-badge">v54.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -647,8 +647,8 @@ body.dark-mode{
       <div class="smhdr">
         <button class="bbtn" onclick="showPage('home')">←</button>
         <div><div class="smtitle" id="sm-title">Menu</div><div class="smsub" id="sm-sub"></div></div>
-        <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled
-          style="margin:0;padding:9px 14px;font-size:.78rem;border-radius:10px;min-width:100px;white-space:nowrap">
+        <button id="sm-checkout-btn" onclick="goCheckout()" disabled
+          style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:10px;padding:9px 14px;font-size:.8rem;font-weight:800;cursor:pointer;white-space:nowrap;opacity:.45;box-shadow:0 2px 8px rgba(244,163,37,.3)">
           Cart (0)
         </button>
       </div>
@@ -661,14 +661,22 @@ body.dark-mode{
     
     <!-- ══ CHECKOUT ══ -->
     <div class="page" id="pg-checkout">
-      <div class="smhdr">
+      <div class="smhdr" style="padding:10px 14px">
         <button class="bbtn" onclick="showPage('submenu')">←</button>
-        <div><div class="smtitle">Checkout</div><div class="smsub">Review · Pay · Notify</div></div>
+        <button class="btn-place" id="placeBtn" onclick="placeOrder()"
+          style="flex:1;margin:0 10px;padding:12px 10px;font-size:.85rem;border-radius:11px;box-shadow:0 3px 12px rgba(244,163,37,.4)">
+          🎉 Place Order &amp; Notify Host
+        </button>
+        <button class="btn-notify-dabba" id="notifyDabbaBtn" onclick="notifyDabbaDropped()"
+          style="display:none;flex:1;margin:0 10px;font-size:.72rem;padding:10px 8px;border-radius:11px">
+          📦 Dropped Dabba!
+        </button>
+        <div style="width:36px;flex-shrink:0"></div>
       </div>
       <div class="cosec"><div class="cotitle">🛒 Your Order</div><div id="co-items"></div>
         <div class="tcard"><div class="trow"><span>Subtotal</span><span id="co-sub">₹0</span></div><div class="trow"><span>Packing</span><span>₹0</span></div><div class="trow tot"><span>Total</span><span id="co-tot">₹0</span></div></div>
       </div>
-      <div class="cosec"><div class="cotitle">🍱 Dabba Drop-off</div>
+      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">🍱 Dabba Drop-off</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
         <div class="dabba-card">
           <div class="dab-title">📍 Where to drop</div>
           <div class="dab-info">Place clean dabba at <strong>H-002</strong> or <strong>Exit Gate Security</strong> with your flat number</div>
@@ -678,7 +686,7 @@ body.dark-mode{
           </div>
         </div>
       </div>
-      <div class="cosec"><div class="cotitle">✈️ Telegram Updates</div>
+      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">✈️ Telegram Updates</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
         <div class="tele-connect" id="co-tele-wrap">
           <div class="tc-top"><div class="tc-ico">✈️</div><div><div class="tc-title">Link Telegram</div><div class="tc-sub">Get order confirmation &amp; ready alerts</div></div></div>
           <ul class="tc-steps">
@@ -695,7 +703,7 @@ body.dark-mode{
           <div class="tele-linked-badge" id="co-tele-linked">✅ Telegram linked! You will get a message when your dabba is ready.</div>
         </div>
       </div>
-      <div class="cosec"><div class="cotitle">👤 Your Details</div>
+      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">👤 Your Details</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
         <div class="cform">
           <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
           <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
@@ -704,8 +712,7 @@ body.dark-mode{
           
         </div>
         <div id="order-closed-banner" style="display:none;background:rgba(239,68,68,.12);border:1.5px solid rgba(239,68,68,.35);border-radius:14px;padding:16px 18px;font-size:.92rem;font-weight:700;color:#f87171;text-align:center;margin-bottom:12px;line-height:1.5"></div>
-        <button class="btn-place" id="placeBtn" onclick="placeOrder()">🎉 Place Order &amp; Notify Host</button>
-        <button class="btn-notify-dabba" id="notifyDabbaBtn" onclick="notifyDabbaDropped()">📦 I've Dropped My Dabba!</button>
+
         <div style="height:8px"></div>
       </div>
       <div class="success-sec" id="success-sec">
@@ -844,7 +851,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v52.0</span>
+          <span class="ver-badge">v54.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1190,7 +1197,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v52.0 — Bring Your Own Dabba
+// BYOD v54.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
