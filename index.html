@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v39</title>
+<title>BYOD — Bring Your Own Dabba v59</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -109,7 +109,7 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 /* ════════════════════════════
    SUBMENU
 ════════════════════════════ */
-.smhdr{padding:12px 11px 9px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:5;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.smhdr{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px 8px;border-bottom:1px solid var(--border)}
 .bbtn{width:29px;height:29px;border-radius:7px;background:var(--card);border:1px solid var(--border);color:var(--cream);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .smtitle{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700}
 .smsub{font-size:.6rem;color:var(--muted)}
@@ -206,9 +206,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--saff);box-shadow:0 0 0 2px rgba(244,163,37,.07)}
 .fld input::placeholder,.fld textarea::placeholder{color:var(--muted)}
 .fld select option{background:var(--card)}
-.btn-place{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(90deg,var(--saff),var(--saff2));color:#000;border:none;border-radius:var(--r);padding:13px;font-family:'Playfair Display',serif;font-size:.98rem;font-weight:700;cursor:pointer;transition:.15s;margin-bottom:6px}
+.btn-place{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:12px;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;transition:.15s;letter-spacing:.01em;box-shadow:0 3px 12px rgba(244,163,37,.35)}
 .btn-place:active{opacity:.86;transform:scale(.98)}
-.btn-place:disabled{background:var(--muted);cursor:not-allowed;transform:none;color:rgba(255,255,255,.35)}
+.btn-place:disabled{background:rgba(244,163,37,.2);border:1.5px solid rgba(244,163,37,.3);cursor:default;transform:none;color:rgba(244,163,37,.6);box-shadow:none}
 .btn-notify-dabba{width:100%;background:none;border:1.5px solid var(--green);color:var(--green);border-radius:var(--r);padding:11px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;display:none;align-items:center;justify-content:center;gap:5px;margin-bottom:6px}
 .btn-notify-dabba:active{background:rgba(78,158,107,.1)}
 .success-sec{display:none;padding:26px 15px;text-align:center;animation:su .4s ease}
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v47.0</span>
+      <span class="ver-badge" id="ver-badge">v59.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -575,7 +575,7 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div id="pub-dot-si" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
+              <div id="pub-dot-si" style="width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.3s"></div>
               <span id="arr-si" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
             </div>
           </div>
@@ -598,7 +598,7 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div id="pub-dot-pb" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
+              <div id="pub-dot-pb" style="width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.3s"></div>
               <span id="arr-pb" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
             </div>
           </div>
@@ -621,7 +621,7 @@ body.dark-mode{
               </div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div id="pub-dot-sv" style="width:7px;height:7px;border-radius:50%;background:var(--muted)"></div>
+              <div id="pub-dot-sv" style="width:8px;height:8px;border-radius:50%;background:var(--muted);transition:.3s"></div>
               <span id="arr-sv" style="color:var(--saff);font-size:.85rem;transition:.2s">▼</span>
             </div>
           </div>
@@ -647,28 +647,36 @@ body.dark-mode{
       <div class="smhdr">
         <button class="bbtn" onclick="showPage('home')">←</button>
         <div><div class="smtitle" id="sm-title">Menu</div><div class="smsub" id="sm-sub"></div></div>
+        <button id="sm-checkout-btn" onclick="goCheckout()" disabled
+          style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:10px;padding:9px 14px;font-size:.8rem;font-weight:800;cursor:pointer;white-space:nowrap;opacity:.45;box-shadow:0 2px 8px rgba(244,163,37,.3)">
+          Cart (0)
+        </button>
       </div>
       <div class="min-note" id="submenu-min-note">ℹ️ Minimum 2 items to order</div>
       <div id="dish-list"></div>
   <div id="sm-price-note" style="display:none;margin:6px 11px 0;font-size:.62rem;color:var(--muted);font-style:italic;line-height:1.5;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid var(--border)">💡 Prices are indicative and may vary based on ingredient availability and portion size.</div>
   <div id="prior-order-section"></div>
-      <div style="height:130px"></div><!-- spacer for sticky bar -->
+      <div style="height:160px"></div><!-- spacer for sticky bar -->
     </div>
-    <!-- Sticky checkout bar — always visible at bottom of submenu page -->
-    <div id="sm-checkout-bar" style="display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:10px 14px;padding-bottom:calc(10px + 58px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--border);z-index:11;box-shadow:0 -2px 16px rgba(0,0,0,.18)">
-      <button class="btn-place" id="sm-checkout-btn" onclick="goCheckout()" disabled style="margin-bottom:0;font-size:.9rem;padding:14px">Add items to order →</button>
-    </div>
-
+    
     <!-- ══ CHECKOUT ══ -->
     <div class="page" id="pg-checkout">
-      <div class="smhdr">
+      <div class="smhdr" style="padding:10px 14px">
         <button class="bbtn" onclick="showPage('submenu')">←</button>
-        <div><div class="smtitle">Checkout</div><div class="smsub">Review · Pay · Notify</div></div>
+        <button class="btn-place" id="placeBtn" onclick="placeOrder()"
+          style="flex:1;margin:0 10px;padding:12px 10px;font-size:.85rem;border-radius:11px;box-shadow:0 3px 12px rgba(244,163,37,.4)">
+          🎉 Place Order &amp; Notify Host
+        </button>
+        <button class="btn-notify-dabba" id="notifyDabbaBtn" onclick="notifyDabbaDropped()"
+          style="display:none;flex:1;margin:0 10px;font-size:.72rem;padding:10px 8px;border-radius:11px">
+          📦 Dropped Dabba!
+        </button>
+        <div style="width:36px;flex-shrink:0"></div>
       </div>
       <div class="cosec"><div class="cotitle">🛒 Your Order</div><div id="co-items"></div>
         <div class="tcard"><div class="trow"><span>Subtotal</span><span id="co-sub">₹0</span></div><div class="trow"><span>Packing</span><span>₹0</span></div><div class="trow tot"><span>Total</span><span id="co-tot">₹0</span></div></div>
       </div>
-      <div class="cosec"><div class="cotitle">🍱 Dabba Drop-off</div>
+      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">🍱 Dabba Drop-off</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
         <div class="dabba-card">
           <div class="dab-title">📍 Where to drop</div>
           <div class="dab-info">Place clean dabba at <strong>H-002</strong> or <strong>Exit Gate Security</strong> with your flat number</div>
@@ -678,7 +686,7 @@ body.dark-mode{
           </div>
         </div>
       </div>
-      <div class="cosec"><div class="cotitle">👤 Your Details</div>
+      <div class="cosec"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div class="cotitle" style="margin-bottom:0">👤 Your Details</div><button onclick="placeOrder()" style="background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:9px;padding:7px 13px;font-size:.72rem;font-weight:800;cursor:pointer;white-space:nowrap;box-shadow:0 2px 8px rgba(244,163,37,.3);font-family:'DM Sans',sans-serif">🎉 Place Order</button></div>
         <div class="cform">
           <div class="fld"><label>Full Name</label><input id="cf-name" placeholder="Your name"/></div>
           <div class="fld"><label>📱 Phone (backup)</label><input id="cf-phone" type="tel" placeholder="+91 98765 43210"/></div>
@@ -687,8 +695,7 @@ body.dark-mode{
           
         </div>
         <div id="order-closed-banner" style="display:none;background:rgba(239,68,68,.12);border:1.5px solid rgba(239,68,68,.35);border-radius:14px;padding:16px 18px;font-size:.92rem;font-weight:700;color:#f87171;text-align:center;margin-bottom:12px;line-height:1.5"></div>
-        <button class="btn-place" id="placeBtn" onclick="placeOrder()">🎉 Place Order &amp; Notify Host</button>
-        <button class="btn-notify-dabba" id="notifyDabbaBtn" onclick="notifyDabbaDropped()">📦 I've Dropped My Dabba!</button>
+
         <div style="height:8px"></div>
       </div>
       <div class="success-sec" id="success-sec">
@@ -827,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v47.0</span>
+          <span class="ver-badge">v59.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -840,10 +847,23 @@ body.dark-mode{
         <button class="atab" onclick="switchAdminTab('settings',this)">⚙️ Settings</button>
       </div>
       <div class="asec on" id="atab-orders">
-        <div style="display:flex;gap:6px;margin:10px 0 8px">
-          <div id="pub-status-si" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">🍲 Ala Carte<br><span style="font-weight:700">—</span></div>
-          <div id="pub-status-pb" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">✨ Special<br><span style="font-weight:700">—</span></div>
-          <div id="pub-status-sv" style="flex:1;background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:8px;text-align:center;font-size:.62rem;color:var(--muted)">🌾 Dinner<br><span style="font-weight:700">—</span></div>
+        <!-- Section Publish/Unpublish buttons — Admin Orders tab -->
+        <div style="margin:10px 0 10px">
+          <div style="font-size:.58rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">📢 Publish Sections</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <button id="pub-btn-si" onclick="publishSection('si')"
+              style="width:100%;background:rgba(78,158,107,.15);border:1.5px solid rgba(78,158,107,.3);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#4e9e6b;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+              <span>🍲 South Indian Ala Carte</span><span id="pub-btn-si-lbl" style="font-size:.72rem;opacity:.8">OFFLINE</span>
+            </button>
+            <button id="pub-btn-pb" onclick="publishSection('pb')"
+              style="width:100%;background:rgba(244,163,37,.12);border:1.5px solid rgba(244,163,37,.25);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:var(--saff);cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+              <span>✨ BYOD Special</span><span id="pub-btn-pb-lbl" style="font-size:.72rem;opacity:.8">OFFLINE</span>
+            </button>
+            <button id="pub-btn-sv" onclick="publishSection('sv')"
+              style="width:100%;background:rgba(100,149,237,.12);border:1.5px solid rgba(100,149,237,.25);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:700;color:#6495ed;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+              <span>🌾 Millet & Dinner</span><span id="pub-btn-sv-lbl" style="font-size:.72rem;opacity:.8">OFFLINE</span>
+            </button>
+          </div>
         </div><div class="stats-grid" style="margin-top:0">
           <div class="sbox"><div class="sbn s" id="st-orders">0</div><div class="sbl">Orders</div></div>
           <div class="sbox"><div class="sbn g" id="st-rev">₹0</div><div class="sbl">Revenue</div></div>
@@ -1160,7 +1180,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v14.0 — Bring Your Own Dabba
+// BYOD v59.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -1212,34 +1232,34 @@ const DEFAULT_MENU = {
   ],
   sv:[
     // POHA
-    {id:'sv_kp1',e:'🌾',n:'Karuppu Kavuni Poha (Black Rice Flakes)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_kp2',e:'🌾',n:'Barnyard Millet Poha (Kuthiraivali)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_kp3',e:'🌾',n:'Finger Millet Poha (Ragi)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp1',e:'🌾',n:'Black Rice Poha (Karuppu Kavuni)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp2',e:'🌾',n:'Barnyard Millet Poha (Kuthiraivali / Jhangora)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp3',e:'🌾',n:'Finger Millet Poha (Ragi / Kelvaragu)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_kp4',e:'🌾',n:'Red Rice Poha',p:70,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_kp5',e:'🌾',n:'Mapillai Samba Poha (Heritage Red Rice)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_kp5',e:'🌾',n:'Heritage Red Rice Poha (Mapillai Samba)',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     // NOODLES
     {id:'sv_n1',e:'🍜',n:'Carrot Noodles',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n2',e:'🍜',n:'Beetroot Noodles',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n3',e:'🍜',n:'Moringa Noodles (Drumstick Leaf)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n3',e:'🍜',n:'Drumstick Leaf Noodles (Moringa / Murungai)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n4',e:'🍜',n:'Tomato Noodles',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n5',e:'🍜',n:'Wheat Noodles',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n6',e:'🍜',n:'Foxtail Millet Noodles (Thinai)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n7',e:'🍜',n:'Mapillai Samba Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n8',e:'🍜',n:'Finger Millet Noodles (Ragi)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n9',e:'🍜',n:'Multi Millet Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n10',e:'🍜',n:'Moringa Little Millet Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_n11',e:'🍜',n:'Pearl Millet Noodles (Kambu)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n6',e:'🍜',n:'Foxtail Millet Noodles (Thinai / Kangni)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n7',e:'🍜',n:'Heritage Red Rice Noodles (Mapillai Samba)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n8',e:'🍜',n:'Finger Millet Noodles (Ragi / Kelvaragu)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n9',e:'🍜',n:'Multi Millet Noodles (Mixed Grain)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n10',e:'🍜',n:'Drumstick Leaf & Little Millet Noodles (Moringa Samai)',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_n11',e:'🍜',n:'Pearl Millet Noodles (Kambu / Bajra)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_n12',e:'🍜',n:'Black Rice Noodles',p:95,avail:false,soldOut:false,photo:'',portionLabel:''},
     // SEMIYA (VERMICELLI)
     {id:'sv_s1',e:'🍝',n:'Red Rice Vermicelli',p:80,avail:false,soldOut:false,photo:'',portionLabel:''},
     {id:'sv_s2',e:'🍝',n:'Wheat Vermicelli',p:75,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s3',e:'🍝',n:'Foxtail Millet Vermicelli (Thinai)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s4',e:'🍝',n:'Finger Millet Vermicelli (Ragi)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s5',e:'🍝',n:'Kodo Millet Vermicelli (Varagu)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s6',e:'🍝',n:'Little Millet Vermicelli (Samai)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s7',e:'🍝',n:'Pearl Millet Vermicelli (Kambu)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s8',e:'🍝',n:'Sorghum Vermicelli (Jowar)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
-    {id:'sv_s9',e:'🍝',n:'Mapillai Samba Vermicelli',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s3',e:'🍝',n:'Foxtail Millet Vermicelli (Thinai / Kangni)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s4',e:'🍝',n:'Finger Millet Vermicelli (Ragi / Kelvaragu)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s5',e:'🍝',n:'Kodo Millet Vermicelli (Varagu / Kodra)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s6',e:'🍝',n:'Little Millet Vermicelli (Samai / Kutki)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s7',e:'🍝',n:'Pearl Millet Vermicelli (Kambu / Bajra)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s8',e:'🍝',n:'Sorghum Vermicelli (Jowar / Cholam)',p:85,avail:false,soldOut:false,photo:'',portionLabel:''},
+    {id:'sv_s9',e:'🍝',n:'Heritage Red Rice Vermicelli (Mapillai Samba)',p:90,avail:false,soldOut:false,photo:'',portionLabel:''},
   ],
   pb:[
     {id:'pb1',e:'🫓',n:'Methi Parantha',p:70,avail:true,soldOut:false,photo:''},
@@ -1335,6 +1355,31 @@ async function _sheetsFetch(url){
 
 // Load ALL persistent data from Sheet on startup
 async function loadFromSheets(){
+  // Name migration — fixes old Tamil/shortened names from Sheet
+  const _NAME_FIX={
+    'Karuppu Kavuni Poha':'Black Rice Poha (Karuppu Kavuni)',
+    'Karuppu Kavuni Poha (Black Rice Flakes)':'Black Rice Poha (Karuppu Kavuni)',
+    'Barnyard Millet Poha (Kuthiraivali)':'Barnyard Millet Poha (Kuthiraivali / Jhangora)',
+    'Finger Millet Poha (Ragi)':'Finger Millet Poha (Ragi / Kelvaragu)',
+    'Mapillai Samba Poha (Heritage Red Rice)':'Heritage Red Rice Poha (Mapillai Samba)',
+    'Mapillai Samba Poha':'Heritage Red Rice Poha (Mapillai Samba)',
+    'Foxtail Millet Noodles (Thinai)':'Foxtail Millet Noodles (Thinai / Kangni)',
+    'Mapillai Samba Noodles':'Heritage Red Rice Noodles (Mapillai Samba)',
+    'Finger Millet Noodles (Ragi)':'Finger Millet Noodles (Ragi / Kelvaragu)',
+    'Pearl Millet Noodles (Kambu)':'Pearl Millet Noodles (Kambu / Bajra)',
+    'Moringa Noodles (Drumstick Leaf)':'Drumstick Leaf Noodles (Moringa / Murungai)',
+    'Moringa Little Millet Noodles':'Drumstick Leaf & Little Millet Noodles (Moringa Samai)',
+    'Foxtail Millet Vermicelli (Thinai)':'Foxtail Millet Vermicelli (Thinai / Kangni)',
+    'Finger Millet Vermicelli (Ragi)':'Finger Millet Vermicelli (Ragi / Kelvaragu)',
+    'Kodo Millet Vermicelli (Varagu)':'Kodo Millet Vermicelli (Varagu / Kodra)',
+    'Little Millet Vermicelli (Samai)':'Little Millet Vermicelli (Samai / Kutki)',
+    'Pearl Millet Vermicelli (Kambu)':'Pearl Millet Vermicelli (Kambu / Bajra)',
+    'Sorghum Vermicelli (Jowar)':'Sorghum Vermicelli (Jowar / Cholam)',
+    'Mapillai Samba Vermicelli':'Heritage Red Rice Vermicelli (Mapillai Samba)',
+    'Multi Millet Noodles':'Multi Millet Noodles (Mixed Grain)',
+  };
+  function _fixName(n){ return _NAME_FIX[n]||n; }
+
   if(!SHEETS_URL) return false;
   showLoadingBanner('Loading your menu from Google Sheets…');
   const res = await sheetsCall({action:'load'});
@@ -1358,7 +1403,7 @@ async function loadFromSheets(){
       freshMenu[catKey].push({
         id: String(id),
         e: emoji||'🍽️',
-        n: name||'',
+        n: _fixName(String(name||'')),
         p: parseFloat(price)||0,
         avail: String(avail).toLowerCase()!=='false'&&String(avail).toLowerCase()!=='no',
         soldOut: String(soldOutCol||'').toLowerCase()==='sold out',
@@ -1376,6 +1421,8 @@ async function loadFromSheets(){
     });
     INGREDIENTS = {...DEFAULT_INGREDIENTS,...freshIngr};
     _sheetsLoaded = true;
+    // Immediately write corrected names back to Sheet
+    setTimeout(()=>syncMenuToSheets(),2000);
   }
   // Parse settings (published state + per-section)
   if(res.settings){
@@ -1589,6 +1636,14 @@ function handleRequest(data) {
       var rows = sheet.getDataRange().getValues();
       for (var i=1;i<rows.length;i++){
         if (String(rows[i][0])===String(data.oid)){ sheet.getRange(i+1,10).setValue(data.status); break; }
+      }
+      return respond({ok:true});
+    }
+    if (action === 'deleteOrder') {
+      var sheet = ss.getSheetByName('Orders'); if (!sheet) return respond({ok:true});
+      var rows = sheet.getDataRange().getValues();
+      for (var i=1;i<rows.length;i++){
+        if(String(rows[i][0])===String(data.oid)){ sheet.deleteRow(i+1); break; }
       }
       return respond({ok:true});
     }
@@ -2094,6 +2149,15 @@ function findDish(id){return[...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d
 function getItems(){return Object.keys(cart).map(id=>({...findDish(id),qty:cart[id]}));}
 function getTotal(){return getItems().reduce((s,i)=>s+i.p*i.qty,0);}
 function updateCheckBtn(){
+  // Update cart summary line
+  const summEl=document.getElementById('sm-cart-summary');
+  if(summEl){
+    const items=getItems();
+    if(items.length>0){
+      summEl.textContent=items.length+' item'+(items.length>1?'s':'')+' · ₹'+getTotal();
+    } else { summEl.textContent=''; }
+  }
+
   const s=getOrderStatus(currentCat),n=Object.keys(cart).length;
   const siCount=Object.keys(cart).filter(id=>id.startsWith('si')).length;
   const btn=document.getElementById('sm-checkout-btn');
@@ -2168,16 +2232,7 @@ async function markPaymentDone(){
   renderAdmin();
   toast('💚','Payment confirmed!','Thank you! Host has been notified.');
 }
-function linkTele(ctx){
-  const inp=document.getElementById(ctx==='co'?'co-tele-inp':'tele-main-inp');
-  const val=(inp.value||'').trim();if(!val||!val.startsWith('@')){toast('⚠️','Invalid username','Enter your @username');return;}
-  teleLinked=true;teleUser=val;subs++;
-  const st=document.getElementById('st-subs');if(st)st.textContent=subs;
-  document.getElementById('pill-tele').classList.add('at');document.getElementById('pill-tele-lbl').textContent='Linked '+val;
-  if(ctx==='co'){const el=document.getElementById('co-tele-linked');if(el)el.style.display='flex';}
-  else{const el=document.getElementById('tele-linked-main');if(el)el.style.display='flex';}
-  toast('✈️','Telegram linked!','Alerts will go to '+val);
-}
+
 function openTeleBot(){window.open('https://t.me/BYODSattvicMeals','_blank');}
 
 async function placeOrder(){
@@ -2272,9 +2327,16 @@ function renderAdmin(){
       ${o.tele&&o.tele!=='Not linked'?`<div class="oc-tele">✈️ ${o.tele}</div>`:''}
       <div class="oc-items">${o.items.map(i=>i.e+' '+i.n+' x'+i.qty).join(' · ')}</div>
       <div class="oc-foot"><span class="oc-total">Rs.${o.total} · ${o.portions}</span><span style="font-size:.58rem;padding:2px 7px;border-radius:8px;font-weight:700;${o.paymentStatus==='paid'?'background:rgba(78,158,107,.15);color:#4e9e6b':'background:rgba(239,68,68,.1);color:#f87171'}">${o.paymentStatus==='paid'?'✅ Paid':'⚠️ Payment Pending'}</span>
-        <div class="oc-acts"><button class="ocbtn g" id="rb-${o.oid}" onclick="markReady('${o.oid}')">Mark Ready</button><button class="ocbtn t" onclick="notifyCust('${o.oid}')">✈️ Notify</button></div>
+        <div class="oc-acts"><button class="ocbtn g" id="rb-${o.oid}" onclick="markReady('${o.oid}')">Mark Ready</button><button class="ocbtn t" onclick="notifyCust('${o.oid}')">✈️ Notify</button><button class="ocbtn" onclick="deleteOrder('${o.oid}')" style="background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;padding:5px 9px">🗑</button></div>
       </div>
     </div>`).join('');
+}
+async function deleteOrder(oid){
+  if(!confirm('Delete order '+oid+'? This removes it from the app and Google Sheet.')) return;
+  orders=orders.filter(o=>o.oid!==oid);
+  renderAdmin();
+  const synced=await sheetsCall({action:'deleteOrder',oid});
+  toast('🗑','Order deleted',synced&&synced.ok?'Removed from Sheet too.':'Removed locally — Sheet sync failed.');
 }
 async function notifyCust(oid){
   const o=orders.find(x=>x.oid===oid);if(!o)return;
@@ -2444,66 +2506,30 @@ async function publishSection(cat){
 }
 
 function _syncAdminPubButtons(){
+  const cfg={
+    si:{name:'🍲 Ala Carte',liveCol:'rgba(78,158,107,.2)',liveBorder:'rgba(78,158,107,.4)',liveText:'#4e9e6b',offCol:'rgba(100,100,100,.1)',offBorder:'rgba(100,100,100,.2)',offText:'var(--muted)'},
+    pb:{name:'✨ BYOD Special',liveCol:'rgba(244,163,37,.18)',liveBorder:'rgba(244,163,37,.35)',liveText:'var(--saff)',offCol:'rgba(100,100,100,.1)',offBorder:'rgba(100,100,100,.2)',offText:'var(--muted)'},
+    sv:{name:'🌾 Dinner',liveCol:'rgba(100,149,237,.18)',liveBorder:'rgba(100,149,237,.35)',liveText:'#6495ed',offCol:'rgba(100,100,100,.1)',offBorder:'rgba(100,100,100,.2)',offText:'var(--muted)'}
+  };
   ['si','pb','sv'].forEach(cat=>{
-    const btn=document.getElementById('pub-btn-'+cat);
-    const dot=document.getElementById('adm-pub-dot-'+cat);
     const pub=_sectionPublished[cat];
-    if(dot) dot.style.background = pub ? '#4e9e6b' : 'var(--muted)';
+    const c=cfg[cat];
+    // Admin orders tab buttons
+    const btn=document.getElementById('pub-btn-'+cat);
+    const lbl=document.getElementById('pub-btn-'+cat+'-lbl');
     if(btn){
-      if(pub){
-        btn.textContent='🔴 Unpublish';
-        btn.style.background='rgba(239,68,68,.12)';
-        btn.style.borderColor='rgba(239,68,68,.25)';
-        btn.style.color='#f87171';
-      } else {
-        btn.textContent='📢 Publish';
-        btn.style.background = cat==='pb'?'rgba(244,163,37,.15)':'rgba(78,158,107,.15)';
-        btn.style.borderColor = cat==='pb'?'rgba(244,163,37,.3)':'rgba(78,158,107,.3)';
-        btn.style.color = cat==='pb'?'var(--saff)':'#4e9e6b';
-      }
+      btn.style.background=pub?c.liveCol:c.offCol;
+      btn.style.borderColor=pub?c.liveBorder:c.offBorder;
+      btn.style.color=pub?c.liveText:c.offText;
     }
+    if(lbl) lbl.textContent=pub?'🟢 LIVE — tap to unpublish':'⚫ OFFLINE — tap to publish';
+    // Old admin dot (if still present)
+    const dot=document.getElementById('adm-pub-dot-'+cat);
+    if(dot) dot.style.background=pub?'#4e9e6b':'var(--muted)';
+    // Home section dot (read-only indicator)
+    const homeDot=document.getElementById('pub-dot-'+cat);
+    if(homeDot) homeDot.style.background=pub?'#4e9e6b':'var(--muted)';
   });
-}
-
-// Save menu → Sheet (single source of truth)
-async function saveMenu(){
-  // ── Lock the save button while uploading ─────────────────
-  const saveBtn=document.querySelector('.save-btn');
-  const origLabel=saveBtn?saveBtn.innerHTML:'';
-  if(saveBtn){
-    saveBtn.disabled=true;
-    saveBtn.style.opacity='.55';
-    saveBtn.style.cursor='not-allowed';
-    saveBtn.innerHTML='<span class="spin"></span> Saving to Google Sheets…';
-  }
-  try{
-    ['si','sv','pb','ck'].forEach(cat=>{
-      MENU[cat].forEach(d=>{
-        const n=document.getElementById('edn-'+d.id),p=document.getElementById('edp-'+d.id),
-              t=document.getElementById('edt-'+d.id),ph=document.getElementById('edph-'+d.id),
-              ing=document.getElementById('eding-'+d.id);
-        const q=document.getElementById('edq-'+d.id),so=document.getElementById('edso-'+d.id);
-        if(n)d.n=n.value;if(p)d.p=parseFloat(p.value)||d.p;
-        if(q)d.portionLabel=q.value.trim();
-        if(t)d.avail=t.classList.contains('on');
-        if(so)d.soldOut=so.classList.contains('son');
-        if(ph)d.photo=ph.value.trim();if(ing)INGREDIENTS[d.id]=ing.value.trim();
-      });
-    });
-    renderBanner();
-    const sheetsSynced=await syncMenuToSheets();
-    if(saveBtn){
-      saveBtn.innerHTML='✅ Saved!';
-      saveBtn.style.background='rgba(78,158,107,.9)';
-      setTimeout(()=>{
-        if(saveBtn){saveBtn.innerHTML=origLabel;saveBtn.style.opacity='';saveBtn.style.cursor='';saveBtn.style.background='';saveBtn.disabled=false;}
-      },2200);
-    }
-    toast('💾','Menu saved!',sheetsSynced?'✅ Synced to Google Sheets — safe across all future builds!':'Saved locally. Connect Sheets in Admin → Settings to persist across builds.');
-  }catch(e){
-    if(saveBtn){saveBtn.innerHTML='⚠️ Error — tap to retry';saveBtn.style.opacity='';saveBtn.style.cursor='';saveBtn.disabled=false;}
-    toast('⚠️','Save failed',e.message||'Unknown error');
-  }
 }
 
 function deleteDish(cat,id){
@@ -2906,7 +2932,8 @@ function hideToast(){document.getElementById('toast').classList.remove('show');}
 let _pageHistory=[];
 function showPage(name,_fromPop){
   const bar=document.getElementById('sm-checkout-bar');
-  if(bar) bar.style.display=(name==='submenu'?'block':'none');
+  // checkout btn now in header — no separate bar needed
+
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
   const pg=document.getElementById('pg-'+name);if(pg)pg.classList.add('on');
   const navMap={home:'nav-home',submenu:'nav-submenu',checkout:'nav-submenu',admin:'nav-admin',alerts:'nav-alerts',reviews:'nav-byod'};
@@ -2938,4 +2965,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 init();
 </script>
 </body>
-</html>
+</html>btn.disabled=n<1;
+    btn.style.opacity=n<1?'.4':'1';
+    btn.textContent=n<1?'Cart (0)':`₹${getTotal()} · Checkout →`;
+    btn.style.fontSize=n<1?'.78rem':'.82rem';
+  }
