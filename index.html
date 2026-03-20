@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v51</title>
+<title>BYOD — Bring Your Own Dabba v52</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -206,9 +206,9 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;o
 .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--saff);box-shadow:0 0 0 2px rgba(244,163,37,.07)}
 .fld input::placeholder,.fld textarea::placeholder{color:var(--muted)}
 .fld select option{background:var(--card)}
-.btn-place{width:100%;display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:12px;padding:16px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;transition:.15s;letter-spacing:.01em;box-shadow:0 4px 16px rgba(244,163,37,.4)}
+.btn-place{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#f4a325,#e8821a);color:#000;border:none;border-radius:12px;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;transition:.15s;letter-spacing:.01em;box-shadow:0 3px 12px rgba(244,163,37,.35)}
 .btn-place:active{opacity:.86;transform:scale(.98)}
-.btn-place:disabled{background:rgba(100,100,100,.3);border:1.5px solid rgba(255,255,255,.1);cursor:not-allowed;transform:none;color:rgba(255,255,255,.5)}
+.btn-place:disabled{background:rgba(244,163,37,.2);border:1.5px solid rgba(244,163,37,.3);cursor:default;transform:none;color:rgba(244,163,37,.6);box-shadow:none}
 .btn-notify-dabba{width:100%;background:none;border:1.5px solid var(--green);color:var(--green);border-radius:var(--r);padding:11px;font-family:'Playfair Display',serif;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s;display:none;align-items:center;justify-content:center;gap:5px;margin-bottom:6px}
 .btn-notify-dabba:active{background:rgba(78,158,107,.1)}
 .success-sec{display:none;padding:26px 15px;text-align:center;animation:su .4s ease}
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v51.0</span>
+      <span class="ver-badge" id="ver-badge">v52.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -844,7 +844,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v51.0</span>
+          <span class="ver-badge">v52.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -1190,7 +1190,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v51.0 — Bring Your Own Dabba
+// BYOD v52.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
