@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<title>BYOD — Bring Your Own Dabba v65</title>
+<title>BYOD — Bring Your Own Dabba v67</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -525,7 +525,7 @@ body.dark-mode{
       <button class="icon-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle dark/light mode" style="font-size:.8rem">🌙</button>
       <button class="icon-btn" onclick="changeFontSize(-1)" title="Smaller text" style="font-size:.72rem;font-weight:700">A-</button>
       <button class="icon-btn" onclick="changeFontSize(1)" title="Larger text" style="font-size:.82rem;font-weight:700">A+</button>
-      <span class="ver-badge" id="ver-badge">v65.0</span>
+      <span class="ver-badge" id="ver-badge">v67.0</span>
       <button class="icon-btn" onclick="showPage('alerts')">🔔<div class="bdot"></div></button>
     </div>
   </header>
@@ -834,7 +834,7 @@ body.dark-mode{
           <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:900">Admin</div>
         </div>
         <div style="display:flex;align-items:center;gap:7px">
-          <span class="ver-badge">v65.0</span>
+          <span class="ver-badge">v67.0</span>
           <div style="font-size:.58rem;color:var(--muted)" id="admDate"></div>
         </div>
       </div>
@@ -918,7 +918,7 @@ body.dark-mode{
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
                 <button id="af-si-all" onclick="setAdminFilter('si','all')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
                 <button id="af-si-avail" onclick="setAdminFilter('si','avail')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
-                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('si')">+ Add</button>
+                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem;margin-right:4px" onclick="showDishPicker('si')">+ Add Dish</button><button class="add-btn" style="padding:4px 10px;font-size:.62rem;background:rgba(244,163,37,.1);border-color:rgba(244,163,37,.3);color:var(--saff)" onclick="addBlankDish('si')">+ New Dish</button>
               </div>
               <div id="ed-si"></div>
 
@@ -945,7 +945,7 @@ body.dark-mode{
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
                 <button id="af-pb-all" onclick="setAdminFilter('pb','all')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer">All</button>
                 <button id="af-pb-avail" onclick="setAdminFilter('pb','avail')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer">✅ Available only</button>
-                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('pb')">+ Add</button>
+                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem;margin-right:4px" onclick="showDishPicker('pb')">+ Add Dish</button><button class="add-btn" style="padding:4px 10px;font-size:.62rem;background:rgba(244,163,37,.1);border-color:rgba(244,163,37,.3);color:var(--saff)" onclick="addBlankDish('pb')">+ New Dish</button>
               </div>
               <div id="ed-pb"></div>
 
@@ -972,7 +972,7 @@ body.dark-mode{
               <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
                 <button id="af-sv-all" onclick="setAdminFilter('sv','all')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--saff);background:var(--saff);color:#000;font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">All</button>
                 <button id="af-sv-avail" onclick="setAdminFilter('sv','avail')" style="padding:4px 11px;border-radius:15px;border:1px solid var(--border);background:none;color:var(--muted);font-size:.62rem;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">✅ Available only</button>
-                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem" onclick="addDish('sv')">+ Add</button>
+                <button class="add-btn" style="margin-left:auto;padding:4px 10px;font-size:.62rem;margin-right:4px" onclick="showDishPicker('sv')">+ Add Dish</button><button class="add-btn" style="padding:4px 10px;font-size:.62rem;background:rgba(244,163,37,.1);border-color:rgba(244,163,37,.3);color:var(--saff)" onclick="addBlankDish('sv')">+ New Dish</button>
               </div>
               <div id="ed-sv"></div>
 
@@ -1181,7 +1181,7 @@ body.dark-mode{
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-// BYOD v65.0 — Bring Your Own Dabba
+// BYOD v67.0 — Bring Your Own Dabba
 // ─────────────────────────────────────────────────────────────
 // STORAGE ARCHITECTURE:
 //   Google Sheets = single source of truth for ALL persistent data
@@ -2713,6 +2713,40 @@ function _refreshBadge(id){
 function addDish(cat){
   addBlankDish(cat);
 }
+function showDishPicker(targetCat){
+  // Show only dishes from the same category
+  const catLabels={si:'South Indian',sv:'Millet & Dinner',pb:'BYOD Special',ck:'Cookies & Breads'};
+  const allDishes=MENU[targetCat].map(d=>({...d,_cat:targetCat,_catLabel:catLabels[targetCat]}));
+
+  const modal=document.createElement('div');
+  modal.id='dish-picker-modal';
+  modal.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center';
+  modal.innerHTML=`
+    <div style="width:100%;max-width:480px;background:var(--card);border-radius:20px 20px 0 0;padding:16px;max-height:75vh;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700">${catLabels[targetCat]} — Add Existing Dish</div>
+        <button onclick="document.getElementById('dish-picker-modal').remove()"
+          style="background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer">✕</button>
+      </div>
+      <div style="font-size:.65rem;color:var(--muted);margin-bottom:10px">Select a dish to copy into this section. You can edit it after.</div>
+      <div style="overflow-y:auto;flex:1">
+        ${allDishes.map(d=>`
+          <div onclick="reuseDish('${targetCat}','${d.id}')"
+            style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;border:1px solid var(--border);margin-bottom:6px;background:var(--surf)">
+            <div style="font-size:1.3rem">${d.e}</div>
+            <div style="flex:1">
+              <div style="font-size:.8rem;font-weight:600">${d.n}</div>
+              <div style="font-size:.62rem;color:var(--muted)">${d._catLabel} · ₹${d.p}</div>
+            </div>
+            <div style="font-size:.7rem;color:var(--saff);font-weight:700">Add →</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  // Close on backdrop tap
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  document.body.appendChild(modal);
+}
+
 function reuseDish(targetCat,sourceId){
   const source=[...MENU.si,...MENU.sv,...MENU.pb,...MENU.ck].find(d=>d.id===sourceId);
   if(!source)return;
